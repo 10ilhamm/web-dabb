@@ -304,23 +304,74 @@ section { padding: 48px 0; }
 
 .instagram-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.25fr);
+    gap: 24px;
+    align-items: start;
 }
-.instagram-grid .left img,
-.instagram-grid .right img { width: 100%; border-radius: 6px; }
+.instagram-grid .left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.ig-profile-preview {
+    display: block;
+    width: 100%;
+    background: #10151c;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    padding: 18px;
+}
+.ig-profile-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.ig-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+    padding: 6px;
+}
+.ig-username {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+.ig-name {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+.ig-stats {
+    font-size: 12px;
+    opacity: .9;
+}
 .instagram-grid .right {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 16px;
+}
+.ig-post {
+    display: block;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.ig-post img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
 }
 .follow-btn {
-    margin-top: 12px;
+    margin-top: 0;
     display: inline-block;
     background: #0579CB;
     color: #fff;
     text-decoration: none;
-    padding: 10px 20px;
+    padding: 12px 28px;
     border-radius: 8px;
     font-weight: 600;
     transition: 0.3s;
@@ -328,12 +379,6 @@ section { padding: 48px 0; }
 .follow-btn:hover {
     background: #0563B8;
     transform: translateY(-2px);
-}
-
-.instagram-media {
-    margin: 1px !important;
-    max-width: 540px !important;
-    width: calc(100% - 2px) !important;
 }
 
 .faq-list { display: grid; gap: 12px; }
@@ -388,6 +433,12 @@ footer { background: var(--dark); color: #fff; margin-top: 30px; }
     .info-grid .info-photo {
         height: 220px;
     }
+    .instagram-grid {
+        grid-template-columns: 1fr;
+    }
+    .instagram-grid .right {
+        grid-template-columns: repeat(2, 1fr);
+    }
     .gallery .items { grid-template-columns: 1fr; }
     .menu,
     .auth-utils { display: none; }
@@ -396,4 +447,10 @@ footer { background: var(--dark); color: #fff; margin-top: 30px; }
     [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
     .section-title { text-align: center !important; }
     .separator { margin-left: auto !important; margin-right: auto !important; }
+}
+
+@media (max-width: 640px) {
+    .instagram-grid .right {
+        grid-template-columns: 1fr;
+    }
 }
