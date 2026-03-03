@@ -313,6 +313,10 @@ section { padding: 48px 0; }
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    align-content: start;
+}
+.instagram-grid .right .instagram-media {
+    min-width: 0 !important;
 }
 .follow-btn {
     margin-top: 12px;
