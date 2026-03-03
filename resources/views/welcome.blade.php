@@ -166,12 +166,12 @@
             <div class="separator"></div>
             @php
                 $igPosts = [
-                    ['code' => 'DULJ3gDkkDZ', 'url' => 'https://www.instagram.com/p/DULJ3gDkkDZ/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=='],
-                    ['code' => 'DUIkzDcEjtW', 'url' => 'https://www.instagram.com/p/DUIkzDcEjtW/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUGS9NCkiTd', 'url' => 'https://www.instagram.com/p/DUGS9NCkiTd/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUDcoEWkpPr', 'url' => 'https://www.instagram.com/p/DUDcoEWkpPr/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUCla4wku-w', 'url' => 'https://www.instagram.com/p/DUCla4wku-w/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUA1BeEEsun', 'url' => 'https://www.instagram.com/p/DUA1BeEEsun/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
+                    ['img' => 'image/instagram/post1.png', 'url' => 'https://www.instagram.com/p/DULJ3gDkkDZ/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=='],
+                    ['img' => 'image/instagram/post2.png', 'url' => 'https://www.instagram.com/p/DUIkzDcEjtW/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
+                    ['img' => 'image/instagram/post3.png', 'url' => 'https://www.instagram.com/p/DUGS9NCkiTd/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
+                    ['img' => 'image/instagram/post4.png', 'url' => 'https://www.instagram.com/p/DUDcoEWkpPr/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
+                    ['img' => 'image/instagram/post5.png', 'url' => 'https://www.instagram.com/p/DUCla4wku-w/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
+                    ['img' => 'image/instagram/post6.png', 'url' => 'https://www.instagram.com/p/DUA1BeEEsun/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
                 ];
             @endphp
             <div class="instagram-grid">
@@ -191,7 +191,7 @@
                 <div class="right">
                     @foreach($igPosts as $index => $post)
                         <a class="ig-post" href="{{ $post['url'] }}" target="_blank" rel="noopener noreferrer">
-                            <img src="https://www.instagram.com/p/{{ $post['code'] }}/media/?size=l" alt="Instagram konten {{ $index + 1 }}" loading="lazy">
+                            <img src="{{ asset($post['img']) }}" alt="Instagram konten {{ $index + 1 }}" loading="lazy">
                         </a>
                     @endforeach
                 </div>
