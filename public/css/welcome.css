@@ -307,12 +307,12 @@ section { padding: 48px 0; }
     grid-template-columns: 1fr 1fr;
     gap: 18px;
 }
-.instagram-grid .left img,
-.instagram-grid .right img { width: 100%; border-radius: 6px; }
+.instagram-grid .left img { width: 100%; border-radius: 6px; }
 .instagram-grid .right {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+    align-items: start;
 }
 .follow-btn {
     margin-top: 12px;

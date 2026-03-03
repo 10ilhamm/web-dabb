@@ -172,12 +172,12 @@
                     <a href="https://www.instagram.com/arsipnasionalri/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="follow-btn" target="_blank">Follow Kami @arsipnasionalri</a>
                 </div>
                 <div class="right">
-                    <img src="{{ asset('image/statistik_pengunjung2.png') }}" alt="IG 1">
-                    <img src="{{ asset('image/pameran1.png') }}" alt="IG 2">
-                    <img src="{{ asset('image/desain_dokumentasi.png') }}" alt="IG 3">
-                    <img src="{{ asset('image/pegawai1.png') }}" alt="IG 4">
-                    <img src="{{ asset('image/kantordabb.png') }}" alt="IG 5">
-                    <img src="{{ asset('image/pameran1.png') }}" alt="IG 6">
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DULJ3gDkkDZ/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:calc(100% - 2px);"></blockquote>
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DUIkzDcEjtW/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:calc(100% - 2px);"></blockquote>
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DUGS9NCkiTd/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:calc(100% - 2px);"></blockquote>
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DUDcoEWkpPr/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:calc(100% - 2px);"></blockquote>
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DUCla4wku-w/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:calc(100% - 2px);"></blockquote>
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DUA1BeEEsun/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:calc(100% - 2px);"></blockquote>
                 </div>
             </div>
         </div>
