@@ -165,7 +165,7 @@
         </div>
     </section>
 
-    <section class="instagram">
+    <section>
         <div class="container">
             <h2 class="section-title">{{ __('home.sections.instagram') }}</h2>
             <div class="separator"></div>
