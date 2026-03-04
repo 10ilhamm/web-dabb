@@ -288,24 +288,159 @@ section { padding: 48px 0; }
 .counter { text-align: center; }
 .counter .number { font-size: 42px; color: #444; margin-bottom: 6px; }
 
-.youtube-slider {
+/* ===== YouTube Carousel ===== */
+.youtube-wrap {
+    position: relative;
     background: #f3f3f3;
     border-radius: 26px;
     padding: 24px;
-    display: grid;
-    place-items: center;
+    overflow: hidden;
 }
-.youtube-slider img { width: min(740px, 100%); border-radius: 20px; }
-#youtube-prev:hover,
-#youtube-next:hover {
-    background: var(--dark);
-    transform: scale(1.1);
+.youtube-carousel-container {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 20px;
+}
+.youtube-carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    width: 100%;
+}
+.youtube-item {
+    flex: 0 0 160px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+    transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.5s, filter 0.5s;
+    opacity: 0.6;
+    transform: scale(0.8);
+    filter: brightness(0.9);
+    pointer-events: none;
+}
+.youtube-item.active {
+    flex: 0 0 240px;
+    height: 180px;
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+    pointer-events: auto;
+    z-index: 10;
+    margin: 0 8px;
+}
+.youtube-item.prev {
+    opacity: 0.7;
+    transform: scale(0.85);
+    filter: brightness(0.95);
+}
+.youtube-item.next {
+    opacity: 0.7;
+    transform: scale(0.85);
+    filter: brightness(0.95);
+}
+.youtube-thumb {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.youtube-thumb iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: none;
+    display: block;
+}
+.youtube-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    z-index: 8;
+    transition: background 0.2s, transform 0.2s;
+}
+.youtube-play:hover {
+    background: #fff;
+    transform: translate(-50%, -50%) scale(1.05);
+}
+.youtube-play span {
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 18px solid #4C7BFF;
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
+    margin-left: 4px;
+}
+.youtube-item:not(.active) .youtube-play {
+    opacity: 0;
+    pointer-events: none;
+}
+.youtube-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-top: 18px;
+}
+.youtube-nav button {
+    background: none;
+    border: none;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.youtube-nav button:hover {
+    background: #e6e6e6;
+}
+.youtube-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #d3d3d3;
+    border-radius: 50%;
+    margin: 0 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.youtube-dot.active {
+    background: var(--blue-light);
+}
+
+
+.instagram .container {
+    width: 100%;
+    max-width: none;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 
 .instagram-grid {
     display: grid;
-    grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.25fr);
-    gap: 24px;
+    grid-template-columns: minmax(320px, 350px) 1fr;
+    gap: 60px;
     align-items: start;
 }
 .instagram-grid .left {
@@ -355,15 +490,16 @@ section { padding: 48px 0; }
 }
 .ig-post {
     display: block;
+    background: #fff;
     border-radius: 4px;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
-.ig-post img {
+.ig-post iframe {
     width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+    height: 320px;
+    border: 0;
     display: block;
-    border-radius: 4px;
 }
 .follow-btn {
     margin-top: 0;
@@ -439,6 +575,9 @@ footer { background: var(--dark); color: #fff; margin-top: 30px; }
     .instagram-grid .right {
         grid-template-columns: repeat(2, 1fr);
     }
+    .ig-post iframe {
+        height: 300px;
+    }
     .gallery .items { grid-template-columns: 1fr; }
     .menu,
     .auth-utils { display: none; }
@@ -452,5 +591,8 @@ footer { background: var(--dark); color: #fff; margin-top: 30px; }
 @media (max-width: 640px) {
     .instagram-grid .right {
         grid-template-columns: 1fr;
+    }
+    .ig-post iframe {
+        height: 340px;
     }
 }

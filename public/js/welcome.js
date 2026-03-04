@@ -14,48 +14,178 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-let youtubeIndex = 0;
+const youtubeCarousel = document.getElementById('youtube-carousel');
+const youtubeDots = Array.from(document.querySelectorAll('.youtube-dot'));
+let youtubeIsAnimating = false;
+const youtubeAnimDuration = 420;
 
-function showYoutubeVideo(n) {
-    const videos = document.querySelectorAll('.youtube-video');
-    const dots = document.querySelectorAll('.youtube-dot');
-
-    if (n >= videos.length) { youtubeIndex = 0; }
-    if (n < 0) { youtubeIndex = videos.length - 1; }
-
-    videos.forEach(v => {
-        v.style.display = 'none';
-    });
-    dots.forEach(d => {
-        d.classList.remove('active');
-    });
-
-    if (videos[youtubeIndex]) videos[youtubeIndex].style.display = 'flex';
-    if (dots[youtubeIndex]) dots[youtubeIndex].classList.add('active');
+function loopIndex(index, total) {
+    return (index + total) % total;
 }
 
-const prevButton = document.getElementById('youtube-prev');
-const nextButton = document.getElementById('youtube-next');
+function removeAutoplayParam(src) {
+    if (!src) return src;
+    try {
+        const parsed = new URL(src, window.location.origin);
+        parsed.searchParams.delete('autoplay');
+        return parsed.toString();
+    } catch {
+        return src
+            .replace(/[?&]autoplay=1/g, '')
+            .replace('?&', '?')
+            .replace(/[?&]$/, '');
+    }
+}
 
-if (prevButton) {
-    prevButton.addEventListener('click', () => {
-        youtubeIndex--;
-        showYoutubeVideo(youtubeIndex);
+function getYoutubeItems() {
+    return youtubeCarousel ? Array.from(youtubeCarousel.querySelectorAll('.youtube-item')) : [];
+}
+
+function updateYoutubeClasses() {
+    const items = getYoutubeItems();
+    if (!items.length) return;
+
+    items.forEach((item, idx) => {
+        item.classList.remove('active', 'prev', 'next');
+        if (idx === 2) {
+            item.classList.add('active');
+        } else if (idx === 1) {
+            item.classList.add('prev');
+        } else if (idx === 3) {
+            item.classList.add('next');
+        }
+    });
+
+    const center = items[2];
+    const centerIndex = center ? Number(center.dataset.videoIndex) : 0;
+    youtubeDots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === centerIndex);
     });
 }
 
-if (nextButton) {
-    nextButton.addEventListener('click', () => {
-        youtubeIndex++;
-        showYoutubeVideo(youtubeIndex);
+function initYoutubeItems() {
+    const items = getYoutubeItems();
+    items.forEach((item, idx) => {
+        item.dataset.videoIndex = String(idx);
+        const iframe = item.querySelector('iframe');
+        if (iframe) {
+            iframe.setAttribute('src', removeAutoplayParam(iframe.getAttribute('src')));
+        }
     });
 }
 
-document.querySelectorAll('.youtube-dot').forEach((dot, index) => {
+function animateYoutubeStep(direction) {
+    if (!youtubeCarousel || youtubeIsAnimating) return;
+    const itemsBefore = getYoutubeItems();
+    if (itemsBefore.length < 5) return;
+
+    youtubeIsAnimating = true;
+
+    const firstRects = new Map(
+        itemsBefore.map((item) => [item.dataset.videoIndex, item.getBoundingClientRect()])
+    );
+
+    if (direction > 0) {
+        const first = itemsBefore[0];
+        if (first) youtubeCarousel.appendChild(first);
+    } else {
+        const last = itemsBefore[itemsBefore.length - 1];
+        if (last) youtubeCarousel.insertBefore(last, itemsBefore[0]);
+    }
+
+    updateYoutubeClasses();
+
+    const itemsAfter = getYoutubeItems();
+    itemsAfter.forEach((item) => {
+        const thumb = item.querySelector('.youtube-thumb');
+        if (!thumb) return;
+
+        const firstRect = firstRects.get(item.dataset.videoIndex);
+        const lastRect = item.getBoundingClientRect();
+        const deltaX = firstRect ? firstRect.left - lastRect.left : 0;
+
+        thumb.style.transition = 'none';
+        thumb.style.transform = `translateX(${deltaX}px)`;
+    });
+
+    requestAnimationFrame(() => {
+        itemsAfter.forEach((item) => {
+            const thumb = item.querySelector('.youtube-thumb');
+            if (!thumb) return;
+            thumb.style.transition = `transform ${youtubeAnimDuration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+            thumb.style.transform = 'translateX(0)';
+        });
+
+        window.setTimeout(() => {
+            itemsAfter.forEach((item) => {
+                const thumb = item.querySelector('.youtube-thumb');
+                if (!thumb) return;
+                thumb.style.transition = '';
+                thumb.style.transform = '';
+            });
+            youtubeIsAnimating = false;
+        }, youtubeAnimDuration);
+    });
+}
+
+function goYoutube(direction) {
+    animateYoutubeStep(direction);
+}
+
+const prevBtn = document.getElementById('youtube-prev');
+const nextBtn = document.getElementById('youtube-next');
+
+if (prevBtn) prevBtn.addEventListener('click', () => goYoutube(1));
+if (nextBtn) nextBtn.addEventListener('click', () => goYoutube(-1));
+
+youtubeDots.forEach((dot, idx) => {
     dot.addEventListener('click', () => {
-        youtubeIndex = index;
-        showYoutubeVideo(youtubeIndex);
+        const items = getYoutubeItems();
+        if (!items.length || youtubeIsAnimating) return;
+
+        const currentCenter = Number(items[2].dataset.videoIndex);
+        const total = items.length;
+        const forward = loopIndex(idx - currentCenter, total);
+        const backward = loopIndex(currentCenter - idx, total);
+
+        if (forward === 0) return;
+
+        const direction = forward <= backward ? 1 : -1;
+        const steps = Math.min(forward, backward);
+
+        let step = 0;
+        const run = () => {
+            if (step >= steps) return;
+            if (youtubeIsAnimating) {
+                window.setTimeout(run, 30);
+                return;
+            }
+            animateYoutubeStep(direction);
+            step += 1;
+            window.setTimeout(run, youtubeAnimDuration + 20);
+        };
+        run();
     });
 });
 
-showYoutubeVideo(0);
+// Tombol play overlay hanya aktif di tengah
+document.querySelectorAll('.youtube-play').forEach((btn) => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const item = btn.closest('.youtube-item');
+        if (item && item.classList.contains('active')) {
+            const iframe = item.querySelector('iframe');
+            if (iframe) {
+                const src = iframe.getAttribute('src');
+                if (src && !src.includes('autoplay=1')) {
+                    const autoplaySrc = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+                    iframe.setAttribute('src', autoplaySrc);
+                }
+            }
+        }
+    });
+});
+
+// Initialize carousel
+initYoutubeItems();
+updateYoutubeClasses();
