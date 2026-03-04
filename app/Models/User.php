@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
         'role',
     ];
@@ -45,5 +46,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /* Relationships */
+    public function userUmum()
+    {
+        return $this->hasOne(UserUmum::class);
+    }
+
+    public function userPelajar()
+    {
+        return $this->hasOne(UserPelajar::class);
+    }
+
+    public function userInstansi()
+    {
+        return $this->hasOne(UserInstansi::class);
     }
 }

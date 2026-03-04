@@ -9,7 +9,7 @@
 
         <div class="nav-right">
             <div class="menu">
-                <a href="#" class="active">{{ __('home.nav.home') }}</a>
+                <a href="{{ route('home') }}" class="active">{{ __('home.nav.home') }}</a>
                 <a href="#">{{ __('home.nav.profile') }}</a>
                 <a href="#">{{ __('home.nav.exhibition') }}</a>
                 <a href="#">{{ __('home.nav.publication') }}</a>
@@ -20,8 +20,10 @@
             <div class="auth-utils">
                 <a href="{{ route('login') }}" class="login-link">{{ __('home.nav.login') }}</a>
                 <div class="lang-switch">
-                    <a href="{{ route('locale.switch', 'id') }}" class="{{ app()->getLocale() === 'id' ? 'current' : '' }}">ID</a>
-                    <a href="{{ route('locale.switch', 'en') }}" class="{{ app()->getLocale() === 'en' ? 'current' : '' }}">EN</a>
+                    <a href="{{ route('locale.switch', 'id') }}"
+                        class="{{ app()->getLocale() === 'id' ? 'current' : '' }}">ID</a>
+                    <a href="{{ route('locale.switch', 'en') }}"
+                        class="{{ app()->getLocale() === 'en' ? 'current' : '' }}">EN</a>
                 </div>
             </div>
         </div>
