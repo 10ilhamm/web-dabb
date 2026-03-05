@@ -21,37 +21,8 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8F9FB;
-            /* Light background for the dashboard area */
-        }
-
-        [x-cloak] {
-            display: none !important;
-        }
-
-        /* Custom scrollbar for sidebar */
-        .sidebar {
-            background-color: #174E93;
-            /* Deep ANRI Blue */
-        }
-
-        .sidebar-link {
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .sidebar-link.active {
-            background-color: rgba(255, 255, 255, 0.15);
-            /* Slightly lighter blue for active item */
-        }
-
-        .sidebar-link:hover:not(.active) {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-    </style>
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 </head>
 
 <body class="text-gray-800 antialiased overflow-hidden">
@@ -63,20 +34,18 @@
             class="sidebar text-white transition-all duration-300 ease-in-out flex flex-col h-full z-20 shrink-0">
 
             <!-- Logo Section -->
-            <div class="h-20 flex items-center justify-center border-b border-white/10 px-4 mt-2">
+            <div class="flex items-center justify-center border-b border-white/10 px-4 py-4">
                 <!-- Expanded Logo -->
                 <div x-show="sidebarOpen"
-                    class="flex flex-col items-center  w-full space-y-2 transition-opacity duration-300"
+                    class="flex flex-col items-center w-full transition-opacity duration-300"
                     x-transition.opacity>
-                    <div class="flex items-center justify-start w-full">
+                    <div class="flex items-center justify-start w-full gap-2">
                         <img src="{{ asset('image/logo_anri.png') }}" alt="Logo ANRI"
                             class="h-10 w-auto shrink-0 drop-shadow-md">
-                        <div class="ml-3 flex flex-col items-start leading-tight">
-                            <div class="font-bold text-[13px] tracking-wide text-white drop-shadow-sm">Depot Arsip</div>
-                            <div class="font-bold text-[13px] tracking-wide text-white drop-shadow-sm">Berkelanjutan
-                                Bandung</div>
-                            <div class="font-normal text-[9px] text-blue-200 mt-1 whitespace-nowrap">Depot Arsip
-                                Berkelanjutan</div>
+                        <div class="flex flex-col items-start leading-tight min-w-0">
+                            <div class="font-bold text-[12px] tracking-wide text-white drop-shadow-sm">Depot Arsip</div>
+                            <div class="font-bold text-[12px] tracking-wide text-white drop-shadow-sm">Berkelanjutan Bandung</div>
+                            <div class="font-normal text-[9px] text-blue-200/80 mt-0.5 whitespace-nowrap">Depot Arsip Berkelanjutan</div>
                         </div>
                     </div>
                 </div>
@@ -84,15 +53,15 @@
                 <!-- Collapsed Logo -->
                 <div x-show="!sidebarOpen" class="flex justify-center w-full transition-opacity duration-300"
                     x-transition.opacity x-cloak>
-                    <img src="{{ asset('image/logo_anri.png') }}" alt="Logo ANRI" class="h-10 w-auto shrink-0">
+                    <img src="{{ asset('image/logo_anri.png') }}" alt="Logo ANRI" class="h-9 w-auto shrink-0">
                 </div>
             </div>
 
             <!-- Navigation Links -->
-            <nav class="flex-1 mt-6 px-3 space-y-2 overflow-y-auto no-scrollbar">
+            <nav class="flex-1 mt-8 px-3 space-y-3 overflow-y-auto no-scrollbar">
                 <!-- Beranda -->
                 <a href="{{ route('dashboard') }}"
-                    class="sidebar-link active flex items-center px-3 py-3 rounded-lg text-white group">
+                    class="sidebar-link {{ request()->routeIs('dashboard') || request()->routeIs('dashboard.*') ? 'active text-white' : 'text-[#b8cdef] hover:text-white' }} flex items-center px-3 py-3 rounded-lg group">
                     <svg class="w-6 h-6 shrink-0 opacity-90 group-hover:opacity-100" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -121,21 +90,45 @@
                 </a>
 
                 <!-- CMS -->
-                <a href="#"
-                    class="sidebar-link flex items-center px-3 py-3 rounded-lg text-[#b8cdef] hover:text-white group">
-                    <svg class="w-6 h-6 shrink-0 opacity-80 group-hover:opacity-100" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                        </path>
-                    </svg>
-                    <span x-show="sidebarOpen" class="ml-4 text-[14px] font-medium transition-opacity duration-300"
-                        x-transition.opacity>{{ __('dashboard.sidebar.cms') }}</span>
-                    <svg x-show="sidebarOpen" class="w-4 h-4 ml-auto text-blue-300" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
+                <div x-data="{ open: {{ request()->routeIs('cms.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open"
+                        class="sidebar-link w-full flex items-center px-3 py-3 rounded-lg text-[#b8cdef] hover:text-white group {{ request()->routeIs('cms.*') ? 'active text-white' : '' }}">
+                        <svg class="w-6 h-6 shrink-0 opacity-80 group-hover:opacity-100 {{ request()->routeIs('cms.*') ? 'text-white opacity-100' : '' }}"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                            </path>
+                        </svg>
+                        <span x-show="sidebarOpen"
+                            class="ml-4 text-[14px] font-medium transition-opacity duration-300 whitespace-nowrap {{ request()->routeIs('cms.*') ? 'text-white' : '' }}"
+                            x-transition.opacity>{{ __('dashboard.sidebar.cms') }}</span>
+                        <svg x-show="sidebarOpen"
+                            class="cms-chevron w-4 h-4 ml-auto {{ request()->routeIs('cms.*') ? 'text-white' : 'text-[#b8cdef] group-hover:text-white' }}"
+                            :style="open ? 'transform: rotate(0deg)' : 'transform: rotate(-90deg)'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <!-- Dropdown Items -->
+                    <div x-show="open && sidebarOpen"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 -translate-y-1"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 -translate-y-1"
+                        class="cms-dropdown mt-2 ml-9 mr-1 py-2 px-1 space-y-1">
+
+                        <a href="{{ route('cms.features.index') }}"
+                            class="flex items-center px-3 py-2 text-[13px] rounded-md {{ request()->routeIs('cms.features.*') ? 'active-item' : 'text-white/70 hover:text-white font-medium' }}">
+                            Manajemen Fitur
+                        </a>
+                        <a href="#"
+                            class="flex items-center px-3 py-2 text-[13px] rounded-md font-medium text-white/70 hover:text-white">
+                            Data 2
+                        </a>
+                    </div>
+                </div>
 
                 <!-- Pengguna -->
                 <a href="#"
@@ -206,9 +199,15 @@
                         @hasSection('header')
                             @yield('header')
                         @else
-                            <div class="text-[13px] text-gray-500 font-medium">
-                                <span class="text-gray-400">{{ __('dashboard.header.breadcrumb_home') }} /</span>
-                                <span class="text-[#0ea5e9">@yield('breadcrumb_active', __('dashboard.header.breadcrumb_home'))</span>
+                            <div class="text-[13px] text-gray-500 font-medium flex items-center gap-1">
+                                @hasSection('breadcrumb_parent')
+                                    <span class="text-gray-400">@yield('breadcrumb_parent')</span>
+                                    <span class="text-gray-300">/</span>
+                                @else
+                                    <span class="text-gray-400">{{ __('dashboard.header.breadcrumb_home') }}</span>
+                                    <span class="text-gray-300">/</span>
+                                @endif
+                                <span class="text-[#0ea5e9]">@yield('breadcrumb_active', __('dashboard.header.breadcrumb_home'))</span>
                             </div>
                         @endif
                     </div>

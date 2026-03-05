@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HomeContentController;
 use App\Http\Controllers\RoleDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FeatureController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -39,6 +41,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/activity/logout-others', [ProfileController::class, 'logoutOtherBrowserSessions'])->name('profile.activity.logout-others');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // CMS Home Content Editor
+    Route::middleware('role:admin')->prefix('cms/home')->name('cms.home.')->group(function () {
+        Route::get('/', [HomeContentController::class, 'edit'])->name('edit');
+        Route::post('/', [HomeContentController::class, 'update'])->name('update');
+    });
+
+    // CMS Features
+    Route::middleware('role:admin')->prefix('cms/features')->name('cms.features.')->group(function () {
+        Route::get('/', [FeatureController::class, 'index'])->name('index');
+        Route::post('/', [FeatureController::class, 'store'])->name('store');
+        Route::get('/{feature}', [FeatureController::class, 'show'])->name('show');
+        Route::put('/{feature}', [FeatureController::class, 'update'])->name('update');
+        Route::delete('/{feature}', [FeatureController::class, 'destroy'])->name('destroy');
+        Route::put('/{feature}/content', [FeatureController::class, 'updateContent'])->name('update-content');
+        Route::put('/{feature}/sub', [FeatureController::class, 'updateSub'])->name('update-sub');
+        Route::delete('/{feature}/sub', [FeatureController::class, 'destroySub'])->name('destroy-sub');
+    });
 });
 
 require __DIR__ . '/auth.php';

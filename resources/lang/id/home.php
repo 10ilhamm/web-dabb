@@ -5,7 +5,7 @@ return [
     'tagline' => 'Depot Arsip Berkelanjutan',
     'about' => 'Tentang Kami',
     'hero_title' => 'Selamat Datang Di Website Depot Arsip Berkelanjutan Bandung',
-    'hero_cta' => 'Tentang Kami',
+    'hero_cta' => 'Kami',
     'nav' => [
         'home' => 'Beranda',
         'profile' => 'Profil',
@@ -44,6 +44,13 @@ return [
     'stats' => [
         'total' => 'Total Pengunjung',
         'today' => 'Pengunjung Hari Ini',
+    ],
+    'youtube_ids' => [
+        'F2NhNTiNxoY',
+        'kasMsnf9Cys',
+        'LgdR55MPAnU',
+        'NC9_ugD6vxo',
+        'F2NhNTiNxoY',
     ],
     'faq_items' => [
         'Pukul berapa layanan DABB dibuka untuk umum?',

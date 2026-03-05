@@ -20,7 +20,7 @@ class AdminPegawaiSeeder extends Seeder
             'name' => 'Administrator',
             'username' => 'admin',
             'email' => 'admin@anri.go.id',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
 
