@@ -63,4 +63,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserInstansi::class);
     }
+
+    public function userAdmin()
+    {
+        return $this->hasOne(UserAdmin::class);
+    }
+
+    public function userPegawai()
+    {
+        return $this->hasOne(UserPegawai::class);
+    }
 }

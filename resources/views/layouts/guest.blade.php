@@ -48,6 +48,8 @@
     </div>
 
     @include('footer')
+
+    <x-chat-widget />
 </body>
 
 </html>

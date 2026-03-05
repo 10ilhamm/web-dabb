@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ __('home.site_name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Scripts & Tailwind -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 </head>
+
 <body>
     @include('navbar')
 
@@ -54,10 +62,10 @@
             <h2 class="section-title">{{ __('home.sections.activities') }}</h2>
             <div class="separator"></div>
             @php
-                $colors = ['#D06767','#3598DB','#89DB51','#000000','#DB420F','#E660D4'];
+                $colors = ['#D06767', '#3598DB', '#89DB51', '#000000', '#DB420F', '#E660D4'];
             @endphp
             <div class="activity-list">
-                @foreach(__('home.activity_items') as $index => $item)
+                @foreach (__('home.activity_items') as $index => $item)
                     <div class="activity-card">
                         <div class="activity-number">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</div>
                         <div class="activity-text" style="background: {{ $colors[$index] }}">{{ $item }}</div>
@@ -116,31 +124,44 @@
                     <div id="youtube-carousel" class="youtube-carousel">
                         <div class="youtube-item">
                             <div class="youtube-thumb">
-                                <iframe src="https://www.youtube.com/embed/F2NhNTiNxoY" title="Video 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/F2NhNTiNxoY" title="Video 1" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
                                 <button class="youtube-play"><span></span></button>
                             </div>
                         </div>
                         <div class="youtube-item">
                             <div class="youtube-thumb">
-                                <iframe src="https://www.youtube.com/embed/kasMsnf9Cys" title="Video 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/kasMsnf9Cys" title="Video 2" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
                                 <button class="youtube-play"><span></span></button>
                             </div>
                         </div>
                         <div class="youtube-item">
                             <div class="youtube-thumb">
-                                <iframe src="https://www.youtube.com/embed/LgdR55MPAnU" title="Video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/LgdR55MPAnU" title="Video 3"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
                                 <button class="youtube-play"><span></span></button>
                             </div>
                         </div>
                         <div class="youtube-item">
                             <div class="youtube-thumb">
-                                <iframe src="https://www.youtube.com/embed/NC9_ugD6vxo" title="Video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/NC9_ugD6vxo" title="Video 4"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
                                 <button class="youtube-play"><span></span></button>
                             </div>
                         </div>
                         <div class="youtube-item">
                             <div class="youtube-thumb">
-                                <iframe src="https://www.youtube.com/embed/F2NhNTiNxoY" title="Video 5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/F2NhNTiNxoY" title="Video 5"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
                                 <button class="youtube-play"><span></span></button>
                             </div>
                         </div>
@@ -148,7 +169,11 @@
                 </div>
                 <div class="youtube-nav">
                     <button id="youtube-prev" aria-label="Sebelumnya">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#F3F3F3"/><path d="M18 22L12 16L18 10" stroke="#545456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="16" fill="#F3F3F3" />
+                            <path d="M18 22L12 16L18 10" stroke="#545456" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
                     </button>
                     <span>
                         <span class="youtube-dot"></span>
@@ -158,7 +183,11 @@
                         <span class="youtube-dot"></span>
                     </span>
                     <button id="youtube-next" aria-label="Berikutnya">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#F3F3F3"/><path d="M14 10L20 16L14 22" stroke="#545456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="16" fill="#F3F3F3" />
+                            <path d="M14 10L20 16L14 22" stroke="#545456" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -171,17 +200,43 @@
             <div class="separator"></div>
             @php
                 $igPosts = [
-                    ['code' => 'DULJ3gDkkDZ', 'url' => 'https://www.instagram.com/p/DULJ3gDkkDZ/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=='],
-                    ['code' => 'DUIkzDcEjtW', 'url' => 'https://www.instagram.com/p/DUIkzDcEjtW/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUGS9NCkiTd', 'url' => 'https://www.instagram.com/p/DUGS9NCkiTd/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUDcoEWkpPr', 'url' => 'https://www.instagram.com/p/DUDcoEWkpPr/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUCla4wku-w', 'url' => 'https://www.instagram.com/p/DUCla4wku-w/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
-                    ['code' => 'DUA1BeEEsun', 'url' => 'https://www.instagram.com/p/DUA1BeEEsun/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D'],
+                    [
+                        'code' => 'DULJ3gDkkDZ',
+                        'url' =>
+                            'https://www.instagram.com/p/DULJ3gDkkDZ/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
+                    ],
+                    [
+                        'code' => 'DUIkzDcEjtW',
+                        'url' =>
+                            'https://www.instagram.com/p/DUIkzDcEjtW/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D',
+                    ],
+                    [
+                        'code' => 'DUGS9NCkiTd',
+                        'url' =>
+                            'https://www.instagram.com/p/DUGS9NCkiTd/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D',
+                    ],
+                    [
+                        'code' => 'DUDcoEWkpPr',
+                        'url' =>
+                            'https://www.instagram.com/p/DUDcoEWkpPr/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D',
+                    ],
+                    [
+                        'code' => 'DUCla4wku-w',
+                        'url' =>
+                            'https://www.instagram.com/p/DUCla4wku-w/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D',
+                    ],
+                    [
+                        'code' => 'DUA1BeEEsun',
+                        'url' =>
+                            'https://www.instagram.com/p/DUA1BeEEsun/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D',
+                    ],
                 ];
             @endphp
             <div class="instagram-grid">
                 <div class="left">
-                    <a class="ig-profile-preview" href="https://www.instagram.com/arsipnasionalri/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">
+                    <a class="ig-profile-preview"
+                        href="https://www.instagram.com/arsipnasionalri/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        target="_blank" rel="noopener noreferrer">
                         <div class="ig-profile-head">
                             <img src="{{ asset('image/logo_anri.png') }}" alt="arsipnasionalri" class="ig-avatar">
                             <div>
@@ -191,15 +246,14 @@
                             </div>
                         </div>
                     </a>
-                    <a href="https://www.instagram.com/arsipnasionalri/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="follow-btn" target="_blank" rel="noopener noreferrer">Follow Kami</a>
+                    <a href="https://www.instagram.com/arsipnasionalri/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                        class="follow-btn" target="_blank" rel="noopener noreferrer">Follow Kami</a>
                 </div>
                 <div class="right">
-                    @foreach($igPosts as $index => $post)
+                    @foreach ($igPosts as $index => $post)
                         <div class="ig-post" aria-label="Instagram konten {{ $index + 1 }}">
-                            <iframe
-                                src="https://www.instagram.com/p/{{ $post['code'] }}/embed/"
-                                title="Instagram konten {{ $index + 1 }}"
-                                loading="lazy"
+                            <iframe src="https://www.instagram.com/p/{{ $post['code'] }}/embed/"
+                                title="Instagram konten {{ $index + 1 }}" loading="lazy"
                                 allowtransparency="true">
                             </iframe>
                         </div>
@@ -209,20 +263,11 @@
         </div>
     </section>
 
-    <section>
-        <div class="container">
-            <h2 class="section-title">{{ __('home.sections.faq') }}</h2>
-            <div class="separator"></div>
-            <div class="faq-list">
-                @foreach(__('home.faq_items') as $faq)
-                    <div class="faq-item">{{ $faq }}</div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
     @include('footer')
+
+    <x-chat-widget />
 
     <script src="{{ asset('js/welcome.js') }}" defer></script>
 </body>
+
 </html>
