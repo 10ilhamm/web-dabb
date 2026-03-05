@@ -26,6 +26,20 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get UI labels for each role.
+     */
+    public static function roleLabels(): array
+    {
+        return [
+            'admin' => 'Admin',
+            'pegawai' => 'Pegawai',
+            'umum' => 'Umum',
+            'pelajar_mahasiswa' => 'Pelajar/Mahasiswa',
+            'instansi_swasta' => 'Instansi/Swasta',
+        ];
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>

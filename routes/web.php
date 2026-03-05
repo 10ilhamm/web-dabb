@@ -34,6 +34,9 @@ Route::middleware('auth')->group(function () {
         ->name('dashboard.instansi');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
+    Route::get('/profile/activity', [ProfileController::class, 'activity'])->name('profile.activity');
+    Route::delete('/profile/activity/logout-others', [ProfileController::class, 'logoutOtherBrowserSessions'])->name('profile.activity.logout-others');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

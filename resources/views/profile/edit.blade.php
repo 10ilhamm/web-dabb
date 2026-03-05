@@ -1,29 +1,104 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.internal-dashboard')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('header')
+    <div class="text-[13px] text-gray-500 font-medium">
+        <span class="text-gray-400">{{ __('dashboard.header.breadcrumb_home') }} /</span>
+        <span class="text-[#0ea5e9]">{{ __('dashboard.profile.manage_account') }}</span>
+    </div>
+@endsection
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+@section('content')
+    <div class="mb-6">
+        <h1 class="text-[22px] font-bold text-[#1E293B] mb-6">{{ __('dashboard.profile.user_profile') }}</h1>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
+        <!-- Top Card: Basic Info -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 flex items-center">
+            <img class="h-16 w-16 rounded-full object-cover border border-gray-200"
+                src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=E5E7EB&color=374151&bold=true&size=128"
+                alt="Avatar">
+            <div class="ml-5">
+                <h2 class="text-lg font-bold text-gray-900">{{ $user->name }}</h2>
+                <div class="text-sm font-medium border-l-[3px] border-blue-200 pl-3 mt-1.5 flex items-center space-x-3">
+                    <span class="text-gray-400">NIP. 1234567890</span>
+                    <span class="text-gray-300">|</span>
+                    <span class="text-gray-500">{{ App\Models\User::roleLabels()[$user->role] ?? 'Pengguna' }}</span>
                 </div>
             </div>
         </div>
+
+        <!-- Bottom Card: Details Form -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col h-full relative">
+            <div class="p-6 pb-20">
+                <h3 class="text-base font-bold text-gray-800 mb-6">{{ __('dashboard.profile.personal_data') }}</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-8">
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.full_name') }}
+                        </div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->name }}</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.nip') }}</div>
+                        <div class="text-[13px] font-medium text-gray-800">1234567890</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.gender') }}</div>
+                        <div class="text-[13px] font-medium text-gray-800">Laki-laki</div>
+                    </div>
+
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.email') }}</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->email }}</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.phone_number') }}
+                        </div>
+                        <div class="text-[13px] font-medium text-gray-800">(+62) 81234567890</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.religion') }}
+                        </div>
+                        <div class="text-[13px] font-medium text-gray-800">Islam</div>
+                    </div>
+
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.position') }}
+                        </div>
+                        <div class="text-[13px] font-medium text-gray-800">
+                            {{ App\Models\User::roleLabels()[$user->role] ?? 'Pengguna' }}</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.rank_class') }}
+                        </div>
+                        <div class="text-[13px] font-medium text-gray-800">Golongan IV</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">
+                            {{ __('dashboard.profile.birth_place_date') }}</div>
+                        <div class="text-[13px] font-medium text-gray-800">Bandung, 10 Januari 1999</div>
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.address') }}</div>
+                        <div class="text-[13px] font-medium text-gray-800 leading-relaxed">
+                            Jl. Raya Derwati, Mekarjaya, Kec. Rancasari,<br> Kota Bandung, Jawa Barat 40292
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button positioned absolutely within the card to match design -->
+            <div class="absolute bottom-6 right-6">
+                <button
+                    class="bg-[#3B82F6] hover:bg-blue-600 text-white text-[13px] font-medium py-2 px-5 rounded-lg border border-blue-500 shadow-sm flex items-center transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                        </path>
+                    </svg>
+                    {{ __('dashboard.profile.edit') }}
+                </button>
+            </div>
+        </div>
     </div>
-</x-app-layout>
+@endsection
