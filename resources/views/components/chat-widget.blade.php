@@ -195,23 +195,40 @@
         toggleBtn.addEventListener('click', toggleChat);
         closeBtn.addEventListener('click', toggleChat);
 
-        // Core bot logic (Rule-based)
-        function getBotResponse(message) {
+        // Core bot logic (Gemini API)
+        async function getBotResponse(message) {
             const lowerMsg = message.toLowerCase();
 
-            if (lowerMsg.includes('akses') || lowerMsg.includes('publik') || lowerMsg.includes('cara')) {
-                return 'Untuk mengakses arsip di DABB, Anda dapat datang langsung ke Ruang Baca DABB atau mengisi formulir pendaftaran secara online melalui halaman Layanan Publik di website ini.';
-            } else if (lowerMsg.includes('layanan') || lowerMsg.includes('apa saja') || lowerMsg.includes(
-                    'fasilitas')) {
-                return 'DABB menyediakan beberapa layanan publik antara lain: Layanan Baca Arsip, Konsultasi Kearsipan, Perawatan Arsip Keluarga (LARASKA), dan Pameran Arsip baik secara onsite maupun virtual.';
-            } else if (lowerMsg.includes('biaya') || lowerMsg.includes('bayar') || lowerMsg.includes(
-                    'gratis') || lowerMsg.includes('harga')) {
-                return 'Seluruh layanan kearsipan di Depot Arsip Berkelanjutan Bandung (DABB) disediakan secara GRATIS atau tanpa dipungut biaya apapun bagi masyarakat.';
-            } else if (lowerMsg.includes('halo') || lowerMsg.includes('hai') || lowerMsg.includes('pagi') ||
-                lowerMsg.includes('siang')) {
-                return 'Halo! Selamat datang di DABB. Ada yang bisa saya bantu terkait informasi arsip atau layanan kami?';
-            } else {
-                return 'Maaf, saya merupakan asisten AI DABB dan saat ini belum memiliki jawaban spesifik untuk pertanyaan tersebut. Silakan hubungi petugas kami di bagian "Kontak Kami" untuk informasi lebih lanjut.';
+            // Use the backend route for AI API
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]') ? document
+                            .querySelector('meta[name="csrf-token"]').getAttribute('content') : ''
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data && data.reply) {
+                    // Remove markdown boldings if any, for cleaner chat display natively
+                    let cleanReply = data.reply.replace(/\*\*/g, '');
+                    return cleanReply;
+                } else {
+                    return 'Maaf, saya tidak dapat memproses jawaban saat ini.';
+                }
+            } catch (error) {
+                console.error('API Proxy Error:', error);
+                return 'Maaf, saat ini sistem AI sedang sibuk atau tidak terhubung (Bypass SSL diaktifkan). Silakan coba lagi nanti.';
             }
         }
 
@@ -259,12 +276,14 @@
             typingIndicator.classList.remove('hidden');
             scrollToBottom();
 
-            // Simulate AI thinking and reply
-            setTimeout(() => {
+            // Fetch response from Gemini AI
+            getBotResponse(message).then(reply => {
                 typingIndicator.classList.add('hidden');
-                const reply = getBotResponse(message);
                 appendMessage(reply, false);
-            }, 800 + Math.random() * 800);
+            }).catch(err => {
+                typingIndicator.classList.add('hidden');
+                appendMessage('Maaf, ada gangguan jaringan.', false);
+            });
         }
 
         // Event listeners for sending

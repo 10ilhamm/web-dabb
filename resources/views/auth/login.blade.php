@@ -101,7 +101,7 @@
             </div>
 
             <!-- Right Side: Image Banner -->
-            <div class=" ">
+            <div class="login-banner-side">
                 <div class="banner-overlay-logo">
                     <img src="{{ asset('image/logo_anri.png') }}" alt="ANRI Logo">
                     <div class="banner-overlay-text">
