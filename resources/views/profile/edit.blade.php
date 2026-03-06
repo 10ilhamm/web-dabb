@@ -21,7 +21,7 @@
                 <div class="text-sm font-medium border-l-[3px] border-blue-200 pl-3 mt-1.5 flex items-center space-x-3">
                     <span class="text-gray-400">NIP. 1234567890</span>
                     <span class="text-gray-300">|</span>
-                    <span class="text-gray-500">{{ App\Models\User::roleLabels()[$user->role] ?? 'Pengguna' }}</span>
+                    <span class="text-gray-500">{{ App\Models\User::roleLabels()[$user->role] ?? __('dashboard.roles.default') }}</span>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.position') }}
                         </div>
                         <div class="text-[13px] font-medium text-gray-800">
-                            {{ App\Models\User::roleLabels()[$user->role] ?? 'Pengguna' }}</div>
+                            {{ App\Models\User::roleLabels()[$user->role] ?? __('dashboard.roles.default') }}</div>
                     </div>
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.rank_class') }}

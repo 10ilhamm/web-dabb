@@ -14,6 +14,7 @@ class FeatureController extends Controller
     public function index()
     {
         $features = Feature::whereNull('parent_id')->withCount('subfeatures')->orderBy('order')->get();
+
         return view('cms.features.index', compact('features'));
     }
 
@@ -23,10 +24,10 @@ class FeatureController extends Controller
     public function store(Request $request, TranslationService $translationService)
     {
         $validated = $request->validate([
-            'name'      => 'required|string|max:255',
-            'type'      => 'required|in:link,dropdown',
-            'path'      => 'nullable|string|max:255',
-            'order'     => 'required|integer|min:0',
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:link,dropdown',
+            'path' => 'nullable|string|max:255',
+            'order' => 'required|integer|min:0',
             'parent_id' => 'nullable|exists:features,id',
         ]);
 
@@ -35,13 +36,13 @@ class FeatureController extends Controller
         Feature::create($validated);
 
         // If it's a sub-feature, redirect back to parent's show page
-        if (!empty($validated['parent_id'])) {
+        if (! empty($validated['parent_id'])) {
             return redirect()->route('cms.features.show', $validated['parent_id'])
-                ->with('success', 'Sub menu berhasil ditambahkan.');
+                ->with('success', __('cms.features.flash.sub_added'));
         }
 
         return redirect()->route('cms.features.index')
-            ->with('success', 'Fitur berhasil ditambahkan.');
+            ->with('success', __('cms.features.flash.feature_added'));
     }
 
     /**
@@ -58,6 +59,7 @@ class FeatureController extends Controller
         }
 
         $feature->load('subfeatures');
+
         return view('cms.features.show', compact('feature'));
     }
 
@@ -67,9 +69,9 @@ class FeatureController extends Controller
     public function update(Request $request, Feature $feature, TranslationService $translationService)
     {
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'type'  => 'required|in:link,dropdown',
-            'path'  => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:link,dropdown',
+            'path' => 'nullable|string|max:255',
             'order' => 'required|integer|min:0',
         ]);
 
@@ -78,7 +80,7 @@ class FeatureController extends Controller
         $feature->update($validated);
 
         return redirect()->route('cms.features.index')
-            ->with('success', 'Fitur berhasil diperbarui.');
+            ->with('success', __('cms.features.flash.feature_updated'));
     }
 
     /**
@@ -91,17 +93,17 @@ class FeatureController extends Controller
         ]);
 
         $contentEn = null;
-        if (!empty($validated['content'])) {
+        if (! empty($validated['content'])) {
             $contentEn = $translationService->translate($validated['content']);
         }
 
         $feature->update([
-            'content'    => $validated['content'],
+            'content' => $validated['content'],
             'content_en' => $contentEn,
         ]);
 
         return redirect()->route('cms.features.show', $feature)
-            ->with('success', 'Konten halaman berhasil disimpan.');
+            ->with('success', __('cms.features.flash.content_saved'));
     }
 
     /**
@@ -112,7 +114,7 @@ class FeatureController extends Controller
         $feature->delete();
 
         return redirect()->route('cms.features.index')
-            ->with('success', 'Fitur berhasil dihapus.');
+            ->with('success', __('cms.features.flash.feature_deleted'));
     }
 
     /**
@@ -121,8 +123,8 @@ class FeatureController extends Controller
     public function updateSub(Request $request, Feature $feature, TranslationService $translationService)
     {
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'path'  => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'path' => 'nullable|string|max:255',
             'order' => 'required|integer|min:0',
         ]);
 
@@ -131,7 +133,7 @@ class FeatureController extends Controller
         $feature->update($validated);
 
         return redirect()->route('cms.features.show', $feature->parent_id)
-            ->with('success', 'Sub fitur berhasil diperbarui.');
+            ->with('success', __('cms.features.flash.sub_updated'));
     }
 
     /**
@@ -143,6 +145,6 @@ class FeatureController extends Controller
         $feature->delete();
 
         return redirect()->route('cms.features.show', $parentId)
-            ->with('success', 'Sub fitur berhasil dihapus.');
+            ->with('success', __('cms.features.flash.sub_deleted'));
     }
 }

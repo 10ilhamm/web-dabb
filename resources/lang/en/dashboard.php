@@ -5,6 +5,8 @@ return [
         'home' => 'Home',
         'reports' => 'Reports',
         'cms' => 'CMS',
+        'cms_features' => 'Feature Management',
+        'cms_data2' => 'Data 2',
         'users' => 'Users',
         'manage_users' => 'Manage Users',
         'visit_website' => 'Visit Website',
@@ -12,6 +14,22 @@ return [
     ],
     'header' => [
         'breadcrumb_home' => 'Home',
+    ],
+    'logo' => [
+        'line1' => 'Sustainable Archives',
+        'line2' => 'Depot Bandung',
+        'tagline' => 'Sustainable Archives Depot',
+    ],
+    'footer' => [
+        'copyright' => 'Bandung Sustainable Archives Depot.',
+    ],
+    'roles' => [
+        'admin' => 'Admin',
+        'pegawai' => 'Employee',
+        'umum' => 'General',
+        'pelajar_mahasiswa' => 'Student',
+        'instansi_swasta' => 'Organization',
+        'default' => 'User',
     ],
     'admin' => [
         'title' => 'Home',
@@ -94,6 +112,7 @@ return [
         'current_password' => 'Current Password',
         'new_password' => 'New Password',
         'confirm_password' => 'Confirm New Password',
+        'saved' => 'Saved.',
     ],
     'activity' => [
         'title' => 'Login Activity',

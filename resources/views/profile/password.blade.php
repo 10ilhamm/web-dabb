@@ -107,7 +107,7 @@
 
                 @if (session('status') === 'password-updated')
                     <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                        class="text-sm text-green-600 font-medium">{{ __('Tersimpan.') }}</p>
+                        class="text-sm text-green-600 font-medium">{{ __('dashboard.password.saved') }}</p>
                 @endif
             </div>
             </form>

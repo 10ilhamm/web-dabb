@@ -5,7 +5,7 @@ return [
     'tagline' => 'Depot Arsip Berkelanjutan',
     'about' => 'Tentang Kami',
     'hero_title' => 'Selamat Datang Di Website Depot Arsip Berkelanjutan Bandung',
-    'hero_cta' => 'Kami',
+    'hero_cta' => 'Tentang Kami',
     'nav' => [
         'home' => 'Beranda',
         'profile' => 'Profil',

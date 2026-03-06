@@ -31,11 +31,11 @@ class User extends Authenticatable
     public static function roleLabels(): array
     {
         return [
-            'admin' => 'Admin',
-            'pegawai' => 'Pegawai',
-            'umum' => 'Umum',
-            'pelajar_mahasiswa' => 'Pelajar/Mahasiswa',
-            'instansi_swasta' => 'Instansi/Swasta',
+            'admin' => __('dashboard.roles.admin'),
+            'pegawai' => __('dashboard.roles.pegawai'),
+            'umum' => __('dashboard.roles.umum'),
+            'pelajar_mahasiswa' => __('dashboard.roles.pelajar_mahasiswa'),
+            'instansi_swasta' => __('dashboard.roles.instansi_swasta'),
         ];
     }
 

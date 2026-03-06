@@ -1,6 +1,6 @@
 @extends('layouts.internal-dashboard')
 
-@section('breadcrumb_parent', 'CMS / Manajemen Fitur')
+@section('breadcrumb_parent', 'CMS / ' . __('cms.features.title'))
 @section('breadcrumb_active', $feature->name)
 
 @section('content')
@@ -15,13 +15,13 @@
             </svg>
         </a>
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Detail Fitur: {{ $feature->name }}</h1>
+            <h1 class="text-2xl font-bold text-gray-800">{{ __('cms.features.detail_title', ['name' => $feature->name]) }}</h1>
             <p class="text-sm text-gray-500 mt-0.5">
-                Tipe:
+                {{ __('cms.features.type_label') }}:
                 @if($feature->type === 'dropdown')
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100">Dropdown</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100">{{ __('cms.features.type_dropdown') }}</span>
                 @else
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">Link</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">{{ __('cms.features.type_link') }}</span>
                 @endif
             </p>
         </div>
@@ -42,15 +42,15 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-5 border-b border-gray-100 flex items-start justify-between">
             <div>
-                <h2 class="text-base font-semibold text-gray-800">Daftar Sub Menu — {{ $feature->name }}</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Kelola sub menu yang ada di dalam menu {{ $feature->name }}</p>
+                <h2 class="text-base font-semibold text-gray-800">{{ __('cms.features.sub.list_title', ['name' => $feature->name]) }}</h2>
+                <p class="text-sm text-gray-500 mt-0.5">{{ __('cms.features.sub.list_desc', ['name' => $feature->name]) }}</p>
             </div>
             <button @click="openAddSubModal()"
                 class="flex items-center gap-2 bg-gray-800 hover:bg-gray-900 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Tambah Sub Menu
+                {{ __('cms.features.sub.add_button') }}
             </button>
         </div>
 
@@ -59,10 +59,10 @@
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-12">No</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Sub Menu</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Path / URL</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">Urutan</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">Aksi</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('cms.features.sub.col_name') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('cms.features.sub.col_path') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.sub.col_order') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.sub.col_action') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -98,7 +98,7 @@
                                 <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
-                                <p class="text-gray-400 text-sm">Belum ada sub menu. Klik "+ Tambah Sub Menu" untuk menambahkan.</p>
+                                <p class="text-gray-400 text-sm">{{ __('cms.features.sub.empty') }}</p>
                             </div>
                         </td>
                     </tr>
@@ -112,28 +112,28 @@
     {{-- ===== LINK TYPE: Show content editor ===== --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-5 border-b border-gray-100">
-            <h2 class="text-base font-semibold text-gray-800">Editor Konten Halaman — {{ $feature->name }}</h2>
-            <p class="text-sm text-gray-500 mt-0.5">Edit konten yang ditampilkan pada halaman {{ $feature->name }}</p>
+            <h2 class="text-base font-semibold text-gray-800">{{ __('cms.features.content.title', ['name' => $feature->name]) }}</h2>
+            <p class="text-sm text-gray-500 mt-0.5">{{ __('cms.features.content.desc', ['name' => $feature->name]) }}</p>
         </div>
         <div class="p-6">
             <form action="{{ route('cms.features.update-content', $feature) }}" method="POST" class="space-y-4">
                 @csrf
                 @method('PUT')
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Konten Halaman</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('cms.features.content.label') }}</label>
                     <textarea name="content" rows="16"
                         class="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-y"
-                        placeholder="Masukkan konten HTML atau teks untuk halaman ini...">{{ old('content', $feature->content) }}</textarea>
-                    <p class="text-xs text-gray-400 mt-1.5">Anda dapat menggunakan HTML untuk memformat konten.</p>
+                        placeholder="{{ __('cms.features.content.placeholder') }}">{{ old('content', $feature->content) }}</textarea>
+                    <p class="text-xs text-gray-400 mt-1.5">{{ __('cms.features.content.help') }}</p>
                 </div>
                 <div class="flex items-center justify-end gap-3">
                     <a href="{{ route('cms.features.index') }}"
                         class="px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                        Kembali
+                        {{ __('cms.common.back') }}
                     </a>
                     <button type="submit"
                         class="px-5 py-2.5 text-sm font-semibold text-white bg-[#174E93] hover:bg-blue-800 rounded-lg transition-colors shadow-sm">
-                        Simpan Konten
+                        {{ __('cms.common.save_content') }}
                     </button>
                 </div>
             </form>
@@ -157,7 +157,7 @@
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <h3 class="text-base font-semibold text-gray-800">Tambah Sub Menu</h3>
+                <h3 class="text-base font-semibold text-gray-800">{{ __('cms.features.sub.add_title') }}</h3>
                 <button @click="addSubModal.open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -169,28 +169,28 @@
                 <input type="hidden" name="parent_id" value="{{ $feature->id }}">
                 <input type="hidden" name="type" value="link">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Sub Menu <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" required placeholder="Contoh: Sejarah"
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.name') }} <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required placeholder="{{ __('cms.features.sub.form.name_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Path / URL</label>
-                    <input type="text" name="path" placeholder="Contoh: /profil/sejarah"
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.path') }}</label>
+                    <input type="text" name="path" placeholder="{{ __('cms.features.sub.form.path_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Urutan <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.order') }} <span class="text-red-500">*</span></label>
                     <input type="number" name="order" min="0" value="{{ $feature->subfeatures->count() + 1 }}" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" @click="addSubModal.open = false"
                         class="px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                        Batal
+                        {{ __('cms.common.cancel') }}
                     </button>
                     <button type="submit"
                         class="px-4 py-2.5 text-sm font-semibold text-white bg-[#174E93] hover:bg-blue-800 rounded-lg transition-colors">
-                        Tambah Sub Menu
+                        {{ __('cms.features.sub.add_button') }}
                     </button>
                 </div>
             </form>
@@ -212,7 +212,7 @@
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <h3 class="text-base font-semibold text-gray-800">Edit Sub Menu</h3>
+                <h3 class="text-base font-semibold text-gray-800">{{ __('cms.features.sub.edit_title') }}</h3>
                 <button @click="editSubModal.open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -223,28 +223,28 @@
                 @csrf
                 @method('PUT')
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Sub Menu <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.name') }} <span class="text-red-500">*</span></label>
                     <input type="text" name="name" x-model="editSubModal.name" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Path / URL</label>
-                    <input type="text" name="path" x-model="editSubModal.path" placeholder="Contoh: /profil/sejarah"
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.path') }}</label>
+                    <input type="text" name="path" x-model="editSubModal.path" placeholder="{{ __('cms.features.sub.form.path_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Urutan <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.order') }} <span class="text-red-500">*</span></label>
                     <input type="number" name="order" x-model="editSubModal.order" min="0" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" @click="editSubModal.open = false"
                         class="px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                        Batal
+                        {{ __('cms.common.cancel') }}
                     </button>
                     <button type="submit"
                         class="px-4 py-2.5 text-sm font-semibold text-white bg-[#174E93] hover:bg-blue-800 rounded-lg transition-colors">
-                        Simpan Perubahan
+                        {{ __('cms.common.save_changes') }}
                     </button>
                 </div>
             </form>
@@ -272,20 +272,23 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-base font-semibold text-gray-800">Hapus Sub Menu</h3>
-                    <p class="text-sm text-gray-500 mt-1">Apakah Anda yakin ingin menghapus sub menu <strong x-text="deleteSubModal.name" class="text-gray-700"></strong>?</p>
+                    <h3 class="text-base font-semibold text-gray-800">{{ __('cms.features.sub.delete.title') }}</h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        {{ __('cms.features.sub.delete.confirm', ['name' => '']) }}
+                        <strong x-text="deleteSubModal.name" class="text-gray-700"></strong>
+                    </p>
                 </div>
                 <div class="flex items-center gap-3 w-full">
                     <button @click="deleteSubModal.open = false"
                         class="flex-1 px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                        Batal
+                        {{ __('cms.common.cancel') }}
                     </button>
                     <form :action="`/cms/features/${deleteSubModal.id}/sub`" method="POST" class="flex-1">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
                             class="w-full px-4 py-2.5 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
-                            Ya, Hapus
+                            {{ __('cms.features.sub.delete.yes') }}
                         </button>
                     </form>
                 </div>

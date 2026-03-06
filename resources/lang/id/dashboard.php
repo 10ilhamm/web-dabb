@@ -5,6 +5,8 @@ return [
         'home' => 'Beranda',
         'reports' => 'Laporan',
         'cms' => 'CMS',
+        'cms_features' => 'Manajemen Fitur',
+        'cms_data2' => 'Data 2',
         'users' => 'Pengguna',
         'manage_users' => 'Kelola Pengguna',
         'visit_website' => 'Lihat Website',
@@ -12,6 +14,22 @@ return [
     ],
     'header' => [
         'breadcrumb_home' => 'Beranda',
+    ],
+    'logo' => [
+        'line1' => 'Depot Arsip',
+        'line2' => 'Berkelanjutan Bandung',
+        'tagline' => 'Depot Arsip Berkelanjutan',
+    ],
+    'footer' => [
+        'copyright' => 'Depot Arsip Berkelanjutan Bandung.',
+    ],
+    'roles' => [
+        'admin' => 'Admin',
+        'pegawai' => 'Pegawai',
+        'umum' => 'Umum',
+        'pelajar_mahasiswa' => 'Pelajar/Mahasiswa',
+        'instansi_swasta' => 'Instansi/Swasta',
+        'default' => 'Pengguna',
     ],
     'admin' => [
         'title' => 'Beranda',
@@ -94,6 +112,7 @@ return [
         'current_password' => 'Kata Sandi Saat Ini',
         'new_password' => 'Kata Sandi Baru',
         'confirm_password' => 'Konfirmasi Kata Sandi Baru',
+        'saved' => 'Tersimpan.',
     ],
     'activity' => [
         'title' => 'Aktivitas Login',

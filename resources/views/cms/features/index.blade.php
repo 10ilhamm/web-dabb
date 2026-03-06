@@ -1,14 +1,14 @@
 @extends('layouts.internal-dashboard')
 
 @section('breadcrumb_parent', 'CMS')
-@section('breadcrumb_active', 'Manajemen Fitur')
+@section('breadcrumb_active', __('cms.features.title'))
 
 @section('content')
 <div class="space-y-6" x-data="featureManager()">
 
     <!-- Page Header -->
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Manajemen Fitur</h1>
+        <h1 class="text-2xl font-bold text-gray-800">{{ __('cms.features.title') }}</h1>
     </div>
 
     <!-- Success / Error Alert -->
@@ -26,15 +26,15 @@
         <!-- Card Header -->
         <div class="px-6 py-5 border-b border-gray-100 flex items-start justify-between">
             <div>
-                <h2 class="text-base font-semibold text-gray-800">Manajemen Fitur CMS</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Kelola semua fitur yang ditampilkan di website</p>
+                <h2 class="text-base font-semibold text-gray-800">{{ __('cms.features.card_title') }}</h2>
+                <p class="text-sm text-gray-500 mt-0.5">{{ __('cms.features.card_desc') }}</p>
             </div>
             <button @click="openAddModal()"
                 class="flex items-center gap-2 bg-gray-800 hover:bg-gray-900 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Tambah Fitur
+                {{ __('cms.features.add_button') }}
             </button>
         </div>
 
@@ -44,11 +44,11 @@
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-12">No</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Fitur</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tipe Menu</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">Jumlah Sub Fitur</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">Urutan</th>
-                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">Aksi</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('cms.features.col_name') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('cms.features.col_type') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.col_sub_count') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.col_order') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.col_action') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -59,11 +59,11 @@
                         <td class="px-6 py-4">
                             @if($feature->type === 'dropdown')
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100">
-                                    Dropdown
+                                    {{ __('cms.features.type_dropdown') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
-                                    Link
+                                    {{ __('cms.features.type_link') }}
                                 </span>
                             @endif
                         </td>
@@ -78,7 +78,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
-                                    Detail
+                                    {{ __('cms.features.detail') }}
                                 </a>
                                 <!-- Edit Button -->
                                 <button @click="openEditModal({{ $feature->id }}, '{{ addslashes($feature->name) }}', '{{ $feature->type }}', '{{ $feature->path ?? '' }}', {{ $feature->order }})"
@@ -104,7 +104,7 @@
                                 <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
-                                <p class="text-gray-400 text-sm">Belum ada fitur. Klik "+ Tambah Fitur" untuk menambahkan.</p>
+                                <p class="text-gray-400 text-sm">{{ __('cms.features.empty') }}</p>
                             </div>
                         </td>
                     </tr>
@@ -132,7 +132,7 @@
             x-transition:enter-end="opacity-100 scale-100">
             <!-- Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <h3 class="text-base font-semibold text-gray-800">Edit Fitur</h3>
+                <h3 class="text-base font-semibold text-gray-800">{{ __('cms.features.edit_title') }}</h3>
                 <button @click="editModal.open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -144,25 +144,25 @@
                 @csrf
                 @method('PUT')
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Fitur <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.name') }} <span class="text-red-500">*</span></label>
                     <input type="text" name="name" x-model="editModal.name" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Tipe Menu <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.type') }} <span class="text-red-500">*</span></label>
                     <select name="type" x-model="editModal.type" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
-                        <option value="link">Link</option>
-                        <option value="dropdown">Dropdown</option>
+                        <option value="link">{{ __('cms.features.type_link') }}</option>
+                        <option value="dropdown">{{ __('cms.features.type_dropdown') }}</option>
                     </select>
                 </div>
                 <div x-show="editModal.type === 'link'">
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Path / URL</label>
-                    <input type="text" name="path" x-model="editModal.path" placeholder="Contoh: /beranda"
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.path') }}</label>
+                    <input type="text" name="path" x-model="editModal.path" placeholder="{{ __('cms.features.form.path_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Urutan <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.order') }} <span class="text-red-500">*</span></label>
                     <input type="number" name="order" x-model="editModal.order" min="0" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
@@ -170,11 +170,11 @@
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" @click="editModal.open = false"
                         class="px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                        Batal
+                        {{ __('cms.common.cancel') }}
                     </button>
                     <button type="submit"
                         class="px-4 py-2.5 text-sm font-semibold text-white bg-[#174E93] hover:bg-blue-800 rounded-lg transition-colors">
-                        Simpan Perubahan
+                        {{ __('cms.common.save_changes') }}
                     </button>
                 </div>
             </form>
@@ -199,7 +199,7 @@
             x-transition:enter-end="opacity-100 scale-100">
             <!-- Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <h3 class="text-base font-semibold text-gray-800">Tambah Fitur Baru</h3>
+                <h3 class="text-base font-semibold text-gray-800">{{ __('cms.features.add_title') }}</h3>
                 <button @click="addModal.open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -210,25 +210,25 @@
             <form action="{{ route('cms.features.store') }}" method="POST" class="px-6 py-5 space-y-4">
                 @csrf
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Fitur <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" required placeholder="Contoh: Beranda"
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.name') }} <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required placeholder="{{ __('cms.features.form.name_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Tipe Menu <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.type') }} <span class="text-red-500">*</span></label>
                     <select name="type" x-model="addModal.type" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
-                        <option value="link">Link</option>
-                        <option value="dropdown">Dropdown</option>
+                        <option value="link">{{ __('cms.features.type_link') }}</option>
+                        <option value="dropdown">{{ __('cms.features.type_dropdown') }}</option>
                     </select>
                 </div>
                 <div x-show="addModal.type === 'link'">
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Path / URL</label>
-                    <input type="text" name="path" placeholder="Contoh: /beranda"
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.path') }}</label>
+                    <input type="text" name="path" placeholder="{{ __('cms.features.form.path_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Urutan <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.order') }} <span class="text-red-500">*</span></label>
                     <input type="number" name="order" min="0" value="{{ $features->count() + 1 }}" required
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
@@ -236,11 +236,11 @@
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button type="button" @click="addModal.open = false"
                         class="px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                        Batal
+                        {{ __('cms.common.cancel') }}
                     </button>
                     <button type="submit"
                         class="px-4 py-2.5 text-sm font-semibold text-white bg-[#174E93] hover:bg-blue-800 rounded-lg transition-colors">
-                        Tambah Fitur
+                        {{ __('cms.features.add_button') }}
                     </button>
                 </div>
             </form>
@@ -270,20 +270,23 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-base font-semibold text-gray-800">Hapus Fitur</h3>
-                    <p class="text-sm text-gray-500 mt-1">Apakah Anda yakin ingin menghapus fitur <strong x-text="deleteModal.name" class="text-gray-700"></strong>? Tindakan ini tidak dapat dibatalkan.</p>
+                    <h3 class="text-base font-semibold text-gray-800">{{ __('cms.features.delete.title') }}</h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        {{ __('cms.features.delete.confirm', ['name' => '']) }}
+                        <strong x-text="deleteModal.name" class="text-gray-700"></strong>
+                    </p>
                 </div>
                 <div class="flex items-center gap-3 w-full">
                     <button @click="deleteModal.open = false"
                         class="flex-1 px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                        Batal
+                        {{ __('cms.common.cancel') }}
                     </button>
                     <form :action="`/cms/features/${deleteModal.id}`" method="POST" class="flex-1">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
                             class="w-full px-4 py-2.5 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
-                            Ya, Hapus
+                            {{ __('cms.features.delete.yes') }}
                         </button>
                     </form>
                 </div>

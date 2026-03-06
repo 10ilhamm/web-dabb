@@ -1,6 +1,6 @@
 @extends('layouts.internal-dashboard')
 
-@section('breadcrumb_parent', 'CMS / Manajemen Fitur')
+@section('breadcrumb_parent', 'CMS / ' . __('cms.features.title'))
 @section('breadcrumb_active', 'Beranda')
 
 @section('content')
@@ -15,15 +15,15 @@
             </svg>
         </a>
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Editor Konten Halaman Beranda</h1>
-            <p class="text-sm text-gray-500 mt-0.5">Kelola semua konten yang ditampilkan di halaman Beranda website</p>
+            <h1 class="text-2xl font-bold text-gray-800">{{ __('cms.home.title') }}</h1>
+            <p class="text-sm text-gray-500 mt-0.5">{{ __('cms.home.desc') }}</p>
         </div>
         <a href="{{ route('home') }}" target="_blank"
             class="ml-auto inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#174E93] bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-100">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
             </svg>
-            Lihat Halaman
+            {{ __('cms.home.view_page') }}
         </a>
     </div>
 
@@ -52,18 +52,18 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Seksi Hero (Banner Utama)</h3>
-                        <p class="text-xs text-gray-500">Teks utama dan tombol CTA di bagian atas halaman</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.home.hero.title') }}</h3>
+                        <p class="text-xs text-gray-500">{{ __('cms.home.hero.desc') }}</p>
                     </div>
                 </div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Judul Hero</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.hero.hero_title') }}</label>
                         <input type="text" name="hero_title" value="{{ $idContent['hero_title'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Teks Tombol CTA</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.hero.hero_cta') }}</label>
                         <input type="text" name="hero_cta" value="{{ $idContent['hero_cta'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
@@ -79,28 +79,28 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Feature Strip (Banner Bawah Hero)</h3>
-                        <p class="text-xs text-gray-500">Dua kotak informasi di bawah hero</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.home.feature_strip.title') }}</h3>
+                        <p class="text-xs text-gray-500">{{ __('cms.home.feature_strip.desc') }}</p>
                     </div>
                 </div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Teks Kiri</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.feature_strip.left') }}</label>
                         <textarea name="feature_strip[left]" rows="3"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none">{{ $idContent['feature_strip']['left'] ?? '' }}</textarea>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Tombol Tengah</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.feature_strip.middle') }}</label>
                         <input type="text" name="feature_strip[middle]" value="{{ $idContent['feature_strip']['middle'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Tombol Kanan</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.feature_strip.right_button') }}</label>
                         <input type="text" name="feature_strip[right_button]" value="{{ $idContent['feature_strip']['right_button'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Teks Kanan</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.feature_strip.right_text') }}</label>
                         <textarea name="feature_strip[right_text]" rows="3"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none">{{ $idContent['feature_strip']['right_text'] ?? '' }}</textarea>
                     </div>
@@ -116,23 +116,23 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Seksi Informasi DABB</h3>
-                        <p class="text-xs text-gray-500">Judul dan dua paragraf informasi tentang DABB</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.home.info.title') }}</h3>
+                        <p class="text-xs text-gray-500">{{ __('cms.home.info.desc') }}</p>
                     </div>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Judul Seksi</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.info.section') }}</label>
                         <input type="text" name="sections[info_title]" value="{{ $idContent['sections']['info_title'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Paragraf 1</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.info.paragraph1') }}</label>
                         <textarea name="sections[info_1]" rows="4"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-y">{{ $idContent['sections']['info_1'] ?? '' }}</textarea>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Paragraf 2</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.info.paragraph2') }}</label>
                         <textarea name="sections[info_2]" rows="4"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-y">{{ $idContent['sections']['info_2'] ?? '' }}</textarea>
                     </div>
@@ -148,13 +148,13 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Seksi Kegiatan Kearsipan</h3>
-                        <p class="text-xs text-gray-500">6 item kegiatan yang ditampilkan dalam kartu berwarna</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.home.activities.title') }}</h3>
+                        <p class="text-xs text-gray-500">{{ __('cms.home.activities.desc') }}</p>
                     </div>
                 </div>
                 <div class="p-6 space-y-3">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Judul Seksi</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.activities.section') }}</label>
                         <input type="text" name="sections[activities]" value="{{ $idContent['sections']['activities'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
@@ -181,18 +181,18 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Judul Seksi Lainnya</h3>
-                        <p class="text-xs text-gray-500">Judul untuk seksi Galeri, Statistik, YouTube, Instagram, dll.</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.home.section_titles.title') }}</h3>
+                        <p class="text-xs text-gray-500">{{ __('cms.home.section_titles.desc') }}</p>
                     </div>
                 </div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     @php
                         $sectionLabels = [
-                            'related'    => 'Link Terkait',
-                            'gallery'    => 'Pameran Arsip (Galeri)',
-                            'stats'      => 'Statistik Pengunjung',
-                            'youtube'    => 'YouTube',
-                            'instagram'  => 'Instagram Feed',
+                            'related'    => __('cms.home.section_titles.related'),
+                            'gallery'    => __('cms.home.section_titles.gallery'),
+                            'stats'      => __('cms.home.section_titles.stats'),
+                            'youtube'    => __('cms.home.section_titles.youtube'),
+                            'instagram'  => __('cms.home.section_titles.instagram'),
                         ];
                     @endphp
                     @foreach($sectionLabels as $key => $label)
@@ -214,18 +214,18 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Label Statistik</h3>
-                        <p class="text-xs text-gray-500">Label teks untuk counter statistik pengunjung</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.home.stats.title') }}</h3>
+                        <p class="text-xs text-gray-500">{{ __('cms.home.stats.desc') }}</p>
                     </div>
                 </div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Label Total Pengunjung</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.stats.total') }}</label>
                         <input type="text" name="stats[total]" value="{{ $idContent['stats']['total'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Label Pengunjung Hari Ini</label>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.stats.today') }}</label>
                         <input type="text" name="stats[today]" value="{{ $idContent['stats']['today'] ?? '' }}"
                             class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
@@ -242,8 +242,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Video YouTube</h3>
-                        <p class="text-xs text-gray-500">ID video YouTube yang ditampilkan di carousel (format: ID saja, contoh: F2NhNTiNxoY)</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.home.youtube.title') }}</h3>
+                        <p class="text-xs text-gray-500">{{ __('cms.home.youtube.desc') }}</p>
                     </div>
                 </div>
                 <div class="p-6">
@@ -253,10 +253,10 @@
                         @endphp
                         @foreach($youtubeIds as $yi => $vid)
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Video {{ $yi + 1 }}</label>
+                            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{{ __('cms.home.youtube.video_label', ['number' => $yi + 1]) }}</label>
                             <div class="flex gap-2">
                                 <input type="text" name="youtube_ids[{{ $yi }}]" value="{{ $vid }}"
-                                    placeholder="ID YouTube"
+                                    placeholder="{{ __('cms.home.youtube.placeholder') }}"
                                     class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                                 @if($vid)
                                 <a href="https://youtube.com/watch?v={{ $vid }}" target="_blank"
@@ -270,7 +270,7 @@
                         </div>
                         @endforeach
                     </div>
-                    <p class="text-xs text-gray-400 mt-3">Salin ID dari URL YouTube: youtube.com/watch?v=<strong>ID_DI_SINI</strong></p>
+                    <p class="text-xs text-gray-400 mt-3">{!! __('cms.home.youtube.help') !!}</p>
                 </div>
             </div>
 
@@ -278,11 +278,11 @@
             <div class="flex items-center justify-end gap-3 pb-4">
                 <a href="{{ route('cms.features.index') }}"
                     class="px-5 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 rounded-lg transition-colors">
-                    Kembali
+                    {{ __('cms.common.back') }}
                 </a>
                 <button type="submit"
                     class="px-6 py-2.5 text-sm font-semibold text-white bg-[#174E93] hover:bg-blue-800 rounded-lg transition-colors shadow-sm">
-                    💾 Simpan Konten
+                    {{ __('cms.common.save_content') }}
                 </button>
             </div>
         </form>

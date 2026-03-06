@@ -3,7 +3,7 @@
 @section('header')
     <div class="text-[13px] text-gray-500 font-medium">
         <span class="text-gray-400">{{ __('dashboard.header.breadcrumb_home') }} /</span>
-        <span class="text-[#0ea5e9]">Dashboard Pegawai</span>
+        <span class="text-[#0ea5e9]">{{ __('dashboard.sidebar.home') }}</span>
     </div>
 @endsection
 

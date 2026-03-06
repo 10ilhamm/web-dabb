@@ -5,7 +5,7 @@ return [
     'tagline' => 'Sustainable Archives Depot',
     'about' => 'About Us',
     'hero_title' => 'Welcome to the Bandung Sustainable Archives Depot Website',
-    'hero_cta' => 'We',
+    'hero_cta' => 'About Us',
     'nav' => [
         'home' => 'Home page',
         'profile' => 'Profile',
@@ -77,9 +77,9 @@ return [
     ],
     'dashboard' => [
         'title' => 'User Profile',
-        'profile' => 'Personal data',
+        'profile' => 'Profile',
         'edit' => 'Change',
         'view_site' => 'View Website',
-        'logout' => 'Go out',
+        'logout' => 'Log Out',
     ],
 ];

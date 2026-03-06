@@ -43,9 +43,9 @@
                         <img src="{{ asset('image/logo_anri.png') }}" alt="Logo ANRI"
                             class="h-10 w-auto shrink-0 drop-shadow-md">
                         <div class="flex flex-col items-start leading-tight min-w-0">
-                            <div class="font-bold text-[12px] tracking-wide text-white drop-shadow-sm">Depot Arsip</div>
-                            <div class="font-bold text-[12px] tracking-wide text-white drop-shadow-sm">Berkelanjutan Bandung</div>
-                            <div class="font-normal text-[9px] text-blue-200/80 mt-0.5 whitespace-nowrap">Depot Arsip Berkelanjutan</div>
+                            <div class="font-bold text-[12px] tracking-wide text-white drop-shadow-sm">{{ __('dashboard.logo.line1') }}</div>
+                            <div class="font-bold text-[12px] tracking-wide text-white drop-shadow-sm">{{ __('dashboard.logo.line2') }}</div>
+                            <div class="font-normal text-[9px] text-blue-200/80 mt-0.5 whitespace-nowrap">{{ __('dashboard.logo.tagline') }}</div>
                         </div>
                     </div>
                 </div>
@@ -121,11 +121,11 @@
 
                         <a href="{{ route('cms.features.index') }}"
                             class="flex items-center px-3 py-2 text-[13px] rounded-md {{ request()->routeIs('cms.features.*') ? 'active-item' : 'text-white/70 hover:text-white font-medium' }}">
-                            Manajemen Fitur
+                            {{ __('dashboard.sidebar.cms_features') }}
                         </a>
                         <a href="#"
                             class="flex items-center px-3 py-2 text-[13px] rounded-md font-medium text-white/70 hover:text-white">
-                            Data 2
+                            {{ __('dashboard.sidebar.cms_data2') }}
                         </a>
                     </div>
                 </div>
@@ -148,7 +148,7 @@
             <div class="px-3 pb-6 pt-4 space-y-2 mt-auto">
                 <a href="{{ route('home') }}"
                     class="sidebar-link flex items-center px-3 py-3 rounded-lg text-[#b8cdef] hover:text-white group"
-                    title="Lihat Website">
+                    title="{{ __('dashboard.sidebar.visit_website') }}">
                     <svg class="w-6 h-6 shrink-0 opacity-80 group-hover:opacity-100" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -164,7 +164,7 @@
                     @csrf
                     <button type="submit"
                         class="sidebar-link w-full flex items-center px-3 py-3 rounded-lg text-[#b8cdef] hover:text-white group border-none bg-transparent cursor-pointer"
-                        title="Keluar">
+                        title="{{ __('dashboard.sidebar.logout') }}">
                         <svg class="w-6 h-6 shrink-0 opacity-80 group-hover:opacity-100" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -300,7 +300,7 @@
                                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                                     </path>
                                 </svg>
-                                <span class="font-medium text-[13px]">Aktivitas Log</span>
+                                <span class="font-medium text-[13px]">{{ __('dashboard.profile.activity_log') }}</span>
                             </a>
                         </div>
                     </div>
@@ -316,7 +316,7 @@
                 <!-- Footer within content area -->
                 <footer
                     class="max-w-7xl mx-auto w-full mt-10 pt-4 border-t border-gray-200 flex justify-between items-center text-[12px] text-gray-400 font-medium">
-                    <div>{{ date('Y') }} &copy; Depot Arsip Berkelanjutan Bandung.</div>
+                    <div>{{ date('Y') }} &copy; {{ __('dashboard.footer.copyright') }}</div>
                     <img src="{{ asset('image/logo_anri.png') }}" alt="Logo ANRI"
                         class="h-4 opacity-50 grayscale hover:grayscale-0 transition-all">
                 </footer>
