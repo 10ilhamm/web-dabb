@@ -450,6 +450,10 @@ section { padding: 48px 0; }
     opacity: 0;
     pointer-events: none;
 }
+.youtube-play.playing {
+    opacity: 0;
+    pointer-events: none;
+}
 .youtube-nav {
     display: flex;
     justify-content: center;

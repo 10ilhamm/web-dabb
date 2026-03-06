@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ __('Registrasi') }} - {{ config('app.name', 'Laravel') }}</title>
+    <title>{{ __('auth.register') }} - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -209,13 +209,13 @@
 
     <div class="login-breadcrumb">
         <div class="container">
-            <span class="text-cyan">Registrasi</span>
+            <span class="text-cyan">{{ __('auth.register') }}</span>
         </div>
     </div>
 
     <div class="login-hero" style="height: 200px;">
         <div class="container">
-            <h1>REGISTRASI PENGGUNA</h1>
+            <h1>{{ __('auth.register_title') }}</h1>
         </div>
     </div>
 
@@ -224,8 +224,8 @@
 
             <!-- Left Side: Form Area -->
             <div class="login-form-side" style="padding: 50px 60px;">
-                <h2 style="font-size: 26px; margin-bottom: 10px; color: #495057;">Pendaftaran Akun Pengguna</h2>
-                <p class="subtitle" style="margin-bottom: 40px;">Lengkapi form di bawah untuk membuat akun baru</p>
+                <h2 style="font-size: 26px; margin-bottom: 10px; color: #495057;">{{ __('auth.register_heading') }}</h2>
+                <p class="subtitle" style="margin-bottom: 40px;">{{ __('auth.register_subtitle') }}</p>
 
                 <!-- Error Messages -->
                 @if ($errors->any())
@@ -241,10 +241,10 @@
                 <!-- Role Selector -->
                 <div class="role-selector-wrapper" id="initial-selector">
                     <select class="role-selector" id="role-select" onchange="showForm()">
-                        <option value="" disabled selected>Pilih Jenis Akun</option>
-                        <option value="umum">Umum</option>
-                        <option value="pelajar">Pelajar / Mahasiswa</option>
-                        <option value="instansi">Instansi / Swasta</option>
+                        <option value="" disabled selected>{{ __('auth.select_account_type') }}</option>
+                        <option value="umum">{{ __('auth.role_umum') }}</option>
+                        <option value="pelajar">{{ __('auth.role_pelajar') }}</option>
+                        <option value="instansi">{{ __('auth.role_instansi') }}</option>
                     </select>
                 </div>
 
@@ -258,68 +258,67 @@
 
                     <div class="form-grid">
                         <!-- Nama -->
-                        <label for="name" class="required" id="label-name">Nama Lengkap</label>
+                        <label for="name" class="required" id="label-name">{{ __('auth.full_name') }}</label>
                         <input type="text" name="name" id="name" class="login-input"
-                            placeholder="Nama Lengkap" value="{{ old('name') }}" required>
+                            placeholder="{{ __('auth.full_name') }}" value="{{ old('name') }}" required>
 
                         <!-- Username -->
-                        <label for="username" class="required">Username</label>
-                        <input type="text" name="username" id="username" class="login-input" placeholder="username"
+                        <label for="username" class="required">{{ __('auth.username') }}</label>
+                        <input type="text" name="username" id="username" class="login-input" placeholder="{{ strtolower(__('auth.username')) }}"
                             value="{{ old('username') }}" required>
 
                         <!-- Email -->
-                        <label for="email" class="required">Email</label>
+                        <label for="email" class="required">{{ __('Email') }}</label>
                         <input type="email" name="email" id="email" class="login-input"
                             placeholder="nama@gmail.com" value="{{ old('email') }}" required>
 
                         <!-- Jenis Kelamin (Hidden for Instansi) -->
                         <div class="jk-group" style="display: contents;">
-                            <label class="required">Jenis Kelamin</label>
+                            <label class="required">{{ __('auth.gender') }}</label>
                             <div class="radio-group" id="jk-container">
                                 <label class="radio-item">
                                     <input type="radio" name="jenis_kelamin" value="Laki-Laki"
-                                        {{ old('jenis_kelamin') == 'Laki-Laki' ? 'checked' : '' }}> Laki - Laki
+                                        {{ old('jenis_kelamin') == 'Laki-Laki' ? 'checked' : '' }}> {{ __('auth.male') }}
                                 </label>
                                 <label class="radio-item">
                                     <input type="radio" name="jenis_kelamin" value="Perempuan"
-                                        {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }}> Perempuan
+                                        {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }}> {{ __('auth.female') }}
                                 </label>
                             </div>
                         </div>
 
                         <!-- Tempat & Tanggal Lahir -->
-                        <label for="tempat_lahir" class="required" id="label-tempat-lahir">Tempat Tanggal Lahir</label>
+                        <label for="tempat_lahir" class="required" id="label-tempat-lahir">{{ __('auth.birth_place_date') }}</label>
                         <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px;">
                             <input type="text" name="tempat_lahir" id="tempat_lahir" class="login-input"
-                                placeholder="Tempat Lahir" value="{{ old('tempat_lahir') }}" required>
+                                placeholder="{{ __('auth.birth_place') }}" value="{{ old('tempat_lahir') }}" required>
                             <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="login-input"
                                 value="{{ old('tanggal_lahir') }}" required>
                         </div>
 
                         <!-- Kartu Identitas Upload -->
-                        <label for="kartu_identitas" class="required" id="label-kartu-identitas">Kartu
-                            Identitas</label>
+                        <label for="kartu_identitas" class="required" id="label-kartu-identitas">{{ __('auth.identity_card') }}</label>
                         <div class="file-upload-wrapper">
                             <button type="button" class="file-upload-btn"
-                                onclick="document.getElementById('kartu_identitas').click()">Choose File</button>
-                            <span class="file-upload-text" id="file-name">No file chosen</span>
+                                onclick="document.getElementById('kartu_identitas').click()">{{ __('auth.choose_file') }}</button>
+                            <span class="file-upload-text" id="file-name">{{ __('auth.no_file') }}</span>
                             <input type="file" name="kartu_identitas" id="kartu_identitas"
                                 accept=".jpg,.jpeg,.png,.pdf" onchange="updateFileName(this)" required>
                         </div>
 
                         <!-- Nomor Kartu Identitas -->
-                        <label for="nomor_kartu_identitas" class="required">Nomor Kartu Identitas</label>
+                        <label for="nomor_kartu_identitas" class="required">{{ __('auth.identity_number') }}</label>
                         <input type="text" name="nomor_kartu_identitas" id="nomor_kartu_identitas"
-                            class="login-input" placeholder="Nomor Kartu Identitas"
+                            class="login-input" placeholder="{{ __('auth.identity_number') }}"
                             value="{{ old('nomor_kartu_identitas') }}" required>
 
                         <!-- Alamat -->
-                        <label for="alamat" class="required">Alamat</label>
+                        <label for="alamat" class="required">{{ __('auth.address') }}</label>
                         <input type="text" name="alamat" id="alamat" class="login-input"
-                            placeholder="Alamat" value="{{ old('alamat') }}" required>
+                            placeholder="{{ __('auth.address') }}" value="{{ old('alamat') }}" required>
 
                         <!-- Whatsapp -->
-                        <label for="nomor_whatsapp" class="required">Nomor Whatsapp</label>
+                        <label for="nomor_whatsapp" class="required">{{ __('auth.whatsapp') }}</label>
                         <input type="text" name="nomor_whatsapp" id="nomor_whatsapp" class="login-input"
                             placeholder="0831xxxxxxxx" value="{{ old('nomor_whatsapp') }}" required>
 
@@ -329,17 +328,17 @@
                         </div>
 
                         <!-- Password -->
-                        <label for="password" class="required">Password</label>
+                        <label for="password" class="required">{{ __('Password') }}</label>
                         <div class="password-wrapper">
                             <input type="password" name="password" id="password" class="login-input"
-                                placeholder="Password" required>
+                                placeholder="{{ __('Password') }}" required>
                         </div>
 
                         <!-- Confirm Password -->
-                        <label for="password_confirmation" class="required">Ulangi Password</label>
+                        <label for="password_confirmation" class="required">{{ __('auth.confirm_password') }}</label>
                         <div class="password-wrapper">
                             <input type="password" name="password_confirmation" id="password_confirmation"
-                                class="login-input" placeholder="Ulangi Password" required>
+                                class="login-input" placeholder="{{ __('auth.confirm_password') }}" required>
                         </div>
 
                         <div style="grid-column: 1 / -1;">
@@ -347,27 +346,27 @@
                         </div>
 
                         <!-- Jenis Keperluan -->
-                        <label for="jenis_keperluan" class="required">Jenis Keperluan</label>
+                        <label for="jenis_keperluan" class="required">{{ __('auth.purpose_type') }}</label>
                         <select name="jenis_keperluan" id="jenis_keperluan" class="login-input" required>
-                            <option value="">Pilih Keperluan</option>
+                            <option value="">{{ __('auth.select_purpose') }}</option>
                             <option value="Hanya Daftar Akun"
-                                {{ old('jenis_keperluan') == 'Hanya Daftar Akun' ? 'selected' : '' }}>Hanya Daftar Akun
+                                {{ old('jenis_keperluan') == 'Hanya Daftar Akun' ? 'selected' : '' }}>{{ __('auth.purpose_register_only') }}
                             </option>
                             <option value="Penelitian" {{ old('jenis_keperluan') == 'Penelitian' ? 'selected' : '' }}>
-                                Penelitian</option>
+                                {{ __('auth.purpose_research') }}</option>
                             <option value="Kunjungan" {{ old('jenis_keperluan') == 'Kunjungan' ? 'selected' : '' }}>
-                                Kunjungan</option>
+                                {{ __('auth.purpose_visit') }}</option>
                         </select>
 
                         <!-- Judul Keperluan -->
-                        <label for="judul_keperluan" class="required">Judul Keperluan</label>
+                        <label for="judul_keperluan" class="required">{{ __('auth.purpose_title') }}</label>
                         <input type="text" name="judul_keperluan" id="judul_keperluan" class="login-input"
                             value="{{ old('judul_keperluan') }}" required>
 
                     </div>
 
                     <div style="text-align: right; margin-top: 30px;">
-                        <button type="submit" class="btn-submit-form">Daftar Akun</button>
+                        <button type="submit" class="btn-submit-form">{{ __('auth.register_button') }}</button>
                     </div>
 
                 </form>
@@ -379,8 +378,7 @@
                 <div class="banner-overlay-logo">
                     <img src="{{ asset('image/logo_anri.png') }}" alt="ANRI Logo">
                     <div class="banner-overlay-text">
-                        <div class="title">Depot Arsip<br>Berkelanjutan Bandung</div>
-                        <div class="subtitle">Depot Arsip Berkelanjutan</div>
+                        <div class="title">{!! __('auth.banner_title') !!}</div>
                     </div>
                 </div>
             </div>
@@ -391,8 +389,18 @@
     @include('footer')
 
     <script>
+        // Translation strings for JavaScript
+        const authTranslations = {
+            fullName: @json(__('auth.full_name')),
+            institutionName: @json(__('auth.institution_name')),
+            identityCardKtp: @json(__('auth.identity_card_ktp')),
+            identityCardKtm: @json(__('auth.identity_card_ktm')),
+            identityCardInstansi: @json(__('auth.identity_card_instansi')),
+            noFile: @json(__('auth.no_file')),
+        };
+
         function updateFileName(input) {
-            const fileName = input.files[0] ? input.files[0].name : 'No file chosen';
+            const fileName = input.files[0] ? input.files[0].name : authTranslations.noFile;
             document.getElementById('file-name').textContent = fileName;
         }
 
@@ -409,9 +417,9 @@
 
             if (selected === 'umum') {
                 hiddenRoleInput.value = 'umum';
-                document.getElementById('label-name').textContent = "Nama Lengkap";
-                document.getElementById('name').placeholder = "Nama Lengkap";
-                document.getElementById('label-kartu-identitas').textContent = "Kartu Identitas (KTP)";
+                document.getElementById('label-name').textContent = authTranslations.fullName;
+                document.getElementById('name').placeholder = authTranslations.fullName;
+                document.getElementById('label-kartu-identitas').textContent = authTranslations.identityCardKtp;
 
                 // Show JK
                 jkGroupElements.forEach(el => el.style.display = 'contents');
@@ -419,9 +427,9 @@
 
             } else if (selected === 'pelajar') {
                 hiddenRoleInput.value = 'pelajar_mahasiswa';
-                document.getElementById('label-name').textContent = "Nama Lengkap";
-                document.getElementById('name').placeholder = "Nama Lengkap";
-                document.getElementById('label-kartu-identitas').textContent = "Kartu Identitas (KTM/Pelajar)";
+                document.getElementById('label-name').textContent = authTranslations.fullName;
+                document.getElementById('name').placeholder = authTranslations.fullName;
+                document.getElementById('label-kartu-identitas').textContent = authTranslations.identityCardKtm;
 
                 // Show JK
                 jkGroupElements.forEach(el => el.style.display = 'contents');
@@ -429,9 +437,9 @@
 
             } else if (selected === 'instansi') {
                 hiddenRoleInput.value = 'instansi_swasta';
-                document.getElementById('label-name').textContent = "Nama Instansi / Perusahaan";
-                document.getElementById('name').placeholder = "Nama Instansi / Perusahaan";
-                document.getElementById('label-kartu-identitas').textContent = "Kartu Identitas Instansi";
+                document.getElementById('label-name').textContent = authTranslations.institutionName;
+                document.getElementById('name').placeholder = authTranslations.institutionName;
+                document.getElementById('label-kartu-identitas').textContent = authTranslations.identityCardInstansi;
 
                 // Hide JK
                 jkGroupElements.forEach(el => el.style.display = 'none');

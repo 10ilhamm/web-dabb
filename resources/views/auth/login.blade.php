@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ __('Login') }} - {{ config('app.name', 'Laravel') }}</title>
+    <title>{{ __('auth.login') }} - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,14 +29,14 @@
     <!-- Breadcrumb -->
     <div class="login-breadcrumb">
         <div class="container">
-            <span class="text-cyan">Login</span>
+            <span class="text-cyan">{{ __('auth.login') }}</span>
         </div>
     </div>
 
     <!-- Hero Header -->
     <div class="login-hero">
         <div class="container">
-            <h1>LOGIN</h1>
+            <h1>{{ strtoupper(__('auth.login')) }}</h1>
         </div>
     </div>
 
@@ -46,10 +46,10 @@
 
             <!-- Left Side: Form -->
             <div class="login-form-side">
-                <h2>Selamat Datang</h2>
+                <h2>{{ __('auth.welcome') }}</h2>
 
-                <h3>Login</h3>
-                <p class="subtitle">Silahkan masukan email dan password anda</p>
+                <h3>{{ __('auth.login') }}</h3>
+                <p class="subtitle">{{ __('auth.login_subtitle') }}</p>
 
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -76,26 +76,26 @@
                     <!-- Forgot Password Link -->
                     @if (Route::has('password.request'))
                         <a class="login-forgot" href="{{ route('password.request') }}">
-                            {{ __('Lupa Password?') }}
+                            {{ __('auth.forgot_password') }}
                         </a>
                     @endif
 
                     <!-- Submit Button -->
                     <button type="submit" class="btn-submit">
-                        {{ __('Submit') }}
+                        {{ __('auth.submit') }}
                     </button>
 
-                    <div class="login-divider">Atau</div>
+                    <div class="login-divider">{{ __('auth.or') }}</div>
 
                     <!-- Google Login Button (Placeholder href) -->
                     <a href="#" class="btn-google">
                         <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google">
-                        Masuk dengan Google
+                        {{ __('auth.login_google') }}
                     </a>
 
                     <!-- Register Link -->
                     <div class="login-register-text">
-                        Belum punya akun? <a href="{{ route('register') }}">Registrasi</a>
+                        {{ __('auth.no_account') }} <a href="{{ route('register') }}">{{ __('auth.register_link') }}</a>
                     </div>
                 </form>
             </div>
@@ -105,7 +105,7 @@
                 <div class="banner-overlay-logo">
                     <img src="{{ asset('image/logo_anri.png') }}" alt="ANRI Logo">
                     <div class="banner-overlay-text">
-                        <div class="title">Depot Arsip<br>Berkelanjutan Bandung</div>
+                        <div class="title">{!! __('auth.banner_title') !!}</div>
                     </div>
                 </div>
             </div>

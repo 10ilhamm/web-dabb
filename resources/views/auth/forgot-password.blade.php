@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ __('Lupa Password') }} - {{ config('app.name', 'Laravel') }}</title>
+    <title>{{ __('auth.forgot_password_title') }} - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,14 +29,14 @@
     <!-- Breadcrumb -->
     <div class="login-breadcrumb">
         <div class="container">
-            <span class="text-cyan">Lupa Password</span>
+            <span class="text-cyan">{{ __('auth.forgot_password_title') }}</span>
         </div>
     </div>
 
     <!-- Hero Header -->
     <div class="login-hero">
         <div class="container">
-            <h1>LUPA PASSWORD</h1>
+            <h1>{{ strtoupper(__('auth.forgot_password_title')) }}</h1>
         </div>
     </div>
 
@@ -47,8 +47,8 @@
             <!-- Left Side: Form -->
             <div class="login-form-side">
 
-                <h3>Lupa Password</h3>
-                <p class="subtitle">Silahkan masukan email anda</p>
+                <h3>{{ __('auth.forgot_password_title') }}</h3>
+                <p class="subtitle">{{ __('auth.forgot_password_subtitle') }}</p>
 
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -66,7 +66,7 @@
 
                     <!-- Submit Button -->
                     <button type="submit" class="btn-submit mt-4">
-                        {{ __('Submit') }}
+                        {{ __('auth.submit') }}
                     </button>
 
                 </form>
@@ -77,8 +77,7 @@
                 <div class="banner-overlay-logo">
                     <img src="{{ asset('image/logo_anri.png') }}" alt="ANRI Logo">
                     <div class="banner-overlay-text">
-                        <div class="title">Depot Arsip<br>Berkelanjutan Bandung</div>
-                        <div class="subtitle">Depot Arsip Berkelanjutan</div>
+                        <div class="title">{!! __('auth.banner_title') !!}</div>
                     </div>
                 </div>
             </div>

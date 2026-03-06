@@ -54,6 +54,15 @@ function updateYoutubeClasses() {
         } else if (idx === 3) {
             item.classList.add('next');
         }
+        // Reset play button when item leaves active position
+        const iframe = item.querySelector('iframe');
+        const playBtn = item.querySelector('.youtube-play');
+        if (iframe && playBtn) {
+            const src = iframe.getAttribute('src');
+            if (src && !src.includes('autoplay=1')) {
+                playBtn.classList.remove('playing');
+            }
+        }
     });
 
     const center = items[2];
@@ -71,6 +80,8 @@ function initYoutubeItems() {
         if (iframe) {
             iframe.setAttribute('src', removeAutoplayParam(iframe.getAttribute('src')));
         }
+        const playBtn = item.querySelector('.youtube-play');
+        if (playBtn) playBtn.classList.remove('playing');
     });
 }
 
@@ -180,6 +191,7 @@ document.querySelectorAll('.youtube-play').forEach((btn) => {
                 if (src && !src.includes('autoplay=1')) {
                     const autoplaySrc = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
                     iframe.setAttribute('src', autoplaySrc);
+                    btn.classList.add('playing');
                 }
             }
         }

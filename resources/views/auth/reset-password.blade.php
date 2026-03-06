@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ __('Reset Password') }} - {{ config('app.name', 'Laravel') }}</title>
+    <title>{{ __('auth.reset_password') }} - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,14 +29,14 @@
     <!-- Breadcrumb -->
     <div class="login-breadcrumb">
         <div class="container">
-            <span class="text-cyan">Reset Password</span>
+            <span class="text-cyan">{{ __('auth.reset_password') }}</span>
         </div>
     </div>
 
     <!-- Hero Header -->
     <div class="login-hero">
         <div class="container">
-            <h1>RESET PASSWORD</h1>
+            <h1>{{ strtoupper(__('auth.reset_password')) }}</h1>
         </div>
     </div>
 
@@ -47,8 +47,8 @@
             <!-- Left Side: Form -->
             <div class="login-form-side">
 
-                <h3>Reset Password</h3>
-                <p class="subtitle">Silahkan masukan password baru anda</p>
+                <h3>{{ __('auth.reset_password') }}</h3>
+                <p class="subtitle">{{ __('auth.reset_password_subtitle') }}</p>
 
                 <form method="POST" action="{{ route('password.store') }}">
                     @csrf
@@ -74,7 +74,7 @@
 
                     <!-- Confirm Password -->
                     <div class="login-form-group">
-                        <label for="password_confirmation">{{ __('Confirm Password') }}</label>
+                        <label for="password_confirmation">{{ __('auth.confirm_password') }}</label>
                         <input id="password_confirmation" class="login-input" type="password"
                             name="password_confirmation" required autocomplete="new-password" />
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-sm text-red-600" />
@@ -82,7 +82,7 @@
 
                     <!-- Submit Button -->
                     <button type="submit" class="btn-submit mt-4">
-                        {{ __('Reset Password') }}
+                        {{ __('auth.reset_password') }}
                     </button>
 
                 </form>
@@ -93,8 +93,7 @@
                 <div class="banner-overlay-logo">
                     <img src="{{ asset('image/logo_anri.png') }}" alt="ANRI Logo">
                     <div class="banner-overlay-text">
-                        <div class="title">Depot Arsip<br>Berkelanjutan Bandung</div>
-                        <div class="subtitle">Depot Arsip Berkelanjutan</div>
+                        <div class="title">{!! __('auth.banner_title') !!}</div>
                     </div>
                 </div>
             </div>
