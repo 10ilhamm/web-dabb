@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false, logoutModal: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -39,15 +39,10 @@
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
+                        <x-dropdown-link href="#"
+                                onclick="event.preventDefault(); $dispatch('open-logout-modal');">
+                            {{ __('Log Out') }}
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -85,16 +80,67 @@
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
+                <x-responsive-nav-link href="#"
+                        onclick="event.preventDefault(); $dispatch('open-logout-modal');">
+                    {{ __('Log Out') }}
+                </x-responsive-nav-link>
             </div>
         </div>
     </div>
 </nav>
+
+<!-- Logout Confirmation Modal -->
+<div x-data="{ show: false }"
+    x-on:open-logout-modal.window="show = true"
+    x-on:keydown.escape.window="show = false"
+    x-show="show"
+    x-cloak
+    class="fixed inset-0 z-[100] flex items-center justify-center">
+
+    <!-- Backdrop -->
+    <div x-show="show"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click="show = false"
+        class="absolute inset-0 bg-black/50"></div>
+
+    <!-- Modal -->
+    <div x-show="show"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 text-center">
+
+        <!-- Icon -->
+        <div class="mx-auto flex items-center justify-center w-14 h-14 rounded-full bg-red-100 mb-4">
+            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+        </div>
+
+        <h3 class="text-lg font-bold text-gray-800 mb-2">{{ __('dashboard.sidebar.logout_confirm_title') }}</h3>
+        <p class="text-sm text-gray-500 mb-6">{{ __('dashboard.sidebar.logout_confirm_message') }}</p>
+
+        <div class="flex items-center justify-center gap-3">
+            <button @click="show = false"
+                class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                {{ __('dashboard.sidebar.logout_cancel') }}
+            </button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="px-5 py-2.5 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
+                    {{ __('dashboard.sidebar.logout_confirm') }}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

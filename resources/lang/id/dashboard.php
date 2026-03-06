@@ -11,6 +11,10 @@ return [
         'manage_users' => 'Kelola Pengguna',
         'visit_website' => 'Lihat Website',
         'logout' => 'Keluar',
+        'logout_confirm_title' => 'Konfirmasi Keluar',
+        'logout_confirm_message' => 'Apakah Anda yakin ingin keluar dari akun ini?',
+        'logout_cancel' => 'Batal',
+        'logout_confirm' => 'Ya, Keluar',
     ],
     'header' => [
         'breadcrumb_home' => 'Beranda',

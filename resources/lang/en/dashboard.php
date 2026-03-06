@@ -11,6 +11,10 @@ return [
         'manage_users' => 'Manage Users',
         'visit_website' => 'Visit Website',
         'logout' => 'Log Out',
+        'logout_confirm_title' => 'Confirm Logout',
+        'logout_confirm_message' => 'Are you sure you want to log out?',
+        'logout_cancel' => 'Cancel',
+        'logout_confirm' => 'Yes, Log Out',
     ],
     'header' => [
         'breadcrumb_home' => 'Home',
