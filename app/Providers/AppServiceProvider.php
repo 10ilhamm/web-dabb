@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Feature;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -26,6 +28,13 @@ class AppServiceProvider extends ServiceProvider
                 ->mixedCase()
                 ->symbols()
                 ->uncompromised();
+        });
+
+        View::composer('navbar', function ($view) {
+            $view->with('navFeatures', Feature::whereNull('parent_id')
+                ->with('subfeatures')
+                ->orderBy('order')
+                ->get());
         });
     }
 }

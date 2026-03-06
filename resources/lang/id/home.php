@@ -14,6 +14,7 @@ return [
         'service' => 'Layanan Publik',
         'contact' => 'Kontak Kami',
         'login' => 'Login',
+        'dashboard' => 'Dashboard',
     ],
     'feature_strip' => [
         'left' => 'Kunjungi pameran arsip virtual dan juga pameran kontemporer onsite yang tersedia di Depot Arsip Berkelanjutan Bandung.',
