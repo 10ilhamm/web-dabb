@@ -16,8 +16,13 @@
                     @endphp
 
                     @if ($feature->type === 'dropdown' && $feature->subfeatures->count())
+                        @php
+                            $dropdownActive = $feature->subfeatures->contains(function ($sub) {
+                                return $sub->path && request()->is(ltrim($sub->path, '/'));
+                            });
+                        @endphp
                         <div class="nav-dropdown">
-                            <a href="#" class="nav-dropdown-toggle">
+                            <a href="#" class="nav-dropdown-toggle {{ $dropdownActive ? 'active' : '' }}">
                                 {{ $label }}
                                 <svg class="nav-chevron" viewBox="0 0 20 20" fill="currentColor" width="12" height="12">
                                     <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
@@ -33,8 +38,13 @@
                             </div>
                         </div>
                     @else
+                        @php
+                            $isActive = $isHome
+                                ? request()->routeIs('home')
+                                : ($feature->path && request()->is(ltrim($feature->path, '/')));
+                        @endphp
                         <a href="{{ $isHome ? route('home') : ($feature->path ?? '#') }}"
-                           class="{{ $isHome && request()->routeIs('home') ? 'active' : '' }}">
+                           class="{{ $isActive ? 'active' : '' }}">
                             {{ $label }}
                         </a>
                     @endif
@@ -43,9 +53,9 @@
 
             <div class="auth-utils">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="login-link">{{ __('home.nav.dashboard') }}</a>
+                    <a href="{{ route('dashboard') }}" class="login-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">{{ __('home.nav.dashboard') }}</a>
                 @else
-                    <a href="{{ route('login') }}" class="login-link">{{ __('home.nav.login') }}</a>
+                    <a href="{{ route('login') }}" class="login-link {{ request()->routeIs('login', 'register', 'password.*') ? 'active' : '' }}">{{ __('home.nav.login') }}</a>
                 @endauth
                 <div class="lang-switch">
                     <a href="{{ route('locale.switch', 'id') }}"

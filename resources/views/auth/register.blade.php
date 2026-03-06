@@ -1,212 +1,17 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('title', __('auth.register') . ' - ' . config('app.name', 'web-dabb'))
 
-    <title>{{ __('auth.register') }} - {{ config('app.name', 'Laravel') }}</title>
+@section('body-class')
+@endsection
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap"
-        rel="stylesheet">
-
-    <!-- Styles & Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@push('styles')
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-    <style>
-        .register-card {
-            /* Based on login-card but slightly adapted for longer forms */
-            background: #fff;
-            border-radius: 32px;
-            width: 100%;
-            max-width: 1200px;
-            display: flex;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            min-height: 700px;
-        }
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+@endpush
 
-        /* Dropdown wrapper */
-        .role-selector-wrapper {
-            position: relative;
-            margin-bottom: 40px;
-        }
-
-        .role-selector {
-            width: 100%;
-            padding: 16px 20px;
-            border: 1px solid #CED4DA;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #495057;
-            appearance: none;
-            background: #fff url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236C757D' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") no-repeat right 20px center;
-            background-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .role-selector:focus {
-            border-color: #0579CB;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(5, 121, 203, 0.15);
-        }
-
-        /* Form Sections */
-        .dynamic-form-section {
-            display: none;
-            animation: fadeIn 0.4s ease forwards;
-        }
-
-        .dynamic-form-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Grid Layout for Forms */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 180px 1fr;
-            gap: 20px 15px;
-            align-items: center;
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .form-grid label {
-                margin-top: 10px;
-            }
-        }
-
-        .form-grid label {
-            font-size: 14px;
-            font-weight: 500;
-            color: #495057;
-            margin: 0;
-        }
-
-        .form-grid label.required::after {
-            content: "*";
-            color: #DC3545;
-            margin-left: 3px;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            height: 44px;
-        }
-
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        /* File Input Styling */
-        .file-upload-wrapper {
-            display: flex;
-            align-items: center;
-            border: 1px solid #CED4DA;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fff;
-        }
-
-        .file-upload-btn {
-            background: #343A40;
-            color: #fff;
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .file-upload-text {
-            padding: 0 15px;
-            font-size: 13px;
-            color: #6C757D;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        hr {
-            margin: 30px 0;
-            border: 0;
-            border-top: 1px solid #DEE2E6;
-        }
-
-        /* Password wrapper */
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #6C757D;
-        }
-
-        .btn-submit-form {
-            background: #0579CB;
-            color: #fff;
-            padding: 12px 32px;
-            border-radius: 6px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            float: right;
-            margin-top: 20px;
-        }
-
-        .btn-submit-form:hover {
-            background: #0466AC;
-        }
-    </style>
-</head>
-
-<body class="login-page-bg font-sans text-gray-900 antialiased flex flex-col min-h-screen">
-
-    @include('navbar')
-
+@section('content')
     <div class="login-breadcrumb">
         <div class="container">
             <span class="text-cyan">{{ __('auth.register') }}</span>
@@ -385,12 +190,11 @@
 
         </div>
     </main>
+@endsection
 
-    @include('footer')
-
+@push('scripts')
     <script>
-        // Translation strings for JavaScript
-        const authTranslations = {
+        var authTranslations = {
             fullName: @json(__('auth.full_name')),
             institutionName: @json(__('auth.institution_name')),
             identityCardKtp: @json(__('auth.identity_card_ktp')),
@@ -398,67 +202,7 @@
             identityCardInstansi: @json(__('auth.identity_card_instansi')),
             noFile: @json(__('auth.no_file')),
         };
-
-        function updateFileName(input) {
-            const fileName = input.files[0] ? input.files[0].name : authTranslations.noFile;
-            document.getElementById('file-name').textContent = fileName;
-        }
-
-        function showForm() {
-            const selected = document.getElementById('role-select').value;
-            const formContainer = document.getElementById('registration-form');
-            const hiddenRoleInput = document.getElementById('form-role-input');
-            const jkGroupElements = document.querySelectorAll('.jk-group');
-            const jkInputs = document.querySelectorAll('input[name="jenis_kelamin"]');
-
-            if (!selected) return;
-
-            formContainer.style.display = 'block';
-
-            if (selected === 'umum') {
-                hiddenRoleInput.value = 'umum';
-                document.getElementById('label-name').textContent = authTranslations.fullName;
-                document.getElementById('name').placeholder = authTranslations.fullName;
-                document.getElementById('label-kartu-identitas').textContent = authTranslations.identityCardKtp;
-
-                // Show JK
-                jkGroupElements.forEach(el => el.style.display = 'contents');
-                jkInputs.forEach(el => el.required = true);
-
-            } else if (selected === 'pelajar') {
-                hiddenRoleInput.value = 'pelajar_mahasiswa';
-                document.getElementById('label-name').textContent = authTranslations.fullName;
-                document.getElementById('name').placeholder = authTranslations.fullName;
-                document.getElementById('label-kartu-identitas').textContent = authTranslations.identityCardKtm;
-
-                // Show JK
-                jkGroupElements.forEach(el => el.style.display = 'contents');
-                jkInputs.forEach(el => el.required = true);
-
-            } else if (selected === 'instansi') {
-                hiddenRoleInput.value = 'instansi_swasta';
-                document.getElementById('label-name').textContent = authTranslations.institutionName;
-                document.getElementById('name').placeholder = authTranslations.institutionName;
-                document.getElementById('label-kartu-identitas').textContent = authTranslations.identityCardInstansi;
-
-                // Hide JK
-                jkGroupElements.forEach(el => el.style.display = 'none');
-                jkInputs.forEach(el => el.required = false);
-            }
-        }
-
-        // Restore form state if there was a validation error
-        document.addEventListener('DOMContentLoaded', function() {
-            const oldRole = "{{ old('role') }}";
-            if (oldRole) {
-                const select = document.getElementById('role-select');
-                if (oldRole === 'umum') select.value = 'umum';
-                if (oldRole === 'pelajar_mahasiswa') select.value = 'pelajar';
-                if (oldRole === 'instansi_swasta') select.value = 'instansi';
-                showForm();
-            }
-        });
     </script>
-</body>
-
-</html>
+    <input type="hidden" id="old-role-value" value="{{ old('role') }}">
+    <script src="{{ asset('js/register.js') }}" defer></script>
+@endpush

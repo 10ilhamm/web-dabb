@@ -143,6 +143,10 @@ section { padding: 48px 0; }
     font-size: 14px;
     font-weight: 600;
 }
+.auth-utils .login-link.active {
+    color: var(--blue-light);
+    font-weight: 700;
+}
 .lang-switch {
     display: flex;
     gap: 10px;

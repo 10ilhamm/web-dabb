@@ -1,31 +1,16 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('title', __('auth.login') . ' - ' . config('app.name', 'Laravel'))
 
-    <title>{{ __('auth.login') }} - {{ config('app.name', 'Laravel') }}</title>
+@section('body-class')
+@endsection
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap"
-        rel="stylesheet">
-
-    <!-- Styles & Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@push('styles')
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-</head>
+@endpush
 
-<body class="login-page-bg font-sans text-gray-900 antialiased flex flex-col min-h-screen">
-
-    <!-- Navbar -->
-    @include('navbar')
-
+@section('content')
     <!-- Breadcrumb -->
     <div class="login-breadcrumb">
         <div class="container">
@@ -112,10 +97,4 @@
 
         </div>
     </main>
-
-    <!-- Footer -->
-    @include('footer')
-
-</body>
-
-</html>
+@endsection
