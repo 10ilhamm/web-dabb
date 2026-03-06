@@ -1,4 +1,4 @@
-@extends('layouts.internal-dashboard')
+@extends('layouts.app')
 
 @section('breadcrumb_parent', 'CMS / ' . __('cms.features.title'))
 @section('breadcrumb_active', 'Beranda')

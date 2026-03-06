@@ -1,4 +1,4 @@
-@extends('layouts.internal-dashboard')
+@extends('layouts.app')
 
 @section('header')
     <div class="text-[13px] text-gray-500 font-medium">
