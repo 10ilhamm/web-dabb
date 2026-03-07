@@ -115,6 +115,81 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | CMS — Feature Pages
+    |--------------------------------------------------------------------------
+    */
+
+    'feature_pages' => [
+        'title' => 'Page Management — :name',
+        'desc' => 'Manage pages displayed for the :name feature',
+        'add_button' => 'Add Page',
+        'back_to_feature' => 'Back to Feature',
+
+        'col_title' => 'Page Title',
+        'col_sections' => 'Sections',
+        'col_order' => 'Order',
+        'col_action' => 'Action',
+
+        'empty' => 'No pages yet. Click "+ Add Page" to create one.',
+
+        'add_title' => 'Add New Page',
+        'edit_title' => 'Edit Page',
+
+        'delete' => [
+            'title' => 'Delete Page',
+            'confirm' => 'Are you sure you want to delete the page :name?',
+            'yes' => 'Yes, Delete',
+        ],
+
+        'form' => [
+            'title' => 'Page Title',
+            'title_placeholder' => 'Example: Contemporary Exhibition',
+            'description' => 'Page Description',
+            'description_placeholder' => 'Brief description of this page...',
+            'order' => 'Order',
+        ],
+
+        // Sections
+        'sections_title' => 'Page Sections — :name',
+        'sections_desc' => 'Manage content sections on the :name page',
+        'add_section' => 'Add Section',
+        'add_section_title' => 'Add New Section',
+        'edit_section_title' => 'Edit Section',
+
+        'section_form' => [
+            'title' => 'Section Title',
+            'title_placeholder' => 'Example: Mini Diorama Facility',
+            'description' => 'Description',
+            'description_placeholder' => 'Section description...',
+            'images' => 'Images (max. 8)',
+            'images_help' => 'Upload JPG/PNG/WebP images, max 2MB per file',
+            'existing_images' => 'Current Images',
+            'order' => 'Order',
+        ],
+
+        'delete_section' => [
+            'title' => 'Delete Section',
+            'confirm' => 'Are you sure you want to delete the section :name?',
+            'yes' => 'Yes, Delete',
+        ],
+
+        'flash' => [
+            'page_added' => 'Page added successfully.',
+            'page_updated' => 'Page updated successfully.',
+            'page_deleted' => 'Page deleted successfully.',
+            'section_added' => 'Section added successfully.',
+            'section_updated' => 'Section updated successfully.',
+            'section_deleted' => 'Section deleted successfully.',
+        ],
+
+        // Public page
+        'welcome' => 'Welcome to the :name portal,',
+        'search_placeholder' => 'Search',
+        'list_title' => ':name List',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | CMS — Home Editor (home/edit)
     |--------------------------------------------------------------------------
     */

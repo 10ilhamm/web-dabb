@@ -52,7 +52,7 @@ return [
             'admin' => 'Admin',
             'employee' => 'Employee',
             'y_axis' => 'Number of Visitors',
-        ]
+        ],
     ],
     'welcome' => [
         'greeting_pegawai' => 'Welcome, Employee :name',
@@ -126,5 +126,5 @@ return [
         'last_active' => 'Active',
         'logout_other' => 'Log Out Other Browser Sessions',
         'logout_success' => 'All sessions on other devices have been removed.',
-    ]
+    ],
 ];

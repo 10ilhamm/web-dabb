@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('navbar', function ($view) {
             $view->with('navFeatures', Feature::whereNull('parent_id')
-                ->with('subfeatures')
+                ->with('subfeatures.subfeatures')
                 ->orderBy('order')
                 ->get());
         });

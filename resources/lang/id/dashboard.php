@@ -52,7 +52,7 @@ return [
             'admin' => 'Admin',
             'employee' => 'Pegawai',
             'y_axis' => 'Jumlah Pengunjung',
-        ]
+        ],
     ],
     'welcome' => [
         'greeting_pegawai' => 'Selamat Datang, Pegawai :name',
@@ -126,5 +126,5 @@ return [
         'last_active' => 'Aktif',
         'logout_other' => 'Keluar dari Sesi Browser Lainnya',
         'logout_success' => 'Semua sesi di perangkat lain telah dihapus.',
-    ]
+    ],
 ];

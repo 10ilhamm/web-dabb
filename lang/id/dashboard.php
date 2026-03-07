@@ -53,5 +53,5 @@ return [
         'last_active' => 'Aktif',
         'logout_other' => 'Keluar dari Sesi Browser Lainnya',
         'logout_success' => 'Semua sesi di perangkat lain telah dihapus.',
-    ]
+    ],
 ];

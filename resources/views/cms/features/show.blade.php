@@ -8,7 +8,7 @@
 
     <!-- Page Header -->
     <div class="flex items-center gap-3">
-        <a href="{{ route('cms.features.index') }}"
+        <a href="{{ $feature->parent_id ? route('cms.features.show', $feature->parent_id) : route('cms.features.index') }}"
             class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -17,6 +17,9 @@
         <div>
             <h1 class="text-2xl font-bold text-gray-800">{{ __('cms.features.detail_title', ['name' => $feature->name]) }}</h1>
             <p class="text-sm text-gray-500 mt-0.5">
+                @if($feature->parent)
+                    <span class="text-xs text-gray-400">{{ $feature->parent->name }} &raquo;</span>
+                @endif
                 {{ __('cms.features.type_label') }}:
                 @if($feature->type === 'dropdown')
                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100">{{ __('cms.features.type_dropdown') }}</span>
@@ -60,7 +63,9 @@
                     <tr>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-12">No</th>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('cms.features.sub.col_name') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('cms.features.col_type') }}</th>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('cms.features.sub.col_path') }}</th>
+                        <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.col_sub_count') }}</th>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.sub.col_order') }}</th>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">{{ __('cms.features.sub.col_action') }}</th>
                     </tr>
@@ -70,12 +75,45 @@
                     <tr class="hover:bg-gray-50/50 transition-colors">
                         <td class="px-6 py-4 text-gray-500 font-medium">{{ $index + 1 }}</td>
                         <td class="px-6 py-4 font-medium text-gray-800">{{ $sub->name }}</td>
+                        <td class="px-6 py-4">
+                            @if($sub->type === 'dropdown')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600 border border-blue-100">
+                                    {{ __('cms.features.type_dropdown') }}
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                                    {{ __('cms.features.type_link') }}
+                                </span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 text-gray-500 font-mono text-xs">{{ $sub->path ?? '-' }}</td>
+                        <td class="px-6 py-4 text-center text-gray-600">{{ $sub->subfeatures_count ?? 0 }}</td>
                         <td class="px-6 py-4 text-center text-gray-600">{{ $sub->order }}</td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-center gap-2">
+                                @if($sub->type === 'dropdown')
+                                <!-- Detail Sub Button (dropdown → sub-features list) -->
+                                <a href="{{ route('cms.features.show', $sub) }}"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold rounded-md transition-colors">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    {{ __('cms.features.detail') }}
+                                </a>
+                                @else
+                                <!-- Detail Sub Button (link → pages management or content editor) -->
+                                <a href="{{ ($sub->pages_count ?? 0) > 0 ? route('cms.features.pages.index', $sub) : route('cms.features.show', $sub) }}"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold rounded-md transition-colors">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    {{ __('cms.features.detail') }}
+                                </a>
+                                @endif
                                 <!-- Edit Sub Button -->
-                                <button @click="openEditSubModal({{ $sub->id }}, '{{ addslashes($sub->name) }}', '{{ $sub->path ?? '' }}', {{ $sub->order }})"
+                                <button @click="openEditSubModal({{ $sub->id }}, '{{ addslashes($sub->name) }}', '{{ $sub->type }}', '{{ $sub->path ?? '' }}', {{ $sub->order }})"
                                     class="inline-flex items-center justify-center w-8 h-8 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -93,7 +131,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-16 text-center">
+                        <td colspan="7" class="px-6 py-16 text-center">
                             <div class="flex flex-col items-center gap-3">
                                 <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
@@ -109,7 +147,26 @@
     </div>
 
     @else
-    {{-- ===== LINK TYPE: Show content editor ===== --}}
+    {{-- ===== LINK TYPE: Pages management or content editor ===== --}}
+
+    <!-- Multi-page management card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-100 flex items-start justify-between">
+            <div>
+                <h2 class="text-base font-semibold text-gray-800">{{ __('cms.feature_pages.title', ['name' => $feature->name]) }}</h2>
+                <p class="text-sm text-gray-500 mt-0.5">{{ __('cms.feature_pages.desc', ['name' => $feature->name]) }}</p>
+            </div>
+            <a href="{{ route('cms.features.pages.index', $feature) }}"
+                class="flex items-center gap-2 bg-[#174E93] hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                {{ __('cms.feature_pages.add_button') }} ({{ $feature->pages_count ?? 0 }})
+            </a>
+        </div>
+    </div>
+
+    <!-- Content editor -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-5 border-b border-gray-100">
             <h2 class="text-base font-semibold text-gray-800">{{ __('cms.features.content.title', ['name' => $feature->name]) }}</h2>
@@ -144,15 +201,16 @@
     @if($feature->type === 'dropdown')
     {{-- ===== ADD SUB MODAL ===== --}}
     <div x-show="addSubModal.open" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 flex items-center justify-center p-4"
+        style="z-index: 9999;"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0">
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="addSubModal.open = false"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-10"
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="addSubModal.open = false" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0;"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-[9999]"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">
@@ -167,13 +225,20 @@
             <form action="{{ route('cms.features.store') }}" method="POST" class="px-6 py-5 space-y-4">
                 @csrf
                 <input type="hidden" name="parent_id" value="{{ $feature->id }}">
-                <input type="hidden" name="type" value="link">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.name') }} <span class="text-red-500">*</span></label>
                     <input type="text" name="name" required placeholder="{{ __('cms.features.sub.form.name_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.type') }} <span class="text-red-500">*</span></label>
+                    <select name="type" x-model="addSubModal.type" required
+                        class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                        <option value="link">{{ __('cms.features.type_link') }}</option>
+                        <option value="dropdown">{{ __('cms.features.type_dropdown') }}</option>
+                    </select>
+                </div>
+                <div x-show="addSubModal.type === 'link'">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.path') }}</label>
                     <input type="text" name="path" placeholder="{{ __('cms.features.sub.form.path_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
@@ -199,15 +264,16 @@
 
     {{-- ===== EDIT SUB MODAL ===== --}}
     <div x-show="editSubModal.open" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 flex items-center justify-center p-4"
+        style="z-index: 9999;"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0">
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="editSubModal.open = false"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-10"
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="editSubModal.open = false" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0;"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-[9999]"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">
@@ -228,6 +294,14 @@
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.type') }} <span class="text-red-500">*</span></label>
+                    <select name="type" x-model="editSubModal.type" required
+                        class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                        <option value="link">{{ __('cms.features.type_link') }}</option>
+                        <option value="dropdown">{{ __('cms.features.type_dropdown') }}</option>
+                    </select>
+                </div>
+                <div x-show="editSubModal.type === 'link'">
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.sub.form.path') }}</label>
                     <input type="text" name="path" x-model="editSubModal.path" placeholder="{{ __('cms.features.sub.form.path_placeholder') }}"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
@@ -253,15 +327,16 @@
 
     {{-- ===== DELETE SUB CONFIRMATION MODAL ===== --}}
     <div x-show="deleteSubModal.open" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 flex items-center justify-center p-4"
+        style="z-index: 9999;"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0">
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="deleteSubModal.open = false"></div>
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 p-6"
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="deleteSubModal.open = false" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0;"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-[9999] p-6"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">
@@ -303,15 +378,15 @@
 <script>
 function featureDetail() {
     return {
-        addSubModal: { open: false },
-        editSubModal: { open: false, id: null, name: '', path: '', order: 0 },
+        addSubModal: { open: false, type: 'link' },
+        editSubModal: { open: false, id: null, name: '', type: 'link', path: '', order: 0 },
         deleteSubModal: { open: false, id: null, name: '' },
 
         openAddSubModal() {
-            this.addSubModal.open = true;
+            this.addSubModal = { open: true, type: 'link' };
         },
-        openEditSubModal(id, name, path, order) {
-            this.editSubModal = { open: true, id, name, path, order };
+        openEditSubModal(id, name, type, path, order) {
+            this.editSubModal = { open: true, id, name, type, path, order };
         },
         openDeleteSubModal(id, name) {
             this.deleteSubModal = { open: true, id, name };

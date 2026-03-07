@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Stichoza\GoogleTranslate\GoogleTranslate;
 use Illuminate\Support\Facades\Log;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class TranslationService
 {
@@ -11,7 +11,7 @@ class TranslationService
 
     public function __construct()
     {
-        $this->translator = new GoogleTranslate();
+        $this->translator = new GoogleTranslate;
         $this->translator->setSource('id');
         $this->translator->setTarget('en');
     }
@@ -29,7 +29,8 @@ class TranslationService
         try {
             return $this->translator->translate($text) ?? $text;
         } catch (\Exception $e) {
-            Log::warning('Translation failed: ' . $e->getMessage(), ['text' => mb_substr($text, 0, 100)]);
+            Log::warning('Translation failed: '.$e->getMessage(), ['text' => mb_substr($text, 0, 100)]);
+
             return $text;
         }
     }
@@ -47,6 +48,7 @@ class TranslationService
         foreach ($data as $key => $value) {
             if (in_array($key, $skipKeys, true)) {
                 $result[$key] = $value;
+
                 continue;
             }
 

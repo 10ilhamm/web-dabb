@@ -17,44 +17,44 @@ class FeatureSeeder extends Seeder
 
         // Top-level menu items
         $beranda = Feature::create([
-            'name'  => 'Beranda',
-            'type'  => 'link',
-            'path'  => '/',
+            'name' => 'Beranda',
+            'type' => 'link',
+            'path' => '/',
             'order' => 1,
         ]);
 
         $profil = Feature::create([
-            'name'  => 'Profil',
-            'type'  => 'dropdown',
-            'path'  => null,
+            'name' => 'Profil',
+            'type' => 'dropdown',
+            'path' => null,
             'order' => 2,
         ]);
 
         $pameranArsip = Feature::create([
-            'name'  => 'Pameran Arsip',
-            'type'  => 'dropdown',
-            'path'  => null,
+            'name' => 'Pameran Arsip',
+            'type' => 'dropdown',
+            'path' => null,
             'order' => 3,
         ]);
 
         $publikasi = Feature::create([
-            'name'  => 'Publikasi',
-            'type'  => 'dropdown',
-            'path'  => null,
+            'name' => 'Publikasi',
+            'type' => 'dropdown',
+            'path' => null,
             'order' => 4,
         ]);
 
         $layananPublik = Feature::create([
-            'name'  => 'Layanan Publik',
-            'type'  => 'dropdown',
-            'path'  => null,
+            'name' => 'Layanan Publik',
+            'type' => 'dropdown',
+            'path' => null,
             'order' => 5,
         ]);
 
         $kontakKami = Feature::create([
-            'name'  => 'Kontak Kami',
-            'type'  => 'link',
-            'path'  => '/kontak',
+            'name' => 'Kontak Kami',
+            'type' => 'link',
+            'path' => '/kontak',
             'order' => 6,
         ]);
 

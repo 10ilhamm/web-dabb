@@ -32,7 +32,7 @@ class RegisteredUserController extends Controller
         // 1. Validasi Dasar untuk Tabel Users
         $rules = [
             'role' => ['required', 'in:admin,pegawai,umum,pelajar_mahasiswa,instansi_swasta'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
 

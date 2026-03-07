@@ -116,7 +116,8 @@
 
     <!-- ===== EDIT MODAL ===== -->
     <div x-show="editModal.open" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 flex items-center justify-center p-4"
+        style="z-index: 9999;"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
@@ -124,9 +125,9 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="editModal.open = false"></div>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="editModal.open = false" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0;"></div>
         <!-- Modal -->
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-10"
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-[9999]"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">
@@ -183,7 +184,8 @@
 
     <!-- ===== ADD MODAL ===== -->
     <div x-show="addModal.open" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 flex items-center justify-center p-4"
+        style="z-index: 9999;"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
@@ -191,9 +193,9 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="addModal.open = false"></div>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="addModal.open = false" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0;"></div>
         <!-- Modal -->
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-10"
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-[9999]"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">
@@ -249,7 +251,8 @@
 
     <!-- ===== DELETE CONFIRMATION MODAL ===== -->
     <div x-show="deleteModal.open" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 flex items-center justify-center p-4"
+        style="z-index: 9999;"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
@@ -257,9 +260,9 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="deleteModal.open = false"></div>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="deleteModal.open = false" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0;"></div>
         <!-- Modal -->
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-10 p-6"
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm z-[9999] p-6"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100">

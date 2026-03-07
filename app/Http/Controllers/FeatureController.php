@@ -13,7 +13,7 @@ class FeatureController extends Controller
      */
     public function index()
     {
-        $features = Feature::whereNull('parent_id')->withCount('subfeatures')->orderBy('order')->get();
+        $features = Feature::whereNull('parent_id')->withCount(['subfeatures', 'pages'])->orderBy('order')->get();
 
         return view('cms.features.index', compact('features'));
     }
@@ -58,7 +58,10 @@ class FeatureController extends Controller
             return redirect()->route('cms.home.edit');
         }
 
-        $feature->load('subfeatures');
+        $feature->load(['subfeatures' => function ($query) {
+            $query->withCount(['subfeatures', 'pages']);
+        }, 'parent']);
+        $feature->loadCount('pages');
 
         return view('cms.features.show', compact('feature'));
     }
@@ -124,6 +127,7 @@ class FeatureController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'type' => 'required|in:link,dropdown',
             'path' => 'nullable|string|max:255',
             'order' => 'required|integer|min:0',
         ]);

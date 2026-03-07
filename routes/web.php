@@ -1,16 +1,22 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HomeContentController;
-use App\Http\Controllers\RoleDashboardController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\FeaturePageController;
+use App\Http\Controllers\HomeContentController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/lang/{locale}', [HomeController::class, 'switchLocale'])->name('locale.switch');
 Route::post('/api/chat', [ChatController::class, 'getBotResponse'])->name('api.chat');
+
+// Public feature pages
+Route::get('/halaman/{feature}/{pageNum?}', [FeaturePageController::class, 'publicShow'])
+    ->where('pageNum', '[0-9]+')
+    ->name('feature.page');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [RoleDashboardController::class, 'index'])->name('dashboard');
@@ -58,7 +64,24 @@ Route::middleware('auth')->group(function () {
         Route::put('/{feature}/content', [FeatureController::class, 'updateContent'])->name('update-content');
         Route::put('/{feature}/sub', [FeatureController::class, 'updateSub'])->name('update-sub');
         Route::delete('/{feature}/sub', [FeatureController::class, 'destroySub'])->name('destroy-sub');
+
+        // Feature Pages (multi-page content)
+        Route::get('/{feature}/pages', [FeaturePageController::class, 'index'])->name('pages.index');
+        Route::post('/{feature}/pages', [FeaturePageController::class, 'store'])->name('pages.store');
+        Route::get('/{feature}/pages/{page}', [FeaturePageController::class, 'show'])->name('pages.show');
+        Route::put('/{feature}/pages/{page}', [FeaturePageController::class, 'update'])->name('pages.update');
+        Route::delete('/{feature}/pages/{page}', [FeaturePageController::class, 'destroy'])->name('pages.destroy');
+
+        // Page Sections
+        Route::post('/{feature}/pages/{page}/sections', [FeaturePageController::class, 'storeSection'])->name('pages.sections.store');
+        Route::put('/{feature}/pages/{page}/sections/{section}', [FeaturePageController::class, 'updateSection'])->name('pages.sections.update');
+        Route::delete('/{feature}/pages/{page}/sections/{section}', [FeaturePageController::class, 'destroySection'])->name('pages.sections.destroy');
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
+
+// Public feature pages by path (e.g., /pameran/tetap) - must be last
+Route::get('/{path}', [FeaturePageController::class, 'publicShowByPath'])
+    ->where('path', '.+')
+    ->name('feature.path');

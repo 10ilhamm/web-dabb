@@ -26,4 +26,9 @@ class Feature extends Model
     {
         return $this->hasMany(Feature::class, 'parent_id')->orderBy('order');
     }
+
+    public function pages()
+    {
+        return $this->hasMany(FeaturePage::class)->orderBy('order');
+    }
 }

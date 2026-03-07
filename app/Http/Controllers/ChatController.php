@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 
 class ChatController extends Controller
 {
@@ -13,7 +12,7 @@ class ChatController extends Controller
     {
         $message = $request->input('message');
 
-        if (!$message) {
+        if (! $message) {
             return response()->json(['reply' => 'Maaf, saya tidak mengerti maksud Anda.']);
         }
 
@@ -31,14 +30,14 @@ class ChatController extends Controller
                     'contents' => [
                         [
                             'parts' => [
-                                ['text' => $promptText]
-                            ]
-                        ]
+                                ['text' => $promptText],
+                            ],
+                        ],
                     ],
                     'generationConfig' => [
                         'temperature' => 0.7,
                         'maxOutputTokens' => 1024,
-                    ]
+                    ],
                 ]);
 
             if ($response->successful()) {
@@ -46,16 +45,19 @@ class ChatController extends Controller
                 if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
                     $replyText = $data['candidates'][0]['content']['parts'][0]['text'];
                     $replyText = str_replace(['**', '*'], '', $replyText); // Strip markdown bold/italics
+
                     return response()->json([
-                        'reply' => $replyText
+                        'reply' => $replyText,
                     ]);
                 }
             }
 
             Log::error('Gemini API Error Response', ['status' => $response->status(), 'body' => $response->body()]);
+
             return response()->json(['reply' => 'Maaf, saya tidak dapat memproses jawaban saat ini.']);
         } catch (\Exception $e) {
             Log::error('Gemini Exception', ['message' => $e->getMessage()]);
+
             return response()->json(['reply' => 'Maaf, saat ini sistem AI sedang sibuk. Silakan coba lagi nanti.']);
         }
     }

@@ -53,5 +53,5 @@ return [
         'last_active' => 'Active',
         'logout_other' => 'Log Out Other Browser Sessions',
         'logout_success' => 'All sessions on other devices have been removed.',
-    ]
+    ],
 ];

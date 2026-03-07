@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
 
 class ProfileController extends Controller
 {
@@ -73,7 +72,7 @@ class ProfileController extends Controller
         $browser = 'Unknown';
         $isDesktop = true;
 
-        if (!$userAgent) {
+        if (! $userAgent) {
             return (object) compact('platform', 'browser', 'isDesktop');
         }
 

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(php artisan:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(php:*)"
     ]
   }
 }

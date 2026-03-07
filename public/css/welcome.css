@@ -136,6 +136,58 @@ section { padding: 48px 0; }
     color: var(--blue) !important;
 }
 
+/* Fly-out sub-sub menu (3rd level) */
+.nav-submenu-item {
+    position: relative;
+}
+.nav-submenu-item > .nav-submenu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 18px;
+    color: #333 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    white-space: nowrap;
+    transition: background 0.15s;
+    text-decoration: none;
+    cursor: pointer;
+}
+.nav-submenu-item > .nav-submenu-toggle:hover {
+    background: #f0f7ff;
+    color: var(--blue) !important;
+}
+.nav-submenu-toggle .nav-chevron-right {
+    width: 10px;
+    height: 10px;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+.nav-submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    min-width: 200px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    padding: 8px 0;
+    z-index: 210;
+}
+.nav-submenu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10px;
+    width: 10px;
+    height: 100%;
+}
+.nav-submenu-item:hover > .nav-submenu {
+    display: block;
+}
+
 .auth-utils { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
 .auth-utils .login-link {
     color: #fff;

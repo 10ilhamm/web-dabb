@@ -115,6 +115,81 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | CMS — Halaman Fitur (feature pages)
+    |--------------------------------------------------------------------------
+    */
+
+    'feature_pages' => [
+        'title' => 'Manajemen Halaman — :name',
+        'desc' => 'Kelola halaman-halaman yang ditampilkan pada fitur :name',
+        'add_button' => 'Tambah Halaman',
+        'back_to_feature' => 'Kembali ke Fitur',
+
+        'col_title' => 'Judul Halaman',
+        'col_sections' => 'Jumlah Seksi',
+        'col_order' => 'Urutan',
+        'col_action' => 'Aksi',
+
+        'empty' => 'Belum ada halaman. Klik "+ Tambah Halaman" untuk menambahkan.',
+
+        'add_title' => 'Tambah Halaman Baru',
+        'edit_title' => 'Edit Halaman',
+
+        'delete' => [
+            'title' => 'Hapus Halaman',
+            'confirm' => 'Apakah Anda yakin ingin menghapus halaman :name?',
+            'yes' => 'Ya, Hapus',
+        ],
+
+        'form' => [
+            'title' => 'Judul Halaman',
+            'title_placeholder' => 'Contoh: Pameran Kontemporer',
+            'description' => 'Deskripsi Halaman',
+            'description_placeholder' => 'Deskripsi singkat halaman ini...',
+            'order' => 'Urutan',
+        ],
+
+        // Sections
+        'sections_title' => 'Seksi Halaman — :name',
+        'sections_desc' => 'Kelola seksi-seksi konten pada halaman :name',
+        'add_section' => 'Tambah Seksi',
+        'add_section_title' => 'Tambah Seksi Baru',
+        'edit_section_title' => 'Edit Seksi',
+
+        'section_form' => [
+            'title' => 'Judul Seksi',
+            'title_placeholder' => 'Contoh: Fasilitas Mini Diorama',
+            'description' => 'Deskripsi',
+            'description_placeholder' => 'Deskripsi seksi ini...',
+            'images' => 'Gambar (maks. 8)',
+            'images_help' => 'Upload gambar JPG/PNG/WebP, maks 2MB per file',
+            'existing_images' => 'Gambar Saat Ini',
+            'order' => 'Urutan',
+        ],
+
+        'delete_section' => [
+            'title' => 'Hapus Seksi',
+            'confirm' => 'Apakah Anda yakin ingin menghapus seksi :name?',
+            'yes' => 'Ya, Hapus',
+        ],
+
+        'flash' => [
+            'page_added' => 'Halaman berhasil ditambahkan.',
+            'page_updated' => 'Halaman berhasil diperbarui.',
+            'page_deleted' => 'Halaman berhasil dihapus.',
+            'section_added' => 'Seksi berhasil ditambahkan.',
+            'section_updated' => 'Seksi berhasil diperbarui.',
+            'section_deleted' => 'Seksi berhasil dihapus.',
+        ],
+
+        // Public page
+        'welcome' => 'Selamat datang di portal :name,',
+        'search_placeholder' => 'Pencarian',
+        'list_title' => 'Daftar :name',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | CMS — Editor Beranda (home/edit)
     |--------------------------------------------------------------------------
     */

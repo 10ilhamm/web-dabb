@@ -37,7 +37,7 @@ class HomeContentController extends Controller
         $this->saveLangFile('en', $translatedData, replace: true);
 
         return redirect()->route('cms.home.edit')
-            ->with('success', "Konten Beranda berhasil disimpan & diterjemahkan ke Bahasa Inggris.");
+            ->with('success', 'Konten Beranda berhasil disimpan & diterjemahkan ke Bahasa Inggris.');
     }
 
     /**
@@ -49,6 +49,7 @@ class HomeContentController extends Controller
         if (File::exists($path)) {
             return include $path;
         }
+
         return [];
     }
 
@@ -70,7 +71,7 @@ class HomeContentController extends Controller
         }
 
         // Write back as PHP array
-        $content = "<?php\n\nreturn " . $this->varExport($updated, true) . ";\n";
+        $content = "<?php\n\nreturn ".$this->varExport($updated, true).";\n";
         File::put($path, $content);
     }
 
@@ -86,6 +87,7 @@ class HomeContentController extends Controller
                 $base[$key] = $value;
             }
         }
+
         return $base;
     }
 
@@ -100,11 +102,13 @@ class HomeContentController extends Controller
             $items = [];
             $isList = array_keys($var) === range(0, count($var) - 1);
             foreach ($var as $k => $v) {
-                $key = $isList ? '' : var_export($k, true) . ' => ';
-                $items[] = $pad . $key . $this->varExport($v, $indent, $level + 1);
+                $key = $isList ? '' : var_export($k, true).' => ';
+                $items[] = $pad.$key.$this->varExport($v, $indent, $level + 1);
             }
-            return "[\n" . implode(",\n", $items) . ",\n{$closePad}]";
+
+            return "[\n".implode(",\n", $items).",\n{$closePad}]";
         }
+
         return var_export($var, true);
     }
 }
