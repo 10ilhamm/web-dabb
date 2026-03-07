@@ -372,32 +372,40 @@ function sectionManager() {
             container.appendChild(label);
         }
 
+        const cols = Math.min(Math.max(images.length, 1), 4);
+        // Guest container in desktop is ~1140px. 
+        // With a 10px gap, the guest item width is approximately:
+        const guestItemWidth = (1140 - ((cols - 1) * 10)) / cols;
+        const guestItemHeight = 180;
+        const guestAspectRatio = guestItemWidth / guestItemHeight;
+
         images.forEach((img) => {
             const wrapper = document.createElement('div');
-            wrapper.className = 'relative';
-            wrapper.style.marginTop = '8px';
+            wrapper.className = 'relative group mb-4 w-full';
             wrapper.dataset.imgId = img.id;
 
             // Drag container
             const dragBox = document.createElement('div');
-            dragBox.className = 'relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 cursor-crosshair';
-            dragBox.style.height = '180px';
+            dragBox.className = 'relative overflow-hidden rounded-lg bg-gray-900 cursor-crosshair w-full flex items-center justify-center';
+            // Match the precise aspect ratio computed for guest view on desktop
+            dragBox.style.width = '100%';
+            dragBox.style.aspectRatio = guestAspectRatio.toString();
 
             // Image
             const imgEl = document.createElement('img');
             imgEl.src = img.preview;
-            imgEl.className = 'absolute inset-0 pointer-events-none select-none w-full h-full object-cover';
+            imgEl.className = 'absolute pointer-events-none select-none w-full h-full object-cover transition-transform duration-300';
             imgEl.style.objectPosition = img.x + '% ' + img.y + '%';
             dragBox.appendChild(imgEl);
 
             // Focal point
             const focal = document.createElement('div');
-            focal.className = 'absolute w-8 h-8 border-2 border-white rounded-full shadow-lg pointer-events-none flex items-center justify-center';
-            focal.style.cssText = 'background-color:rgba(59,130,246,0.4);transform:translate(-50%,-50%)';
+            focal.className = 'absolute w-6 h-6 border-2 border-white rounded-full shadow-lg pointer-events-none flex items-center justify-center';
+            focal.style.cssText = 'background-color:rgba(59,130,246,0.6);transform:translate(-50%,-50%); transition: opacity 0.2s;';
             focal.style.left = img.x + '%';
             focal.style.top = img.y + '%';
             const dot = document.createElement('div');
-            dot.className = 'w-1 h-1 bg-white rounded-full';
+            dot.className = 'w-1.5 h-1.5 bg-white rounded-full';
             focal.appendChild(dot);
             dragBox.appendChild(focal);
 
@@ -430,8 +438,8 @@ function sectionManager() {
             // Delete button
             const delBtn = document.createElement('button');
             delBtn.type = 'button';
-            delBtn.className = 'absolute bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors cursor-pointer';
-            delBtn.style.cssText = 'width:28px;height:28px;top:-4px;right:-4px;z-index:50;line-height:1';
+            delBtn.className = 'absolute bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors cursor-pointer z-50';
+            delBtn.style.cssText = 'width:24px;height:24px;top:-8px;right:-8px;line-height:1';
             delBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
             delBtn.addEventListener('mousedown', (e) => e.stopPropagation());
             delBtn.addEventListener('click', (e) => {
@@ -441,12 +449,9 @@ function sectionManager() {
                 const idx = _imageStore[mode].findIndex(i => i.id === img.id);
                 if (idx !== -1) _imageStore[mode].splice(idx, 1);
                 delete _files[img.id];
-                // Hapus elemen DOM langsung (bukan re-render semua)
-                wrapper.remove();
-                // Update label visibility
-                if (mode === 'edit' && _imageStore[mode].length === 0) {
-                    container.innerHTML = '';
-                }
+                
+                // Re-render semua untuk menghitung ulang grid cols
+                renderPreviews(mode);
             });
             wrapper.appendChild(delBtn);
 
@@ -505,72 +510,117 @@ function sectionManager() {
             this.imageModal.open = true;
         },
 
-        handleFileChange(event, mode) {
+        async handleFileChange(event, mode) {
             const files = Array.from(event.target.files);
 
-            let loaded = 0;
-            files.forEach(file => {
-                if (_imageStore[mode].length >= 8) return;
+            const compressImage = (file) => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const MAX_SIZE = 1920;
 
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    if (_imageStore[mode].length >= 8) return;
+                            if (width > height && width > MAX_SIZE) {
+                                height *= MAX_SIZE / width;
+                                width = MAX_SIZE;
+                            } else if (height > MAX_SIZE) {
+                                width *= MAX_SIZE / height;
+                                height = MAX_SIZE;
+                            }
 
-                    const imgId = getNextId('new');
-                    _files[imgId] = file;
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
 
-                    _imageStore[mode].push({
-                        id: imgId,
-                        preview: e.target.result,
-                        x: 50,
-                        y: 50,
-                        isExisting: false
-                    });
+                            canvas.toBlob((blob) => {
+                                const originalName = file.name.replace(/\.[^/.]+$/, "");
+                                const newFile = new File([blob], originalName + ".webp", {
+                                    type: 'image/webp',
+                                    lastModified: Date.now()
+                                });
+                                resolve({ file: newFile, preview: e.target.result });
+                            }, 'image/webp', 0.8);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
 
-                    loaded++;
-                    // Re-render setelah semua file selesai dibaca
-                    if (loaded === files.length) {
-                        renderPreviews(mode);
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
+            for (const file of files) {
+                const compressed = await compressImage(file);
+                const imgId = getNextId('new');
+                _files[imgId] = compressed.file;
+                
+                _imageStore[mode].push({
+                    id: imgId,
+                    preview: compressed.preview,
+                    x: 50,
+                    y: 50,
+                    isExisting: false
+                });
+            }
+            
+            renderPreviews(mode);
             event.target.value = '';
         },
 
         submitForm(event, mode) {
+            event.preventDefault();
+
             const form = event.target;
-            const fileInput = form.querySelector('input[type="file"]');
             const images = _imageStore[mode];
 
-            // Hapus hidden inputs lama yang mungkin ada
-            form.querySelectorAll('input[name="image_positions[]"], input[name="existing_images[]"]').forEach(el => el.remove());
+            // Bangun FormData dari field form yang sudah ada (title, description, order, _token, _method)
+            const formData = new FormData(form);
 
-            // Buat hidden inputs untuk positions dan existing images
+            // Hapus field images[] & image_positions[] & existing_images[] bawaan form
+            formData.delete('images[]');
+            formData.delete('image_positions[]');
+            formData.delete('existing_images[]');
+
+            // Tambahkan data gambar dari _imageStore
             images.forEach(img => {
-                const posInput = document.createElement('input');
-                posInput.type = 'hidden';
-                posInput.name = 'image_positions[]';
-                posInput.value = img.x + '% ' + img.y + '%';
-                form.appendChild(posInput);
+                formData.append('image_positions[]', img.x + '% ' + img.y + '%');
 
                 if (img.isExisting) {
-                    const existInput = document.createElement('input');
-                    existInput.type = 'hidden';
-                    existInput.name = 'existing_images[]';
-                    existInput.value = img.path;
-                    form.appendChild(existInput);
+                    formData.append('existing_images[]', img.path);
                 }
             });
 
-            // Rebuild file input dari gambar baru yang masih ada
-            const dt = new DataTransfer();
+            // Tambahkan file baru
             images.forEach(img => {
                 if (!img.isExisting && _files[img.id]) {
-                    dt.items.add(_files[img.id]);
+                    formData.append('images[]', _files[img.id]);
                 }
             });
-            fileInput.files = dt.files;
+
+            // Kirim via fetch
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else if (response.ok) {
+                    window.location.reload();
+                } else {
+                    response.text().then(html => {
+                        alert('Terjadi kesalahan saat menyimpan. Silakan coba lagi.');
+                    });
+                }
+            }).catch(() => {
+                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+            });
         }
     };
 }

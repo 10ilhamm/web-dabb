@@ -161,7 +161,7 @@ return [
             'title_placeholder' => 'Example: Mini Diorama Facility',
             'description' => 'Description',
             'description_placeholder' => 'Section description...',
-            'images' => 'Images (max. 8)',
+            'images' => 'Images',
             'images_help' => 'Upload JPG/PNG/WebP images, max 2MB per file',
             'existing_images' => 'Current Images',
             'order' => 'Order',

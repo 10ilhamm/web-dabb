@@ -104,7 +104,7 @@ class FeaturePageController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'order' => 'required|integer|min:0',
-            'images' => 'nullable|array|max:8',
+            'images' => 'nullable|array', // unlimited
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
             'image_positions' => 'nullable|array',
         ]);
@@ -142,7 +142,7 @@ class FeaturePageController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'order' => 'required|integer|min:0',
-            'images' => 'nullable|array|max:8',
+            'images' => 'nullable|array', // unlimited
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
             'existing_images' => 'nullable|array',
             'existing_images.*' => 'string',

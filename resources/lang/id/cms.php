@@ -161,7 +161,7 @@ return [
             'title_placeholder' => 'Contoh: Fasilitas Mini Diorama',
             'description' => 'Deskripsi',
             'description_placeholder' => 'Deskripsi seksi ini...',
-            'images' => 'Gambar (maks. 8)',
+            'images' => 'Gambar',
             'images_help' => 'Upload gambar JPG/PNG/WebP, maks 2MB per file',
             'existing_images' => 'Gambar Saat Ini',
             'order' => 'Urutan',
