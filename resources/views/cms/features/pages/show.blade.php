@@ -61,7 +61,7 @@
                             <div class="flex flex-wrap gap-2 mt-3">
                                 @foreach($section->images as $imgIndex => $img)
                                 <div class="relative group/image">
-                                    <img src="{{ asset('storage/' . $img) }}" alt="" 
+                                    <img src="{{ asset('storage/' . $img) }}" alt=""
                                         class="w-16 h-16 object-cover rounded-lg border border-gray-200 cursor-pointer"
                                         style="object-position: {{ $section->image_positions[$imgIndex] ?? 'center' }}"
                                         @click="openImageModal('{{ asset('storage/' . $img) }}')">
@@ -149,37 +149,11 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.feature_pages.section_form.images') }}</label>
 
-                    <!-- Preview gambar -->
-                    <div x-show="addSection.images.length > 0" class="space-y-4 mb-4">
-                        <template x-for="img in addSection.images" :key="img.id">
-                            <div class="relative" style="margin-top: 8px;"
-                                x-data="imageItem(img, 'add')" x-init="initItem()">
-                                <div class="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 cursor-crosshair"
-                                    style="height: 180px;"
-                                    x-ref="container"
-                                    @mousedown="onMouseDown($event)"
-                                    @touchstart.passive="onTouchStart($event)">
-                                    <img x-ref="imgEl" :src="img.preview"
-                                        class="absolute inset-0 pointer-events-none select-none w-full h-full object-cover">
-                                    <div x-ref="focalEl"
-                                        class="absolute w-8 h-8 border-2 border-white rounded-full shadow-lg pointer-events-none flex items-center justify-center"
-                                        style="background-color:rgba(59,130,246,0.4);transform:translate(-50%,-50%)">
-                                        <div class="w-1 h-1 bg-white rounded-full"></div>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="image_positions[]" :value="img.x + '% ' + img.y + '%'">
-                                <button type="button"
-                                    @click.stop.prevent="$dispatch('remove-image', { id: img.id, mode: 'add' })"
-                                    class="absolute bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors cursor-pointer"
-                                    style="width: 28px; height: 28px; top: -4px; right: -4px; z-index: 50; line-height: 1;">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                                </button>
-                            </div>
-                        </template>
-                    </div>
+                    <!-- Preview gambar: render via JS ke container ini -->
+                    <div id="add-image-previews"></div>
 
                     <!-- Upload Button -->
-                    <div class="relative">
+                    <div class="relative mt-2">
                         <input type="file" name="images[]" multiple accept="image/jpeg,image/png,image/webp"
                             @change="handleFileChange($event, 'add')"
                             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
@@ -243,40 +217,10 @@
                     <textarea name="description" rows="4" x-model="editSection.description"
                         class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-y"></textarea>
                 </div>
-                <!-- Unified Image List -->
-                <div x-show="editSection.images && editSection.images.length > 0" class="space-y-4 pb-2">
-                    <label class="block text-sm font-medium text-gray-700">Gambar (Geser untuk menyesuaikan posisi)</label>
-                    <template x-for="img in editSection.images" :key="img.id">
-                        <div class="relative" style="margin-top: 8px;"
-                            x-data="imageItem(img, 'edit')" x-init="initItem()">
-                            <div class="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 cursor-crosshair"
-                                style="height: 180px;"
-                                x-ref="container"
-                                @mousedown="onMouseDown($event)"
-                                @touchstart.passive="onTouchStart($event)">
-                                <img x-ref="imgEl" :src="img.preview"
-                                    class="absolute inset-0 pointer-events-none select-none w-full h-full object-cover">
-                                <div x-ref="focalEl"
-                                    class="absolute w-8 h-8 border-2 border-white rounded-full shadow-lg pointer-events-none flex items-center justify-center"
-                                    style="background-color:rgba(59,130,246,0.4);transform:translate(-50%,-50%)">
-                                    <div class="w-1 h-1 bg-white rounded-full"></div>
-                                </div>
-                            </div>
 
-                            <template x-if="img.isExisting">
-                                <input type="hidden" name="existing_images[]" :value="img.path">
-                            </template>
-                            <input type="hidden" name="image_positions[]" :value="img.x + '% ' + img.y + '%'">
+                <!-- Preview gambar edit: render via JS ke container ini -->
+                <div id="edit-image-previews"></div>
 
-                            <button type="button"
-                                @click.stop.prevent="$dispatch('remove-image', { id: img.id, mode: 'edit' })"
-                                class="absolute bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors cursor-pointer"
-                                style="width: 28px; height: 28px; top: -4px; right: -4px; z-index: 50; line-height: 1;">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-                    </template>
-                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.feature_pages.section_form.images') }}</label>
                     <div class="relative">
@@ -387,106 +331,140 @@
 
 @push('scripts')
 <script>
-/**
- * Sub-component: tiap gambar preview punya x-data sendiri
- * agar drag via x-ref tidak terganggu oleh Alpine x-for re-render.
- */
-function imageItem(img, mode) {
-    return {
-        img: img,
-        mode: mode,
-        initItem() {
-            this.applyPosition();
-        },
-        applyPosition() {
-            const imgEl = this.$refs.imgEl;
-            const focalEl = this.$refs.focalEl;
-            if (imgEl) imgEl.style.objectPosition = this.img.x + '% ' + this.img.y + '%';
-            if (focalEl) {
-                focalEl.style.left = this.img.x + '%';
-                focalEl.style.top = this.img.y + '%';
-            }
-        },
-        calcPos(clientX, clientY) {
-            const rect = this.$refs.container.getBoundingClientRect();
-            return {
-                x: parseFloat(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)).toFixed(2)),
-                y: parseFloat(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100)).toFixed(2))
-            };
-        },
-        onMouseDown(e) {
-            if (e.target.closest('button')) return;
-            e.preventDefault();
-            const update = (ev) => {
-                const pos = this.calcPos(ev.clientX, ev.clientY);
-                this.img.x = pos.x;
-                this.img.y = pos.y;
-                this.applyPosition();
-            };
-            const stop = () => {
-                window.removeEventListener('mousemove', update);
-                window.removeEventListener('mouseup', stop);
-            };
-            window.addEventListener('mousemove', update);
-            window.addEventListener('mouseup', stop);
-            update(e);
-        },
-        onTouchStart(e) {
-            if (e.target.closest('button')) return;
-            const touch = e.touches[0];
-            const update = (ev) => {
-                const t = ev.touches[0];
-                const pos = this.calcPos(t.clientX, t.clientY);
-                this.img.x = pos.x;
-                this.img.y = pos.y;
-                this.applyPosition();
-            };
-            const stop = () => {
-                window.removeEventListener('touchmove', update);
-                window.removeEventListener('touchend', stop);
-            };
-            window.addEventListener('touchmove', update, { passive: true });
-            window.addEventListener('touchend', stop);
-            update(e);
-        }
-    };
-}
-
 function sectionManager() {
     let _idCounter = 1;
 
+    // Data gambar disimpan di plain object, BUKAN di Alpine reactive state
+    // Format: { id, preview, x, y, isExisting, path?, file? }
+    const _imageStore = { add: [], edit: [] };
+    const _files = {};
+
+    function getNextId(prefix) {
+        return prefix + '-' + Date.now() + '-' + (_idCounter++);
+    }
+
+    function parsePos(pos) {
+        if (!pos || pos === 'center') return { x: 50, y: 50 };
+        const parts = pos.split(' ');
+        if (parts.length < 2) return { x: 50, y: 50 };
+        return { x: parseFloat(parts[0]) || 50, y: parseFloat(parts[1]) || 50 };
+    }
+
+    // ===== DOM RENDERING =====
+    // Render semua gambar preview ke container via vanilla DOM
+    // Ini sepenuhnya di luar Alpine — tidak ada x-for, tidak ada x-data nested
+    function renderPreviews(mode) {
+        const containerId = mode === 'add' ? 'add-image-previews' : 'edit-image-previews';
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        // Kosongkan container
+        container.innerHTML = '';
+
+        const images = _imageStore[mode];
+        if (!images.length) return;
+
+        // Label
+        if (mode === 'edit') {
+            const label = document.createElement('label');
+            label.className = 'block text-sm font-medium text-gray-700 mb-2';
+            label.textContent = 'Gambar (Geser untuk menyesuaikan posisi)';
+            container.appendChild(label);
+        }
+
+        images.forEach((img) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'relative';
+            wrapper.style.marginTop = '8px';
+            wrapper.dataset.imgId = img.id;
+
+            // Drag container
+            const dragBox = document.createElement('div');
+            dragBox.className = 'relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 cursor-crosshair';
+            dragBox.style.height = '180px';
+
+            // Image
+            const imgEl = document.createElement('img');
+            imgEl.src = img.preview;
+            imgEl.className = 'absolute inset-0 pointer-events-none select-none w-full h-full object-cover';
+            imgEl.style.objectPosition = img.x + '% ' + img.y + '%';
+            dragBox.appendChild(imgEl);
+
+            // Focal point
+            const focal = document.createElement('div');
+            focal.className = 'absolute w-8 h-8 border-2 border-white rounded-full shadow-lg pointer-events-none flex items-center justify-center';
+            focal.style.cssText = 'background-color:rgba(59,130,246,0.4);transform:translate(-50%,-50%)';
+            focal.style.left = img.x + '%';
+            focal.style.top = img.y + '%';
+            const dot = document.createElement('div');
+            dot.className = 'w-1 h-1 bg-white rounded-full';
+            focal.appendChild(dot);
+            dragBox.appendChild(focal);
+
+            // Drag handler
+            dragBox.addEventListener('mousedown', function(e) {
+                if (e.target.closest('button')) return;
+                e.preventDefault();
+                const updatePos = (ev) => {
+                    const rect = dragBox.getBoundingClientRect();
+                    if (rect.width === 0) return;
+                    const px = parseFloat(Math.max(0, Math.min(100, ((ev.clientX - rect.left) / rect.width) * 100)).toFixed(2));
+                    const py = parseFloat(Math.max(0, Math.min(100, ((ev.clientY - rect.top) / rect.height) * 100)).toFixed(2));
+                    imgEl.style.objectPosition = px + '% ' + py + '%';
+                    focal.style.left = px + '%';
+                    focal.style.top = py + '%';
+                    img.x = px;
+                    img.y = py;
+                };
+                const stop = () => {
+                    window.removeEventListener('mousemove', updatePos);
+                    window.removeEventListener('mouseup', stop);
+                };
+                window.addEventListener('mousemove', updatePos);
+                window.addEventListener('mouseup', stop);
+                updatePos(e);
+            });
+
+            wrapper.appendChild(dragBox);
+
+            // Delete button
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'absolute bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors cursor-pointer';
+            delBtn.style.cssText = 'width:28px;height:28px;top:-4px;right:-4px;z-index:50;line-height:1';
+            delBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
+            delBtn.addEventListener('mousedown', (e) => e.stopPropagation());
+            delBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                // Hapus dari store
+                const idx = _imageStore[mode].findIndex(i => i.id === img.id);
+                if (idx !== -1) _imageStore[mode].splice(idx, 1);
+                delete _files[img.id];
+                // Hapus elemen DOM langsung (bukan re-render semua)
+                wrapper.remove();
+                // Update label visibility
+                if (mode === 'edit' && _imageStore[mode].length === 0) {
+                    container.innerHTML = '';
+                }
+            });
+            wrapper.appendChild(delBtn);
+
+            container.appendChild(wrapper);
+        });
+    }
+
     return {
-        addSection: { open: false, images: [] },
-        editSection: { open: false, id: null, title: '', description: '', order: 0, images: [] },
+        addSection: { open: false },
+        editSection: { open: false, id: null, title: '', description: '', order: 0 },
         deleteSection: { open: false, id: null, name: '' },
         imageModal: { open: false, src: '' },
-        _files: {},  // map id -> File object, terpisah dari Alpine state
-
-        init() {
-            // Listen event remove-image dari child component
-            this.$el.addEventListener('remove-image', (e) => {
-                this.removeImage(e.detail.id, e.detail.mode);
-            });
-        },
-
-        getNextId(prefix) {
-            return prefix + '-' + Date.now() + '-' + (_idCounter++);
-        },
-
-        parsePos(pos) {
-            if (!pos || pos === 'center') return { x: 50, y: 50 };
-            const parts = pos.split(' ');
-            if (parts.length < 2) return { x: 50, y: 50 };
-            return {
-                x: parseFloat(parts[0]) || 50,
-                y: parseFloat(parts[1]) || 50
-            };
-        },
 
         openAddSection() {
-            this.addSection.images = [];
-            this._files = {};
+            _imageStore.add = [];
+            Object.keys(_files).forEach(k => delete _files[k]);
             this.addSection.open = true;
+            this.$nextTick(() => renderPreviews('add'));
         },
 
         openEditSection(id, title, description, order, images, positions) {
@@ -494,14 +472,15 @@ function sectionManager() {
             this.editSection.title = title;
             this.editSection.description = description;
             this.editSection.order = order;
-            this._files = {};
 
-            const existingImages = [];
+            _imageStore.edit = [];
+            Object.keys(_files).forEach(k => delete _files[k]);
+
             if (images && images.length) {
                 images.forEach((path, i) => {
-                    const pos = this.parsePos(positions ? positions[i] : null);
-                    existingImages.push({
-                        id: this.getNextId('ext'),
+                    const pos = parsePos(positions ? positions[i] : null);
+                    _imageStore.edit.push({
+                        id: getNextId('ext'),
                         path: path,
                         preview: '{{ asset("storage") }}/' + path,
                         x: pos.x,
@@ -510,8 +489,9 @@ function sectionManager() {
                     });
                 });
             }
-            this.editSection.images = existingImages;
+
             this.editSection.open = true;
+            this.$nextTick(() => renderPreviews('edit'));
         },
 
         openDeleteSection(id, name) {
@@ -527,51 +507,67 @@ function sectionManager() {
 
         handleFileChange(event, mode) {
             const files = Array.from(event.target.files);
-            const target = mode === 'add' ? this.addSection : this.editSection;
 
+            let loaded = 0;
             files.forEach(file => {
-                if (target.images.length >= 8) return;
+                if (_imageStore[mode].length >= 8) return;
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    if (target.images.length >= 8) return;
+                    if (_imageStore[mode].length >= 8) return;
 
-                    const imgId = this.getNextId('new');
-                    // Simpan File object di map terpisah, bukan di Alpine reactive state
-                    this._files[imgId] = file;
+                    const imgId = getNextId('new');
+                    _files[imgId] = file;
 
-                    target.images = [...target.images, {
+                    _imageStore[mode].push({
                         id: imgId,
                         preview: e.target.result,
                         x: 50,
                         y: 50,
                         isExisting: false
-                    }];
+                    });
+
+                    loaded++;
+                    // Re-render setelah semua file selesai dibaca
+                    if (loaded === files.length) {
+                        renderPreviews(mode);
+                    }
                 };
                 reader.readAsDataURL(file);
             });
-            // Reset native input
             event.target.value = '';
         },
 
-        removeImage(id, mode) {
-            const target = mode === 'add' ? this.addSection : this.editSection;
-            // Hapus file reference
-            delete this._files[id];
-            // Hapus dari array — bikin array baru supaya Alpine detect perubahan
-            target.images = target.images.filter(img => img.id !== id);
-        },
-
         submitForm(event, mode) {
-            const target = mode === 'add' ? this.addSection : this.editSection;
             const form = event.target;
             const fileInput = form.querySelector('input[type="file"]');
+            const images = _imageStore[mode];
 
-            // Rebuild file input hanya dari gambar baru yang masih ada
+            // Hapus hidden inputs lama yang mungkin ada
+            form.querySelectorAll('input[name="image_positions[]"], input[name="existing_images[]"]').forEach(el => el.remove());
+
+            // Buat hidden inputs untuk positions dan existing images
+            images.forEach(img => {
+                const posInput = document.createElement('input');
+                posInput.type = 'hidden';
+                posInput.name = 'image_positions[]';
+                posInput.value = img.x + '% ' + img.y + '%';
+                form.appendChild(posInput);
+
+                if (img.isExisting) {
+                    const existInput = document.createElement('input');
+                    existInput.type = 'hidden';
+                    existInput.name = 'existing_images[]';
+                    existInput.value = img.path;
+                    form.appendChild(existInput);
+                }
+            });
+
+            // Rebuild file input dari gambar baru yang masih ada
             const dt = new DataTransfer();
-            target.images.forEach(img => {
-                if (!img.isExisting && this._files[img.id]) {
-                    dt.items.add(this._files[img.id]);
+            images.forEach(img => {
+                if (!img.isExisting && _files[img.id]) {
+                    dt.items.add(_files[img.id]);
                 }
             });
             fileInput.files = dt.files;
