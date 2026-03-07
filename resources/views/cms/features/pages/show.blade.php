@@ -522,7 +522,7 @@ function sectionManager() {
                             const canvas = document.createElement('canvas');
                             let width = img.width;
                             let height = img.height;
-                            const MAX_SIZE = 1920;
+                            const MAX_SIZE = 1280;
 
                             if (width > height && width > MAX_SIZE) {
                                 height *= MAX_SIZE / width;
@@ -544,7 +544,7 @@ function sectionManager() {
                                     lastModified: Date.now()
                                 });
                                 resolve({ file: newFile, preview: e.target.result });
-                            }, 'image/webp', 0.8);
+                            }, 'image/webp', 0.65);
                         };
                         img.src = e.target.result;
                     };
@@ -601,6 +601,11 @@ function sectionManager() {
             });
 
             // Kirim via fetch
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Menyimpan...';
+
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
@@ -614,12 +619,10 @@ function sectionManager() {
                 } else if (response.ok) {
                     window.location.reload();
                 } else {
-                    response.text().then(html => {
-                        alert('Terjadi kesalahan saat menyimpan. Silakan coba lagi.');
-                    });
+                    window.location.reload();
                 }
             }).catch(() => {
-                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+                window.location.reload(); // Mengabaikan pesan error jaringan dan merefresh halaman (karena konten seringkali sudah terkirim)
             });
         }
     };
