@@ -65,9 +65,10 @@
 
                     @if($section->images && count($section->images))
                     <div class="section-images section-images-{{ min(count($section->images), 4) }}cols">
-                        @foreach($section->images as $img)
+                        @foreach($section->images as $imgIndex => $img)
                         <div class="section-img-wrap">
-                            <img src="{{ asset('storage/' . $img) }}" alt="{{ $section->title }}" loading="lazy">
+                            <img src="{{ asset('storage/' . $img) }}" alt="{{ $section->title }}" loading="lazy"
+                                style="object-position: {{ $section->image_positions[$imgIndex] ?? 'center' }}">
                         </div>
                         @endforeach
                     </div>

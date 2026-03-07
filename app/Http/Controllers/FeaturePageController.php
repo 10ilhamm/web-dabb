@@ -106,6 +106,7 @@ class FeaturePageController extends Controller
             'order' => 'required|integer|min:0',
             'images' => 'nullable|array|max:8',
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image_positions' => 'nullable|array',
         ]);
 
         $imagePaths = [];
@@ -124,6 +125,7 @@ class FeaturePageController extends Controller
                 ? $translationService->translate($validated['description'])
                 : null,
             'images' => $imagePaths ?: null,
+            'image_positions' => $validated['image_positions'] ?? null,
             'order' => $validated['order'],
         ]);
 
@@ -144,6 +146,7 @@ class FeaturePageController extends Controller
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
             'existing_images' => 'nullable|array',
             'existing_images.*' => 'string',
+            'image_positions' => 'nullable|array',
         ]);
 
         // Keep existing images that weren't removed
@@ -173,6 +176,7 @@ class FeaturePageController extends Controller
                 ? $translationService->translate($validated['description'])
                 : null,
             'images' => $imagePaths ?: null,
+            'image_positions' => $validated['image_positions'] ?? null,
             'order' => $validated['order'],
         ]);
 

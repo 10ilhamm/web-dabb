@@ -13,11 +13,13 @@ class FeaturePageSection extends Model
         'description',
         'description_en',
         'images',
+        'image_positions',
         'order',
     ];
 
     protected $casts = [
         'images' => 'array',
+        'image_positions' => 'array',
     ];
 
     public function featurePage()
