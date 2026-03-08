@@ -231,7 +231,7 @@ class FeaturePageController extends Controller
      */
     public function publicShowByPath(Request $request)
     {
-        $path = '/' . $request->path;
+        $path = '/'.$request->path;
         $feature = Feature::where('path', $path)->firstOrFail();
         $feature->loadCount('pages');
 

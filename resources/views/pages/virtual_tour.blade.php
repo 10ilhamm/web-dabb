@@ -124,7 +124,53 @@
     cursor: pointer; transition: background 0.2s;
 }
 .vt-modal-close:hover { background: rgba(255,255,255,0.35); }
-#vt-panorama { width: 100%; flex: 1; }
+/* ── Hotspot in viewer (public) ─────────────── */
+.vt-hotspot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(23, 78, 147, 0.9);
+    border: 3px solid rgba(255,255,255,0.9);
+    box-shadow: 0 0 0 2px rgba(23,78,147,0.4), 0 4px 12px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    animation: vt-pulse 2.5s ease-in-out infinite;
+}
+.vt-hotspot:hover { transform: scale(1.2); background: rgba(29, 78, 216, 1); }
+@keyframes vt-pulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(23,78,147,0.4), 0 4px 12px rgba(0,0,0,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(23,78,147,0.15), 0 4px 12px rgba(0,0,0,0.4); }
+}
+.vt-hotspot svg { pointer-events: none; }
+.vt-hotspot-label {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.92);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 5px 10px;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+.vt-hotspot-label::after {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(15, 23, 42, 0.92);
+}
+.vt-hotspot:hover .vt-hotspot-label { opacity: 1; }
+#vt-panorama { width: 100%; flex: 1; min-height: 0; position: relative; }
 </style>
 @endpush
 
@@ -198,61 +244,26 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+{{-- Pass server data to JS (only data, no logic) --}}
 <script>
-let vtViewer = null;
-
-// Pass hotspot data from server
-const roomHotspots = @json(
-    $virtualRooms->keyBy('id')->map(fn($r) => $r->hotspots ?? [])
-);
-
-function openTour(roomId, roomName, imageUrl) {
-    if (!imageUrl) {
-        alert('Panorama untuk ruangan ini belum tersedia.');
-        return;
-    }
-
-    document.getElementById('vtModalTitle').textContent = roomName;
-    document.getElementById('vtModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-    if (vtViewer) { vtViewer.destroy(); vtViewer = null; }
-
-    const hotspots = (roomHotspots[roomId] || []).map(hs => ({
-        pitch: parseFloat(hs.pitch),
-        yaw:   parseFloat(hs.yaw),
-        type:  'info',
-        text:  hs.text_tooltip,
-        cssClass: 'pnlm-hotspot-base pnlm-info',
-    }));
-
-    vtViewer = pannellum.viewer('vt-panorama', {
-        type: 'equirectangular',
-        panorama: imageUrl,
-        autoLoad: true,
-        autoRotate: -2,
-        showZoomCtrl: true,
-        mouseZoom: true,
-        compass: false,
-        hotSpots: hotspots,
-    });
-}
-
-function closeTour() {
-    document.getElementById('vtModal').classList.remove('active');
-    document.body.style.overflow = '';
-    if (vtViewer) { vtViewer.destroy(); vtViewer = null; }
-}
-
-// Close on backdrop click
-document.getElementById('vtModal').addEventListener('click', function(e) {
-    if (e.target === this) closeTour();
-});
-
-// Close on Escape
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeTour();
-});
+window.vtRoomData = {!! json_encode(
+    $virtualRooms->keyBy('id')->map(function($room) {
+        return [
+            'id'       => (string) $room->id,
+            'name'     => $room->name,
+            'imageUrl' => $room->image_360_path ? asset('storage/'.$room->image_360_path) : '',
+            'hotspots' => $room->hotspots->map(function($h) {
+                return [
+                    'pitch'          => (float) $h->pitch,
+                    'yaw'            => (float) $h->yaw,
+                    'text_tooltip'   => $h->text_tooltip,
+                    'target_room_id' => (string) $h->target_room_id,
+                ];
+            })->values(),
+        ];
+    })
+) !!};
 </script>
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+<script src="{{ asset('js/virtual_tour.js') }}"></script>
 @endpush
