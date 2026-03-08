@@ -43,7 +43,8 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:instansi_swasta')
         ->name('dashboard.instansi');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
     Route::get('/profile/activity', [ProfileController::class, 'activity'])->name('profile.activity');
     Route::delete('/profile/activity/logout-others', [ProfileController::class, 'logoutOtherBrowserSessions'])->name('profile.activity.logout-others');

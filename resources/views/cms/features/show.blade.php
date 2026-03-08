@@ -30,8 +30,6 @@
         </div>
     </div>
 
-
-
     @if($feature->type === 'dropdown')
     {{-- ===== DROPDOWN TYPE: Show sub-menu list ===== --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-100">

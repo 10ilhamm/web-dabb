@@ -18,8 +18,9 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Sidebar CSS -->
+    <!-- Sidebar & Alert CSS -->
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/alert.css') }}">
 
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.tailwindcss.min.css">
@@ -232,9 +233,11 @@
                     <div x-data="{ profileOpen: false }" class="relative flex items-center pl-4 border-l border-gray-200">
                         <button @click="profileOpen = !profileOpen" @click.away="profileOpen = false"
                             class="flex items-center focus:outline-none w-full text-left">
-                            <img class="h-9 w-9 rounded-full object-cover border border-gray-200"
-                                src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=E5E7EB&color=374151&bold=true"
-                                alt="Avatar">
+                            <div class="flex items-center justify-center w-[40px] h-[40px] p-[2px] bg-white border border-gray-200 rounded-full shadow-sm shrink-0">
+                                <img class="w-full h-full rounded-full object-cover block"
+                                    src="{{ auth()->user()->photo ? asset('storage/' . auth()->user()->photo) : 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name ?? 'User').'&background=E5E7EB&color=374151&bold=true' }}"
+                                    alt="Avatar">
+                            </div>
                             <div class="ml-3 flex flex-col" style="line-height: 1.2;">
                                 <span
                                     class="text-[13px] font-semibold text-gray-800">{{ auth()->user()->name ?? __('dashboard.profile.default_name') }}</span>
@@ -261,7 +264,7 @@
                             style="display: none;">
 
                             <!-- Kelola Akun -->
-                            <a href="{{ route('profile.edit') }}"
+                            <a href="{{ route('profile.show') }}"
                                 class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-[#EEF2FF] hover:text-[#4F46E5] transition-colors rounded-t-xl group">
                                 <svg class="w-5 h-5 mr-3 text-[#60A5FA] group-hover:text-[#4F46E5]" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -423,29 +426,21 @@
             }
         @endphp
 
-        <!-- Bootstrap Toast with AlpineJS -->
-        <div class="fixed top-8 right-8 z-[9999]" style="width: 350px;"
-             x-data="{ showToast: false }"
-             x-init="setTimeout(() => showToast = true, 50); setTimeout(() => showToast = false, 5000)">
-            <div x-show="showToast" 
-                 x-cloak
-                 x-transition:enter="transition ease-out duration-300 transform"
-                 x-transition:enter-start="translate-x-full opacity-0"
-                 x-transition:enter-end="translate-x-0 opacity-100"
-                 x-transition:leave="transition ease-in duration-300 transform"
-                 x-transition:leave-start="translate-x-0 opacity-100"
-                 x-transition:leave-end="translate-x-full opacity-0"
-                 class="flex items-center p-4 mb-4 border rounded-md shadow-lg {{ $tClass }}" role="alert">
-                <svg class="w-6 h-6 shrink-0 mr-3 fill-current" role="img" aria-label="{{ ucfirst($tType) }}:"><use xlink:href="{{ $tIcon }}"/></svg>
-                <div class="flex-1 font-medium text-sm">
+        <!-- Custom Vanilla JS Toast -->
+        <div class="toast-container">
+            <div class="toast-message {{ $tClass }}" role="alert">
+                <svg class="toast-icon" role="img" aria-label="{{ ucfirst($tType) }}:"><use xlink:href="{{ $tIcon }}"/></svg>
+                <div class="toast-content">
                     {!! $tMsg !!}
                 </div>
-                <button type="button" @click="showToast = false" class="ml-3 focus:outline-none opacity-50 hover:opacity-100">
-                    <span aria-hidden="true" class="text-xl font-bold leading-none">&times;</span>
+                <button type="button" class="toast-close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
         </div>
     @endif
+
+    <script src="{{ asset('js/alert.js') }}"></script>
 
     <!-- DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
