@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeContentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleDashboardController;
+use App\Http\Controllers\Cms\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -52,6 +53,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->prefix('cms/home')->name('cms.home.')->group(function () {
         Route::get('/', [HomeContentController::class, 'edit'])->name('edit');
         Route::post('/', [HomeContentController::class, 'update'])->name('update');
+    });
+
+    // CMS Settings
+    Route::middleware('role:admin')->prefix('cms/settings')->name('cms.settings.')->group(function () {
+        Route::get('/footer', [SettingController::class, 'editFooter'])->name('footer.edit');
+        Route::put('/footer', [SettingController::class, 'updateFooter'])->name('footer.update');
     });
 
     // CMS Features

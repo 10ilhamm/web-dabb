@@ -122,9 +122,9 @@
                             class="flex items-center px-3 py-2 text-[13px] rounded-md {{ request()->routeIs('cms.features.*') ? 'active-item' : 'text-white/70 hover:text-white font-medium' }}">
                             {{ __('dashboard.sidebar.cms_features') }}
                         </a>
-                        <a href="#"
-                            class="flex items-center px-3 py-2 text-[13px] rounded-md font-medium text-white/70 hover:text-white">
-                            {{ __('dashboard.sidebar.cms_data2') }}
+                        <a href="{{ route('cms.settings.footer.edit') }}"
+                            class="flex items-center px-3 py-2 text-[13px] rounded-md {{ request()->routeIs('cms.settings.footer.*') ? 'active-item' : 'text-white/70 hover:text-white font-medium' }}">
+                            {{ __('dashboard.sidebar.cms_footer') }}
                         </a>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ return [
         'reports' => 'Laporan',
         'cms' => 'CMS',
         'cms_features' => 'Manajemen Fitur',
-        'cms_data2' => 'Data 2',
+        'cms_footer' => 'Footer',
         'users' => 'Pengguna',
         'manage_users' => 'Kelola Pengguna',
         'visit_website' => 'Lihat Website',

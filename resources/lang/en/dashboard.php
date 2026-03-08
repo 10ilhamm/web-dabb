@@ -6,7 +6,7 @@ return [
         'reports' => 'Reports',
         'cms' => 'CMS',
         'cms_features' => 'Feature Management',
-        'cms_data2' => 'Data 2',
+        'cms_footer' => 'Footer',
         'users' => 'Users',
         'manage_users' => 'Manage Users',
         'visit_website' => 'Visit Website',
