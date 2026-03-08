@@ -12,6 +12,17 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public static function getEnumValues($table, $column)
+    {
+        $type = \Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM {$table} WHERE Field = '{$column}'")[0]->Type;
+        preg_match('/^enum\((.*)\)$/', $type, $matches);
+        $enum = [];
+        foreach (explode(',', $matches[1]) as $value) {
+            $enum[] = trim($value, "'");
+        }
+        return $enum;
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -64,6 +75,18 @@ class User extends Authenticatable
     }
 
     /* Relationships */
+    public function getProfileAttribute()
+    {
+        return match ($this->role) {
+            'umum' => $this->userUmum,
+            'pelajar_mahasiswa' => $this->userPelajar,
+            'instansi_swasta' => $this->userInstansi,
+            'admin' => $this->userAdmin,
+            'pegawai' => $this->userPegawai,
+            default => null,
+        };
+    }
+
     public function userUmum()
     {
         return $this->hasOne(UserUmum::class);

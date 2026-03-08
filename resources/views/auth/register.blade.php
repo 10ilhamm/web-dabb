@@ -77,18 +77,18 @@
                         <input type="email" name="email" id="email" class="login-input"
                             placeholder="nama@gmail.com" value="{{ old('email') }}" required>
 
-                        <!-- Jenis Kelamin (Hidden for Instansi) -->
                         <div class="jk-group" style="display: contents;">
                             <label class="required">{{ __('auth.gender') }}</label>
                             <div class="radio-group" id="jk-container">
-                                <label class="radio-item">
-                                    <input type="radio" name="jenis_kelamin" value="Laki-Laki"
-                                        {{ old('jenis_kelamin') == 'Laki-Laki' ? 'checked' : '' }}> {{ __('auth.male') }}
-                                </label>
-                                <label class="radio-item">
-                                    <input type="radio" name="jenis_kelamin" value="Perempuan"
-                                        {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }}> {{ __('auth.female') }}
-                                </label>
+                                @php
+                                    $jkList = \App\Models\User::getEnumValues('user_umums', 'jenis_kelamin');
+                                @endphp
+                                @foreach($jkList as $jk)
+                                    <label class="radio-item">
+                                        <input type="radio" name="jenis_kelamin" value="{{ $jk }}"
+                                            {{ old('jenis_kelamin') == $jk ? 'checked' : '' }}> {{ $jk }}
+                                    </label>
+                                @endforeach
                             </div>
                         </div>
 

@@ -13,18 +13,6 @@
             <h1 class="text-[22px] font-bold text-[#1E293B]">Profil Pengguna</h1>
         </div>
 
-        <div class="mb-4">
-            <a href="{{ route('profile.show') }}"
-                class="inline-flex items-center text-[13px] font-medium text-white bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg shadow-sm transition-colors">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Kembali
-            </a>
-        </div>
-
-
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col h-full relative">
             <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                 @csrf
@@ -32,130 +20,193 @@
 
                 <!-- Avatar Section -->
                 <div class="flex flex-col items-center justify-center pt-10 pb-6 border-b border-gray-100">
-                    <div class="relative flex items-center justify-center w-24 h-24 p-[3px] bg-white border border-gray-200 rounded-full shadow-sm shrink-0">
+                    <div
+                        class="relative flex items-center justify-center w-24 h-24 p-[3px] bg-white border border-gray-200 rounded-full shadow-sm shrink-0">
                         <img id="profile-photo-preview" class="w-full h-full rounded-full object-cover block"
-                            src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=E5E7EB&color=374151&bold=true&size=128' }}"
+                            src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=E5E7EB&color=374151&bold=true&size=128' }}"
                             alt="Avatar">
                     </div>
-                    <label for="photo-upload" class="mt-3 text-sm font-medium text-blue-500 hover:text-blue-600 cursor-pointer">
+                    <label for="photo-upload"
+                        class="mt-3 text-sm font-medium text-blue-500 hover:text-blue-600 cursor-pointer">
                         Edit Photo
                     </label>
-                    <input id="photo-upload" type="file" name="photo" accept="image/*" class="hidden" onchange="previewPhoto(event)">
-                    @error('photo')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+                    <input id="photo-upload" type="file" name="photo" accept="image/*" class="hidden"
+                        onchange="previewPhoto(event)">
+                    @error('photo')
+                        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Form Fields -->
                 <div class="p-8 pb-24">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                        
+
                         <!-- Nama Lengkap -->
                         <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.full_name') }}</label>
+                            <label
+                                class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.full_name') }}</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
-                            @error('name')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+                            @error('name')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- NIP -->
-                        <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.nip') }}</label>
-                            <input type="text" name="nip" value="{{ old('nip', '1234567890') }}"
-                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
-                        </div>
+                        <!-- NIP (Admin/Pegawai) -->
+                        @if (in_array($user->role, ['admin', 'pegawai']))
+                            <div>
+                                <label
+                                    class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.nip') }}</label>
+                                <input type="text" name="nip" value="{{ old('nip', $user->profile->nip ?? '') }}"
+                                    maxlength="18"
+                                    class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
+                            </div>
+                        @endif
 
                         <!-- Jenis Kelamin -->
-                        <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.gender') }}</label>
-                            <div class="relative">
-                                <select name="gender" class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none appearance-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
-                                    <option value="L" selected>Laki-laki</option>
-                                    <option value="P">Perempuan</option>
+                        @if ($user->role !== 'instansi_swasta')
+                            <div>
+                                <label
+                                    class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.gender') }}</label>
+                                @php
+                                    $tableName = match($user->role) {
+                                        'admin' => 'user_admins',
+                                        'pegawai' => 'user_pegawais',
+                                        'umum' => 'user_umums',
+                                        'pelajar_mahasiswa' => 'user_pelajars',
+                                        default => 'user_umums'
+                                    };
+                                    $jkList = \App\Models\User::getEnumValues($tableName, 'jenis_kelamin');
+                                @endphp
+                                <select name="jenis_kelamin"
+                                    class="tom-select-class w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
+                                    <option value="">Pilih Jenis Kelamin</option>
+                                    @foreach($jkList as $jk)
+                                    <option value="{{ $jk }}"
+                                        {{ old('jenis_kelamin', $user->profile->jenis_kelamin ?? '') == $jk ? 'selected' : '' }}>
+                                        {{ $jk }}</option>
+                                    @endforeach
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
                             </div>
-                        </div>
+                        @endif
 
                         <!-- Agama -->
-                        <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.religion') }}</label>
-                            <div class="relative">
-                                <select name="religion" class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none appearance-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
-                                    <option value="Islam" selected>Islam</option>
-                                    <option value="Kristen">Kristen</option>
-                                    <option value="Katolik">Katolik</option>
-                                    <option value="Hindu">Hindu</option>
-                                    <option value="Buddha">Buddha</option>
-                                    <option value="Konghucu">Konghucu</option>
+                        @if (in_array($user->role, ['admin', 'pegawai']))
+                            <div>
+                                <label
+                                    class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.religion') }}</label>
+                                @php 
+                                    $tableName = $user->role === 'admin' ? 'user_admins' : 'user_pegawais';
+                                    $agamaList = \App\Models\User::getEnumValues($tableName, 'agama'); 
+                                @endphp
+                                <select name="agama"
+                                    class="tom-select-class w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
+                                    <option value="">Pilih Agama</option>
+                                    @foreach ($agamaList as $agama)
+                                        <option value="{{ $agama }}"
+                                            {{ old('agama', $user->profile->agama ?? '') == $agama ? 'selected' : '' }}>
+                                            {{ $agama }}</option>
+                                    @endforeach
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
                             </div>
-                        </div>
+                        @endif
 
                         <!-- Email -->
                         <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.email') }}</label>
+                            <label
+                                class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.email') }}</label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
-                            @error('email')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
+                            @error('email')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- Nomor Telepon -->
+                        <!-- Nomor WhatsApp -->
                         <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.phone_number') }}</label>
-                            <input type="text" name="phone" value="{{ old('phone', '081234567890') }}"
+                            <label
+                                class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.phone_number') }}</label>
+                            <input type="text" name="nomor_whatsapp"
+                                value="{{ old('nomor_whatsapp', $user->profile->nomor_whatsapp ?? '') }}" maxlength="20"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
                         </div>
 
                         <!-- Jabatan -->
-                        <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.position') }}</label>
-                            <div class="relative">
-                                <select name="position" class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none appearance-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
-                                    <option value="Arsiparis Ahli Utama" selected>Arsiparis Ahli Utama</option>
-                                    <option value="Arsiparis Ahli Madya">Arsiparis Ahli Madya</option>
+                        @if (in_array($user->role, ['admin', 'pegawai']))
+                            <div>
+                                <label
+                                    class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.position') }}</label>
+                                @php 
+                                    $tableName = $user->role === 'admin' ? 'user_admins' : 'user_pegawais';
+                                    $jabatanList = \App\Models\User::getEnumValues($tableName, 'jabatan'); 
+                                @endphp
+                                <select name="jabatan"
+                                    class="tom-select-class w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
+                                    <option value="">Pilih Jabatan</option>
+                                    @foreach ($jabatanList as $jabatan)
+                                        <option value="{{ $jabatan }}"
+                                            {{ old('jabatan', $user->profile->jabatan ?? '') == $jabatan ? 'selected' : '' }}>
+                                            {{ $jabatan }}</option>
+                                    @endforeach
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
                             </div>
-                        </div>
 
-                        <!-- Pangkat/Golongan -->
-                        <div>
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.rank_class') }}</label>
-                            <div class="relative">
-                                <select name="rank" class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none appearance-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
-                                    <option value="Golongan IV" selected>Golongan IV</option>
-                                    <option value="Golongan III">Golongan III</option>
+                            <!-- Pangkat/Golongan -->
+                            <div>
+                                <label
+                                    class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.rank_class') }}</label>
+                                @php 
+                                    $tableName = $user->role === 'admin' ? 'user_admins' : 'user_pegawais';
+                                    $pangkatList = \App\Models\User::getEnumValues($tableName, 'pangkat_golongan'); 
+                                @endphp
+                                <select name="pangkat_golongan"
+                                    class="tom-select-class w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
+                                    <option value="">Pilih Pangkat/Golongan</option>
+                                    @foreach ($pangkatList as $pangkat)
+                                        <option value="{{ $pangkat }}"
+                                            {{ old('pangkat_golongan', $user->profile->pangkat_golongan ?? '') == $pangkat ? 'selected' : '' }}>
+                                            {{ $pangkat }}</option>
+                                    @endforeach
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
                             </div>
-                        </div>
+                        @endif
 
-                        <!-- Tempat, tanggal lahir -->
-                        <div class="md:col-span-2">
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.birth_place_date') }}</label>
-                            <input type="text" name="birth_place_date" value="{{ old('birth_place_date', 'Bandung, 10 Januari 1999') }}"
+                        <!-- Tempat Lahir -->
+                        <div>
+                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir"
+                                value="{{ old('tempat_lahir', $user->profile->tempat_lahir ?? '') }}" maxlength="100"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
+                        </div>
+
+                        <!-- Tanggal Lahir -->
+                        <div>
+                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir"
+                                value="{{ old('tanggal_lahir', $user->profile->tanggal_lahir ?? '') }}"
+                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
                         </div>
 
                         <!-- Alamat -->
                         <div class="md:col-span-2">
-                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.address') }}</label>
-                            <textarea name="address" rows="3"
-                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors resize-none">Jl. Raya Derwati, Mekarjaya, Kec. Rancasari,&#10;Kota Bandung, Jawa Barat 40292</textarea>
+                            <label
+                                class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.address') }}</label>
+                            <textarea name="alamat" rows="3"
+                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors resize-none">{{ old('alamat', $user->profile->alamat ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
 
-                <!-- Save Button positioned absolutely like in show view -->
-                <div class="absolute bottom-6 right-6">
+                <!-- Action Buttons -->
+                <div class="absolute bottom-6 right-6 flex items-center space-x-3">
+                    <a href="{{ route('profile.show') }}"
+                        class="inline-flex items-center text-[13px] font-medium text-white bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg shadow-sm transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Kembali
+                    </a>
                     <button type="submit"
                         class="bg-[#3B82F6] hover:bg-blue-600 text-white text-[13px] font-medium py-2 px-5 rounded-lg border border-blue-500 shadow-sm flex items-center transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,18 +223,98 @@
 @endsection
 
 @push('scripts')
-<script>
-    function previewPhoto(event) {
-        const input = event.target;
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                document.getElementById('profile-photo-preview').src = e.target.result;
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tom-select-class').forEach((el) => {
+                new TomSelect(el, {
+                    create: false,
+                    maxOptions: null,
+                    sortField: {
+                        field: "text",
+                        direction: "asc"
+                    },
+                    controlInput: '<input>',
+                    render: {
+                        no_results: function(data, escape) {
+                            return '<div class="no-results" style="padding: 8px 12px;">Tidak ada hasil ditemukan</div>';
+                        }
+                    }
+                });
+            });
+        });
+
+        function previewPhoto(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    document.getElementById('profile-photo-preview').src = e.target.result;
+                }
+
+                reader.readAsDataURL(input.files[0]);
             }
-            
-            reader.readAsDataURL(input.files[0]);
         }
+    </script>
+@endpush
+
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.default.min.css" rel="stylesheet">
+<style>
+    /* Tom Select Override for Tailwind Custom UI */
+    .ts-wrapper .ts-control {
+        border-radius: 0.5rem !important;
+        background-color: #f9fafb !important;
+        border-color: #e5e7eb !important;
+        padding: 0.625rem 0.75rem !important;
+        min-height: unset !important;
+        font-size: 13px !important;
+        font-family: inherit;
+        color: #1f2937 !important;
+        box-shadow: none !important;
+        display: flex;
+        align-items: center;
     }
-</script>
+    .ts-wrapper.focus .ts-control, .ts-wrapper.input-active .ts-control {
+        background-color: #ffffff !important;
+        border-color: #3b82f6 !important;
+        box-shadow: none !important;
+    }
+    .ts-wrapper .ts-dropdown {
+        border-radius: 0.5rem !important;
+        font-size: 13px !important;
+        margin-top: 4px !important;
+        border: 1px solid #e5e7eb !important;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+    }
+    .ts-wrapper .ts-dropdown .ts-dropdown-content {
+        max-height: 200px !important;
+        overflow-y: auto !important;
+    }
+    .ts-wrapper .option {
+        padding: 8px 12px !important;
+    }
+    .ts-wrapper .option:hover, .ts-wrapper .option.active {
+        background-color: #f3f4f6 !important;
+        color: #1f2937 !important;
+    }
+    .ts-control.single .ts-input {
+        padding-right: 30px;
+    }
+    .ts-wrapper.single .ts-control:after {
+        content: '';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 5px solid transparent;
+        border-top-color: #9ca3af;
+    }
+    .ts-wrapper.single.dropdown-active .ts-control:after {
+        border-top-color: transparent;
+        border-bottom-color: #9ca3af;
+        margin-top: -5px;
+    }
+</style>
 @endpush

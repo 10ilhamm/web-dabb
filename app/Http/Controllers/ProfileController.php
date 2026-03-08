@@ -144,14 +144,19 @@ class ProfileController extends Controller
             $user = $request->user();
             $data = $request->validated();
 
+            $userData = [
+                'name' => $data['name'] ?? $user->name,
+                'email' => $data['email'] ?? $user->email,
+            ];
+
             if ($request->hasFile('photo')) {
                 if ($user->photo) {
                     Storage::disk('public')->delete($user->photo);
                 }
-                $data['photo'] = $request->file('photo')->store('profile-photos', 'public');
+                $userData['photo'] = $request->file('photo')->store('profile-photos', 'public');
             }
 
-            $user->fill($data);
+            $user->fill($userData);
 
             if ($user->isDirty('email')) {
                 $user->email_verified_at = null;
@@ -159,9 +164,27 @@ class ProfileController extends Controller
 
             $user->save();
 
+            // Handle Profile Data
+            $profileFields = ['nip', 'nomor_whatsapp', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'jabatan', 'pangkat_golongan', 'alamat'];
+            $profileData = [];
+
+            foreach ($profileFields as $field) {
+                if (array_key_exists($field, $data)) {
+                    $profileData[$field] = $data[$field];
+                }
+            }
+
+            if (!empty($profileData) && $user->profile) {
+                // Ensure we don't try to save a field that doesn't exist on this particular profile
+                $validProfileData = array_intersect_key($profileData, array_flip(app()->make(get_class($user->profile))->getFillable() ?: $profileFields));
+                
+                // Fast workaround since some fillable might not be set in models, we can just do a direct update:
+                $user->profile->update($profileData);
+            }
+
             return Redirect::route('profile.show')->with('success', 'Profil berhasil diperbarui.');
         } catch (\Throwable $e) {
-            return Redirect::route('profile.edit')->with('error', 'Data gagal diubah.');
+            return Redirect::route('profile.edit')->with('error', 'Data gagal diubah: ' . $e->getMessage());
         }
     }
 

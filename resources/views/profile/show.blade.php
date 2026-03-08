@@ -21,8 +21,10 @@
             <div class="ml-5">
                 <h2 class="text-lg font-bold text-gray-900">{{ $user->name }}</h2>
                 <div class="text-sm font-medium border-l-[3px] border-blue-200 pl-3 mt-1.5 flex items-center space-x-3">
-                    <span class="text-gray-400">NIP. 1234567890</span>
+                    @if(in_array($user->role, ['admin', 'pegawai']))
+                    <span class="text-gray-400">NIP. {{ $user->profile->nip ?? '-' }}</span>
                     <span class="text-gray-300">|</span>
+                    @endif
                     <span class="text-gray-500">{{ App\Models\User::roleLabels()[$user->role] ?? __('dashboard.roles.default') }}</span>
                 </div>
             </div>
@@ -39,14 +41,20 @@
                         </div>
                         <div class="text-[13px] font-medium text-gray-800">{{ $user->name }}</div>
                     </div>
+                    
+                    @if(in_array($user->role, ['admin', 'pegawai']))
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.nip') }}</div>
-                        <div class="text-[13px] font-medium text-gray-800">1234567890</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->profile->nip ?? '-' }}</div>
                     </div>
+                    @endif
+
+                    @if($user->role !== 'instansi_swasta')
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.gender') }}</div>
-                        <div class="text-[13px] font-medium text-gray-800">Laki-laki</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->profile->jenis_kelamin ?? '-' }}</div>
                     </div>
+                    @endif
 
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.email') }}</div>
@@ -55,35 +63,37 @@
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.phone_number') }}
                         </div>
-                        <div class="text-[13px] font-medium text-gray-800">(+62) 81234567890</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->profile->nomor_whatsapp ?? '-' }}</div>
                     </div>
+                    
+                    @if(in_array($user->role, ['admin', 'pegawai']))
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.religion') }}
                         </div>
-                        <div class="text-[13px] font-medium text-gray-800">Islam</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->profile->agama ?? '-' }}</div>
                     </div>
-
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.position') }}
                         </div>
-                        <div class="text-[13px] font-medium text-gray-800">
-                            {{ App\Models\User::roleLabels()[$user->role] ?? __('dashboard.roles.default') }}</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->profile->jabatan ?? '-' }}</div>
                     </div>
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.rank_class') }}
                         </div>
-                        <div class="text-[13px] font-medium text-gray-800">Golongan IV</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->profile->pangkat_golongan ?? '-' }}</div>
                     </div>
+                    @endif
+
                     <div>
                         <div class="text-[11px] font-medium text-gray-400 mb-1">
                             {{ __('dashboard.profile.birth_place_date') }}</div>
-                        <div class="text-[13px] font-medium text-gray-800">Bandung, 10 Januari 1999</div>
+                        <div class="text-[13px] font-medium text-gray-800">{{ $user->profile->tempat_lahir ?? '-' }}, {{ $user->profile->tanggal_lahir ? \Carbon\Carbon::parse($user->profile->tanggal_lahir)->translatedFormat('d F Y') : '-' }}</div>
                     </div>
 
                     <div class="md:col-span-3">
                         <div class="text-[11px] font-medium text-gray-400 mb-1">{{ __('dashboard.profile.address') }}</div>
                         <div class="text-[13px] font-medium text-gray-800 leading-relaxed">
-                            Jl. Raya Derwati, Mekarjaya, Kec. Rancasari,<br> Kota Bandung, Jawa Barat 40292
+                            {{ $user->profile->alamat ?? '-' }}
                         </div>
                     </div>
                 </div>
