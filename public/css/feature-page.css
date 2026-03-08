@@ -166,6 +166,8 @@
 .section-img-wrap {
     overflow: hidden;
     border-radius: 6px;
+    position: relative;
+    cursor: pointer;
 }
 .section-img-wrap img {
     width: 100%;
@@ -175,8 +177,63 @@
     border-radius: 6px;
     transition: transform 0.3s;
 }
-.section-img-wrap img:hover {
-    transform: scale(1.03);
+.hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 6px;
+}
+.section-img-wrap:hover .hover-overlay {
+    opacity: 1;
+}
+.zoom-icon {
+    width: 64px;
+    height: 64px;
+    color: rgba(255, 255, 255, 0.7);
+    stroke-width: 1.5;
+}
+
+/* Image Modal */
+.feature-image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.feature-image-modal .modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.feature-image-modal .close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+.feature-image-modal .close-modal:hover,
+.feature-image-modal .close-modal:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 /* Section Description */

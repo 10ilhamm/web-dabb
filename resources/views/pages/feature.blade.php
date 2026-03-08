@@ -66,9 +66,14 @@
                     @if($section->images && count($section->images))
                     <div class="section-images section-images-{{ min(count($section->images), 4) }}cols">
                         @foreach($section->images as $imgIndex => $img)
-                        <div class="section-img-wrap">
+                        <div class="section-img-wrap" onclick="openImageModal('{{ asset('storage/' . $img) }}')">
                             <img src="{{ asset('storage/' . $img) }}" alt="{{ $section->title }}" loading="lazy"
                                 style="object-position: {{ $section->image_positions[$imgIndex] ?? 'center' }}">
+                            <div class="hover-overlay">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="zoom-icon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                                </svg>
+                            </div>
                         </div>
                         @endforeach
                     </div>
@@ -76,7 +81,7 @@
 
                     @if($section->description)
                     <div class="section-description">
-                        <p>{{ app()->getLocale() === 'en' && $section->description_en ? $section->description_en : $section->description }}</p>
+                        <p>{!! nl2br(e(app()->getLocale() === 'en' && $section->description_en ? $section->description_en : $section->description)) !!}</p>
                     </div>
                     @endif
                 </div>
@@ -122,9 +127,16 @@
 
         </div>
     </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="feature-image-modal" onclick="closeImageModal()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImg">
+    </div>
 @endsection
 
 @push('scripts')
+</script>
 <script>
 function filterSections() {
     const query = document.getElementById('sectionSearch').value.toLowerCase();
@@ -133,6 +145,18 @@ function filterSections() {
         const title = section.getAttribute('data-title');
         section.style.display = title.includes(query) ? '' : 'none';
     });
+}
+function openImageModal(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImg');
+    modal.style.display = 'flex';
+    modalImg.src = src;
+    document.body.style.overflow = 'hidden';
+}
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
 }
 </script>
 @endpush

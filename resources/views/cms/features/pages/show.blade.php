@@ -134,7 +134,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <form action="{{ route('cms.features.pages.sections.store', [$feature, $page]) }}" method="POST" enctype="multipart/form-data" @submit="submitForm($event, 'add')" class="px-6 py-5 space-y-4">
+            <form action="{{ route('cms.features.pages.sections.store', [$feature, $page]) }}" method="POST" enctype="multipart/form-data" @submit.prevent="submitForm($event, 'add')" class="px-6 py-5 space-y-4">
                 @csrf
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.feature_pages.section_form.title') }} <span class="text-red-500">*</span></label>
@@ -204,7 +204,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <form :action="`{{ route('cms.features.pages.show', [$feature, $page]) }}/sections/${editSection.id}`" method="POST" enctype="multipart/form-data" @submit="submitForm($event, 'edit')" class="px-6 py-5 space-y-4">
+            <form :action="`{{ route('cms.features.pages.show', [$feature, $page]) }}/sections/${editSection.id}`" method="POST" enctype="multipart/form-data" @submit.prevent="submitForm($event, 'edit')" class="px-6 py-5 space-y-4">
                 @csrf
                 @method('PUT')
                 <div>
@@ -333,6 +333,7 @@
 <script>
 function sectionManager() {
     let _idCounter = 1;
+    let _isGlobalSubmitting = false;
 
     // Data gambar disimpan di plain object, BUKAN di Alpine reactive state
     // Format: { id, preview, x, y, isExisting, path?, file? }
@@ -464,6 +465,7 @@ function sectionManager() {
         editSection: { open: false, id: null, title: '', description: '', order: 0 },
         deleteSection: { open: false, id: null, name: '' },
         imageModal: { open: false, src: '' },
+        isSubmitting: false,
 
         openAddSection() {
             _imageStore.add = [];
@@ -572,6 +574,8 @@ function sectionManager() {
 
         submitForm(event, mode) {
             event.preventDefault();
+            if (_isGlobalSubmitting) return;
+            _isGlobalSubmitting = true;
 
             const form = event.target;
             const images = _imageStore[mode];
