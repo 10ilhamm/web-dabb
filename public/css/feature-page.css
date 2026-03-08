@@ -27,9 +27,9 @@
 
 .feature-hero {
     position: relative;
-    background: linear-gradient(135deg, rgba(8,72,158,0.85), rgba(84,213,245,0.45)),
+    background: linear-gradient(rgba(0, 0, 0, 0.45)),
                 url('/image/background.png') center/cover no-repeat;
-    color: #fff;
+    color: #ffff;
     padding: 48px 0;
     min-height: 160px;
     display: flex;

@@ -21,7 +21,7 @@
 /* Hero Section */
 .login-hero {
     position: relative;
-    height: 250px;
+    height: 110px;
     background-image: url("../image/background.png");
     background-size: cover;
     background-position: center 35%;
@@ -32,7 +32,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45); /* Dark overlay */
+    background: rgba(0, 0, 0, 0.45);
     z-index: 1;
 }
 .login-hero .container {
@@ -42,7 +42,7 @@
 }
 .login-hero h1 {
     color: #fff;
-    font-size: 42px;
+    font-size: 32px;
     font-weight: 800;
     letter-spacing: 2px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -51,26 +51,27 @@
 
 /* Main Layout Wrapper */
 .login-main-wrapper {
-    padding: 60px 5%;
+    padding: 28px 5%;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
 }
 
 /* Card */
 .login-card {
     background: #fff;
-    border-radius: 32px;
+    border-radius: 24px;
     width: 100%;
-    max-width: 1100px;
+    max-width: 960px;
     display: flex;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-    min-height: 600px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+    min-height: 0;
 }
 
 /* Left Section - Form */
 .login-form-side {
-    padding: 60px;
+    padding: 40px 48px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -78,36 +79,36 @@
 }
 .login-form-side h2 {
     color: #6c757d;
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 800;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 .login-form-side h3 {
     color: #212529;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 .login-form-side p.subtitle {
     color: #6c757d;
-    font-size: 14px;
-    margin-bottom: 30px;
+    font-size: 13px;
+    margin-bottom: 22px;
 }
 
 /* Form Controls */
 .login-form-group {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 .login-form-group label {
     display: block;
     color: #212529;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 .login-input {
     width: 100%;
-    padding: 12px 16px;
+    padding: 10px 14px;
     border: 1px solid #ced4da;
     border-radius: 8px;
     font-family: inherit;
@@ -123,10 +124,10 @@
 /* Links & Buttons */
 .login-forgot {
     color: #3598db;
-    font-size: 13px;
+    font-size: 12px;
     text-decoration: none;
-    margin-top: -5px;
-    margin-bottom: 25px;
+    margin-top: -4px;
+    margin-bottom: 18px;
     display: inline-block;
 }
 .login-forgot:hover {
@@ -139,9 +140,9 @@
     background: #0579cb;
     color: #fff;
     border: none;
-    padding: 14px;
+    padding: 11px;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
@@ -159,9 +160,9 @@
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 30px 0;
+    margin: 18px 0;
     color: #6c757d;
-    font-size: 14px;
+    font-size: 13px;
 }
 .login-divider::before,
 .login-divider::after {
@@ -185,28 +186,29 @@
     background: #fff;
     color: #212529;
     border: 1px solid #ced4da;
-    padding: 14px;
+    padding: 11px;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
     text-decoration: none;
     gap: 10px;
+    box-sizing: border-box;
 }
 .btn-google:hover {
     background: #f8f9fa;
     border-color: #adb5bd;
 }
 .btn-google img {
-    height: 20px;
+    height: 18px;
 }
 
 /* Register Text */
 .login-register-text {
     text-align: center;
-    margin-top: 25px;
-    font-size: 14px;
+    margin-top: 16px;
+    font-size: 13px;
     color: #495057;
 }
 .login-register-text a {
@@ -222,18 +224,18 @@
 .login-banner-side {
     flex: 1;
     position: relative;
-    background-image: url("../image/background_login.png"); /* Or pegawai1.png */
+    background-image: url("../image/background_login.png");
     background-size: cover;
     background-position: center;
     display: flex;
     flex-direction: column;
-    padding: 50px;
+    padding: 36px;
 }
 .login-banner-side::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.2); /* Light overlay if necessary */
+    background: rgba(255, 255, 255, 0.2);
     mix-blend-mode: overlay;
     pointer-events: none;
 }
@@ -242,12 +244,12 @@
     z-index: 2;
     display: flex;
     align-items: flex-start;
-    gap: 15px;
+    gap: 12px;
     color: #fff;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
 }
 .banner-overlay-logo img {
-    height: 50px;
+    height: 42px;
     filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.3));
 }
 .banner-overlay-text {

@@ -49,6 +49,12 @@
     <x-chat-widget />
 
     @stack('scripts')
+
+    {{-- Login required modal (shown for protected public pages when guest) --}}
+    @if(!empty($requiresLoginModal))
+        @include('partials.login_modal')
+        <script>document.body.style.overflow = 'hidden';</script>
+    @endif
 </body>
 
 </html>
