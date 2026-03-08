@@ -1,0 +1,300 @@
+function sectionManager() {
+    let _idCounter = 1;
+    let _isGlobalSubmitting = false;
+
+    // Data gambar disimpan di plain object, BUKAN di Alpine reactive state
+    // Format: { id, preview, x, y, isExisting, path?, file? }
+    const _imageStore = { add: [], edit: [] };
+    const _files = {};
+
+    function getNextId(prefix) {
+        return prefix + '-' + Date.now() + '-' + (_idCounter++);
+    }
+
+    function parsePos(pos) {
+        if (!pos || pos === 'center') return { x: 50, y: 50 };
+        const parts = pos.split(' ');
+        if (parts.length < 2) return { x: 50, y: 50 };
+        return { x: parseFloat(parts[0]) || 50, y: parseFloat(parts[1]) || 50 };
+    }
+
+    // ===== DOM RENDERING =====
+    // Render semua gambar preview ke container via vanilla DOM
+    // Ini sepenuhnya di luar Alpine — tidak ada x-for, tidak ada x-data nested
+    function renderPreviews(mode) {
+        const containerId = mode === 'add' ? 'add-image-previews' : 'edit-image-previews';
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        // Kosongkan container
+        container.innerHTML = '';
+
+        const images = _imageStore[mode];
+        if (!images.length) return;
+
+        // Label
+        if (mode === 'edit') {
+            const label = document.createElement('label');
+            label.className = 'block text-sm font-medium text-gray-700 mb-2';
+            label.textContent = 'Gambar (Geser untuk menyesuaikan posisi)';
+            container.appendChild(label);
+        }
+
+        const cols = Math.min(Math.max(images.length, 1), 4);
+        // Guest container in desktop is ~1140px. 
+        // With a 10px gap, the guest item width is approximately:
+        const guestItemWidth = (1140 - ((cols - 1) * 10)) / cols;
+        const guestItemHeight = 180;
+        const guestAspectRatio = guestItemWidth / guestItemHeight;
+
+        images.forEach((img) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'relative group mb-4 w-full';
+            wrapper.dataset.imgId = img.id;
+
+            // Drag container
+            const dragBox = document.createElement('div');
+            dragBox.className = 'relative overflow-hidden rounded-lg bg-gray-900 cursor-crosshair w-full flex items-center justify-center';
+            // Match the precise aspect ratio computed for guest view on desktop
+            dragBox.style.width = '100%';
+            dragBox.style.aspectRatio = guestAspectRatio.toString();
+
+            // Image
+            const imgEl = document.createElement('img');
+            imgEl.src = img.preview;
+            imgEl.className = 'absolute pointer-events-none select-none w-full h-full object-cover transition-transform duration-300';
+            imgEl.style.objectPosition = img.x + '% ' + img.y + '%';
+            dragBox.appendChild(imgEl);
+
+            // Focal point
+            const focal = document.createElement('div');
+            focal.className = 'absolute w-6 h-6 border-2 border-white rounded-full shadow-lg pointer-events-none flex items-center justify-center';
+            focal.style.cssText = 'background-color:rgba(59,130,246,0.6);transform:translate(-50%,-50%); transition: opacity 0.2s;';
+            focal.style.left = img.x + '%';
+            focal.style.top = img.y + '%';
+            const dot = document.createElement('div');
+            dot.className = 'w-1.5 h-1.5 bg-white rounded-full';
+            focal.appendChild(dot);
+            dragBox.appendChild(focal);
+
+            // Drag handler
+            dragBox.addEventListener('mousedown', function(e) {
+                if (e.target.closest('button')) return;
+                e.preventDefault();
+                const updatePos = (ev) => {
+                    const rect = dragBox.getBoundingClientRect();
+                    if (rect.width === 0) return;
+                    const px = parseFloat(Math.max(0, Math.min(100, ((ev.clientX - rect.left) / rect.width) * 100)).toFixed(2));
+                    const py = parseFloat(Math.max(0, Math.min(100, ((ev.clientY - rect.top) / rect.height) * 100)).toFixed(2));
+                    imgEl.style.objectPosition = px + '% ' + py + '%';
+                    focal.style.left = px + '%';
+                    focal.style.top = py + '%';
+                    img.x = px;
+                    img.y = py;
+                };
+                const stop = () => {
+                    window.removeEventListener('mousemove', updatePos);
+                    window.removeEventListener('mouseup', stop);
+                };
+                window.addEventListener('mousemove', updatePos);
+                window.addEventListener('mouseup', stop);
+                updatePos(e);
+            });
+
+            wrapper.appendChild(dragBox);
+
+            // Delete button
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'absolute bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors cursor-pointer z-50';
+            delBtn.style.cssText = 'width:24px;height:24px;top:-8px;right:-8px;line-height:1';
+            delBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
+            delBtn.addEventListener('mousedown', (e) => e.stopPropagation());
+            delBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                // Hapus dari store
+                const idx = _imageStore[mode].findIndex(i => i.id === img.id);
+                if (idx !== -1) _imageStore[mode].splice(idx, 1);
+                delete _files[img.id];
+                
+                // Re-render semua untuk menghitung ulang grid cols
+                renderPreviews(mode);
+            });
+            wrapper.appendChild(delBtn);
+
+            container.appendChild(wrapper);
+        });
+    }
+
+    return {
+        addSection: { open: false },
+        editSection: { open: false, id: null, title: '', description: '', order: 0 },
+        deleteSection: { open: false, id: null, name: '' },
+        imageModal: { open: false, src: '' },
+        isSubmitting: false,
+
+        openAddSection() {
+            _imageStore.add = [];
+            Object.keys(_files).forEach(k => delete _files[k]);
+            this.addSection.open = true;
+            this.$nextTick(() => renderPreviews('add'));
+        },
+
+        openEditSection(id, title, description, order, images, positions) {
+            this.editSection.id = id;
+            this.editSection.title = title;
+            this.editSection.description = description;
+            this.editSection.order = order;
+
+            _imageStore.edit = [];
+            Object.keys(_files).forEach(k => delete _files[k]);
+
+            if (images && images.length) {
+                images.forEach((path, i) => {
+                    const pos = parsePos(positions ? positions[i] : null);
+                    _imageStore.edit.push({
+                        id: getNextId('ext'),
+                        path: path,
+                        preview: (window.StorageUrl || '/storage') + '/' + path,
+                        x: pos.x,
+                        y: pos.y,
+                        isExisting: true
+                    });
+                });
+            }
+
+            this.editSection.open = true;
+            this.$nextTick(() => renderPreviews('edit'));
+        },
+
+        openDeleteSection(id, name) {
+            this.deleteSection.id = id;
+            this.deleteSection.name = name;
+            this.deleteSection.open = true;
+        },
+
+        openImageModal(src) {
+            this.imageModal.src = src;
+            this.imageModal.open = true;
+        },
+
+        async handleFileChange(event, mode) {
+            const files = Array.from(event.target.files);
+
+            const compressImage = (file) => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const MAX_SIZE = 1280;
+
+                            if (width > height && width > MAX_SIZE) {
+                                height *= MAX_SIZE / width;
+                                width = MAX_SIZE;
+                            } else if (height > MAX_SIZE) {
+                                width *= MAX_SIZE / height;
+                                height = MAX_SIZE;
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob((blob) => {
+                                const originalName = file.name.replace(/\.[^/.]+$/, "");
+                                const newFile = new File([blob], originalName + ".webp", {
+                                    type: 'image/webp',
+                                    lastModified: Date.now()
+                                });
+                                resolve({ file: newFile, preview: e.target.result });
+                            }, 'image/webp', 0.65);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
+
+            for (const file of files) {
+                const compressed = await compressImage(file);
+                const imgId = getNextId('new');
+                _files[imgId] = compressed.file;
+                
+                _imageStore[mode].push({
+                    id: imgId,
+                    preview: compressed.preview,
+                    x: 50,
+                    y: 50,
+                    isExisting: false
+                });
+            }
+            
+            renderPreviews(mode);
+            event.target.value = '';
+        },
+
+        submitForm(event, mode) {
+            event.preventDefault();
+            if (_isGlobalSubmitting) return;
+            _isGlobalSubmitting = true;
+
+            const form = event.target;
+            const images = _imageStore[mode];
+
+            // Bangun FormData dari field form yang sudah ada (title, description, order, _token, _method)
+            const formData = new FormData(form);
+
+            // Hapus field images[] & image_positions[] & existing_images[] bawaan form
+            formData.delete('images[]');
+            formData.delete('image_positions[]');
+            formData.delete('existing_images[]');
+
+            // Tambahkan data gambar dari _imageStore
+            images.forEach(img => {
+                formData.append('image_positions[]', img.x + '% ' + img.y + '%');
+
+                if (img.isExisting) {
+                    formData.append('existing_images[]', img.path);
+                }
+            });
+
+            // Tambahkan file baru
+            images.forEach(img => {
+                if (!img.isExisting && _files[img.id]) {
+                    formData.append('images[]', _files[img.id]);
+                }
+            });
+
+            // Kirim via fetch
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Menyimpan...';
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else if (response.ok) {
+                    window.location.reload();
+                } else {
+                    window.location.reload();
+                }
+            }).catch(() => {
+                window.location.reload(); // Mengabaikan pesan error jaringan dan merefresh halaman (karena konten seringkali sudah terkirim)
+            });
+        }
+    };
+}

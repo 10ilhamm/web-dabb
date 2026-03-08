@@ -238,13 +238,13 @@
 
 /* Section Description */
 .section-description {
-    margin-top: 8px;
+    margin-top: 16px;
 }
 .section-description p {
-    font-size: 14px;
-    color: #444;
+    font-size: 16px;
+    color: #333;
     line-height: 1.8;
-    margin: 0;
+    margin-bottom: 16px;
     text-align: justify;
 }
 
