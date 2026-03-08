@@ -218,7 +218,9 @@ class FeaturePageController extends Controller
 
         $currentPage->load('sections');
 
-        return view('pages.feature', [
+        $virtual3dRooms = $feature->virtual3dRooms()->with('media')->get();
+
+        return view('pages.virtual_3d_tour', [
             'feature'             => $feature,
             'pages'               => $pages,
             'currentPage'         => $currentPage,
@@ -227,6 +229,7 @@ class FeaturePageController extends Controller
             'requiresLoginModal'  => $requiresLoginModal,
             'loginModalPreview'   => $loginModalPreview,
             'loginModalRoomName'  => $loginModalRoomName,
+            'virtual3dRooms'      => $virtual3dRooms,
         ]);
     }
 
@@ -268,7 +271,35 @@ class FeaturePageController extends Controller
             }
         }
 
-        // Virtual rooms feature — show dedicated 360° tour page
+        // Virtual 3D Rooms feature — show interactive 4-walls 3D room
+        if (method_exists($feature, 'virtual3dRooms')) {
+            $virtual3dRooms = $feature->virtual3dRooms()->with('media')->get();
+            
+            // Check subfeatures if the parent feature has no virtual 3d rooms
+            if ($virtual3dRooms->isEmpty() && method_exists($feature, 'subfeatures')) {
+                foreach ($feature->subfeatures as $sub) {
+                    if (method_exists($sub, 'virtual3dRooms')) {
+                        $virtual3dRooms = $virtual3dRooms->merge($sub->virtual3dRooms()->with('media')->get());
+                    }
+                }
+            }
+            
+            if ($virtual3dRooms->isNotEmpty()) {
+                // Add first room thumbnail for modal if needed
+                if ($requiresLoginModal && !$loginModalPreview) {
+                    $first3dRoom = $virtual3dRooms->first();
+                    $loginModalPreview = $first3dRoom->thumbnail_path ? asset('storage/'.$first3dRoom->thumbnail_path) : null;
+                    $loginModalRoomName = $first3dRoom->name;
+                }
+                
+                return view('pages.virtual_3d_tour', compact(
+                    'feature', 'virtual3dRooms', 'requiresLoginModal',
+                    'loginModalPreview', 'loginModalRoomName'
+                ));
+            }
+        }
+
+        // Virtual rooms feature (360) — show dedicated 360° tour page
         if (method_exists($feature, 'virtualRooms')) {
             $virtualRooms = $feature->virtualRooms()->withCount('hotspots')->with('hotspots')->get();
             if ($virtualRooms->isNotEmpty()) {
@@ -283,8 +314,17 @@ class FeaturePageController extends Controller
             return $this->publicShow($feature, 1, $requiresLoginModal, $loginModalPreview, $loginModalRoomName);
         }
 
-        return view('pages.feature', compact(
-            'feature', 'requiresLoginModal', 'loginModalPreview', 'loginModalRoomName'
+        $virtual3dRooms = $feature->virtual3dRooms()->with('media')->get();
+        if ($virtual3dRooms->isEmpty() && method_exists($feature, 'subfeatures')) {
+            foreach ($feature->subfeatures as $sub) {
+                if (method_exists($sub, 'virtual3dRooms')) {
+                    $virtual3dRooms = $virtual3dRooms->merge($sub->virtual3dRooms()->with('media')->get());
+                }
+            }
+        }
+
+        return view('pages.virtual_3d_tour', compact(
+            'feature', 'requiresLoginModal', 'loginModalPreview', 'loginModalRoomName', 'virtual3dRooms'
         ));
     }
 

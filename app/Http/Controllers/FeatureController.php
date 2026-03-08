@@ -58,8 +58,15 @@ class FeatureController extends Controller
             return redirect()->route('cms.home.edit');
         }
 
-        if ($feature->id === 22 || strtolower($feature->name) === 'pameran virtual real') {
-            return redirect()->route('cms.features.virtual_rooms.index', $feature);
+        // If it's a dropdown, skip redirects and show sub-features list
+        if ($feature->type !== 'dropdown') {
+            if ($feature->id === 22 || strtolower($feature->name) === 'pameran virtual real') {
+                return redirect()->route('cms.features.virtual_rooms.index', $feature);
+            }
+
+            if ($feature->id === 23 || strtolower($feature->name) === 'pameran virtual' || $feature->path === '/pameran/virtual') {
+                return redirect()->route('cms.features.virtual_3d_rooms.index', $feature);
+            }
         }
 
         $feature->load(['subfeatures' => function ($query) {

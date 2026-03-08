@@ -36,4 +36,9 @@ class Feature extends Model
     {
         return $this->hasMany(VirtualRoom::class);
     }
+
+    public function virtual3dRooms()
+    {
+        return $this->hasMany(Virtual3dRoom::class);
+    }
 }

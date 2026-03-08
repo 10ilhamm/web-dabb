@@ -86,13 +86,26 @@ Route::middleware('auth')->group(function () {
         Route::put('/{feature}/pages/{page}/sections/{section}', [FeaturePageController::class, 'updateSection'])->name('pages.sections.update');
         Route::delete('/{feature}/pages/{page}/sections/{section}', [FeaturePageController::class, 'destroySection'])->name('pages.sections.destroy');
 
-        // Virtual Room 360 Feature
+        // Virtual Room 360 Feature (yang lama)
         Route::get('/{feature}/virtual-rooms', [VirtualRoomController::class, 'index'])->name('virtual_rooms.index');
         Route::get('/{feature}/virtual-rooms/create', [VirtualRoomController::class, 'create'])->name('virtual_rooms.create');
         Route::post('/{feature}/virtual-rooms', [VirtualRoomController::class, 'store'])->name('virtual_rooms.store');
         Route::get('/{feature}/virtual-rooms/{room}/edit', [VirtualRoomController::class, 'edit'])->name('virtual_rooms.edit');
         Route::put('/{feature}/virtual-rooms/{room}', [VirtualRoomController::class, 'update'])->name('virtual_rooms.update');
         Route::delete('/{feature}/virtual-rooms/{room}', [VirtualRoomController::class, 'destroy'])->name('virtual_rooms.destroy');
+
+        // Virtual 3D Rooms Feature (yang baru - 4 dinding 1 pintu)
+        Route::get('/{feature}/virtual-3d-rooms', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'index'])->name('virtual_3d_rooms.index');
+        Route::get('/{feature}/virtual-3d-rooms/create', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'create'])->name('virtual_3d_rooms.create');
+        Route::post('/{feature}/virtual-3d-rooms', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'store'])->name('virtual_3d_rooms.store');
+        Route::get('/{feature}/virtual-3d-rooms/{room}/edit', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'edit'])->name('virtual_3d_rooms.edit');
+        Route::put('/{feature}/virtual-3d-rooms/{room}', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'update'])->name('virtual_3d_rooms.update');
+        Route::delete('/{feature}/virtual-3d-rooms/{room}', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'destroy'])->name('virtual_3d_rooms.destroy');
+        
+        // Media Management untuk Virtual 3D Rooms
+        Route::post('/{feature}/virtual-3d-rooms/{room}/media', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'uploadMedia'])->name('virtual_3d_rooms.media.store');
+        Route::put('/{feature}/virtual-3d-rooms/{room}/media/{media}', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'updateMediaPosition'])->name('virtual_3d_rooms.media.update');
+        Route::delete('/{feature}/virtual-3d-rooms/{room}/media/{media}', [App\Http\Controllers\Cms\Virtual3dRoomController::class, 'deleteMedia'])->name('virtual_3d_rooms.media.destroy');
     });
 });
 
