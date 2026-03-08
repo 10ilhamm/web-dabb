@@ -14,7 +14,7 @@
 
 
     <!-- Features Table Card -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
         <!-- Card Header -->
         <div class="px-6 py-5 border-b border-gray-100 flex items-start justify-between">
             <div>
@@ -31,8 +31,8 @@
         </div>
 
         <!-- Table -->
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
+        <div>
+            <table id="tableFeatures" class="w-full text-sm text-left">
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-12">No</th>
@@ -293,5 +293,13 @@
 
 @push('scripts')
 <script src="{{ asset('js/cms/features/index.js') }}"></script>
+<script>
+$(document).ready(function() {
+    $('#tableFeatures').DataTable({
+        columnDefs: [{ orderable: false, targets: [0, 5] }],
+        order: [[4, 'asc']],
+    });
+});
+</script>
 @endpush
 @endsection

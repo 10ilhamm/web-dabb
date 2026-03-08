@@ -21,6 +21,10 @@
     <!-- Sidebar CSS -->
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.tailwindcss.min.css">
+    <link rel="stylesheet" href="{{ asset('css/datatables.css') }}">
+
     @stack('styles')
 </head>
 
@@ -442,6 +446,21 @@
             </div>
         </div>
     @endif
+
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.tailwindcss.min.js"></script>
+    <script>
+        $.extend(true, $.fn.dataTable.defaults, {
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/id.json'
+            },
+            pageLength: 10,
+            // dom: top controls row, table, bottom controls row
+            dom: '<"dt-top-row"<"dataTables_length"l><"dataTables_filter"f>>t<"dt-bottom-row"<"dataTables_info"i><"dataTables_paginate"p>>',
+        });
+    </script>
 
     <!-- Stack for additional scripts -->
     @stack('scripts')

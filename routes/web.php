@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleDashboardController;
 use App\Http\Controllers\Cms\SettingController;
+use App\Http\Controllers\Cms\VirtualRoomController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -83,6 +84,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/{feature}/pages/{page}/sections', [FeaturePageController::class, 'storeSection'])->name('pages.sections.store');
         Route::put('/{feature}/pages/{page}/sections/{section}', [FeaturePageController::class, 'updateSection'])->name('pages.sections.update');
         Route::delete('/{feature}/pages/{page}/sections/{section}', [FeaturePageController::class, 'destroySection'])->name('pages.sections.destroy');
+
+        // Virtual Room 360 Feature
+        Route::get('/{feature}/virtual-rooms', [VirtualRoomController::class, 'index'])->name('virtual_rooms.index');
+        Route::get('/{feature}/virtual-rooms/create', [VirtualRoomController::class, 'create'])->name('virtual_rooms.create');
+        Route::post('/{feature}/virtual-rooms', [VirtualRoomController::class, 'store'])->name('virtual_rooms.store');
+        Route::get('/{feature}/virtual-rooms/{room}/edit', [VirtualRoomController::class, 'edit'])->name('virtual_rooms.edit');
+        Route::put('/{feature}/virtual-rooms/{room}', [VirtualRoomController::class, 'update'])->name('virtual_rooms.update');
+        Route::delete('/{feature}/virtual-rooms/{room}', [VirtualRoomController::class, 'destroy'])->name('virtual_rooms.destroy');
     });
 });
 

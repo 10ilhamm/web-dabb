@@ -231,9 +231,17 @@ class FeaturePageController extends Controller
      */
     public function publicShowByPath(Request $request)
     {
-        $path = '/'.$request->path;
+        $path = '/' . $request->path;
         $feature = Feature::where('path', $path)->firstOrFail();
         $feature->loadCount('pages');
+
+        // Virtual rooms feature — show dedicated 360° tour page
+        if (method_exists($feature, 'virtualRooms')) {
+            $virtualRooms = $feature->virtualRooms()->withCount('hotspots')->with('hotspots')->get();
+            if ($virtualRooms->isNotEmpty()) {
+                return view('pages.virtual_tour', compact('feature', 'virtualRooms'));
+            }
+        }
 
         if ($feature->pages_count > 0) {
             return $this->publicShow($feature, 1);

@@ -31,4 +31,9 @@ class Feature extends Model
     {
         return $this->hasMany(FeaturePage::class)->orderBy('order');
     }
+
+    public function virtualRooms()
+    {
+        return $this->hasMany(VirtualRoom::class);
+    }
 }

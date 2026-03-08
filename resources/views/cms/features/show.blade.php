@@ -9,7 +9,7 @@
     <!-- Page Header -->
     <div class="flex items-center gap-3">
         <a href="{{ $feature->parent_id ? route('cms.features.show', $feature->parent_id) : route('cms.features.index') }}"
-            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+            class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-white transition-colors shadow-sm" style="background-color: #818284;">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
@@ -34,7 +34,7 @@
 
     @if($feature->type === 'dropdown')
     {{-- ===== DROPDOWN TYPE: Show sub-menu list ===== --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
         <div class="px-6 py-5 border-b border-gray-100 flex items-start justify-between">
             <div>
                 <h2 class="text-base font-semibold text-gray-800">{{ __('cms.features.sub.list_title', ['name' => $feature->name]) }}</h2>
@@ -49,8 +49,8 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
+        <div>
+            <table id="tableSubFeatures" class="w-full text-sm text-left">
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="px-6 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-12">No</th>
@@ -368,5 +368,15 @@
 
 @push('scripts')
 <script src="{{ asset('js/cms/features/show.js') }}"></script>
+@if($feature->type === 'dropdown')
+<script>
+$(document).ready(function() {
+    $('#tableSubFeatures').DataTable({
+        columnDefs: [{ orderable: false, targets: [0, 6] }],
+        order: [[5, 'asc']],
+    });
+});
+</script>
+@endif
 @endpush
 @endsection
