@@ -267,6 +267,7 @@ return [
         'save_content' => 'Save Content',
         'back' => 'Back',
         'required' => '*',
+        'saved_successfully' => 'Settings saved successfully.',
     ],
 
 ];

@@ -6,11 +6,6 @@
         <h1 class="text-2xl font-bold text-gray-900">{{ __('dashboard.sidebar.cms_footer') ?? 'Pengaturan Footer' }}</h1>
     </div>
 
-    @if (session('success'))
-        <div class="p-4 mb-6 text-sm text-green-700 bg-green-100 rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <form action="{{ route('cms.settings.footer.update') }}" method="POST" class="p-6 space-y-8">

@@ -382,6 +382,66 @@
             </div>
         </div>
     </div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+        <symbol id="check-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+
+    @if(session('success') || session('error') || $errors->any() || session('warning') || session('info'))
+        @php
+            $tType = 'info';
+            $tMsg = session('info');
+            $tIcon = '#info-fill';
+            $tClass = 'text-blue-800 bg-blue-100 border-blue-200';
+            
+            if (session('success')) {
+                $tType = 'success'; 
+                $tMsg = session('success');
+                $tIcon = '#check-circle-fill';
+                $tClass = 'text-green-800 bg-green-100 border-green-200';
+            } elseif (session('error') || $errors->any()) {
+                $tType = 'danger'; 
+                $tMsg = session('error') ?? $errors->first();
+                $tIcon = '#exclamation-triangle-fill';
+                $tClass = 'text-red-800 bg-red-100 border-red-200';
+            } elseif (session('warning')) {
+                $tType = 'warning'; 
+                $tMsg = session('warning');
+                $tIcon = '#exclamation-triangle-fill';
+                $tClass = 'text-yellow-800 bg-yellow-100 border-yellow-200';
+            }
+        @endphp
+
+        <!-- Bootstrap Toast with AlpineJS -->
+        <div class="fixed top-8 right-8 z-[9999]" style="width: 350px;"
+             x-data="{ showToast: false }"
+             x-init="setTimeout(() => showToast = true, 50); setTimeout(() => showToast = false, 5000)">
+            <div x-show="showToast" 
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="translate-x-full opacity-0"
+                 x-transition:enter-end="translate-x-0 opacity-100"
+                 x-transition:leave="transition ease-in duration-300 transform"
+                 x-transition:leave-start="translate-x-0 opacity-100"
+                 x-transition:leave-end="translate-x-full opacity-0"
+                 class="flex items-center p-4 mb-4 border rounded-md shadow-lg {{ $tClass }}" role="alert">
+                <svg class="w-6 h-6 shrink-0 mr-3 fill-current" role="img" aria-label="{{ ucfirst($tType) }}:"><use xlink:href="{{ $tIcon }}"/></svg>
+                <div class="flex-1 font-medium text-sm">
+                    {!! $tMsg !!}
+                </div>
+                <button type="button" @click="showToast = false" class="ml-3 focus:outline-none opacity-50 hover:opacity-100">
+                    <span aria-hidden="true" class="text-xl font-bold leading-none">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
 
     <!-- Stack for additional scripts -->
     @stack('scripts')

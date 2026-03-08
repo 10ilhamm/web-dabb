@@ -267,6 +267,7 @@ return [
         'save_content' => 'Simpan Konten',
         'back' => 'Kembali',
         'required' => '*',
+        'saved_successfully' => 'Pengaturan berhasil disimpan.',
     ],
 
 ];

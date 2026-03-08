@@ -247,54 +247,55 @@ function sectionManager() {
             const form = event.target;
             const images = _imageStore[mode];
 
-            // Bangun FormData dari field form yang sudah ada (title, description, order, _token, _method)
-            const formData = new FormData(form);
+            // Bersihkan input dinamis sebelumnya (jika ada)
+            form.querySelectorAll('.dynamic-input-remove').forEach(el => el.remove());
 
-            // Hapus field images[] & image_positions[] & existing_images[] bawaan form
-            formData.delete('images[]');
-            formData.delete('image_positions[]');
-            formData.delete('existing_images[]');
+            // Buat DataTransfer untuk memindahkan file BLOB image hasil kompresi ke input[type=file]
+            const dt = new DataTransfer();
 
-            // Tambahkan data gambar dari _imageStore
             images.forEach(img => {
-                formData.append('image_positions[]', img.x + '% ' + img.y + '%');
+                const posInput = document.createElement('input');
+                posInput.type = 'hidden';
+                posInput.name = 'image_positions[]';
+                posInput.value = img.x + '% ' + img.y + '%';
+                posInput.className = 'dynamic-input-remove';
+                form.appendChild(posInput);
 
                 if (img.isExisting) {
-                    formData.append('existing_images[]', img.path);
+                    const existInput = document.createElement('input');
+                    existInput.type = 'hidden';
+                    existInput.name = 'existing_images[]';
+                    existInput.value = img.path;
+                    existInput.className = 'dynamic-input-remove';
+                    form.appendChild(existInput);
+                } else if (_files[img.id]) {
+                    dt.items.add(_files[img.id]);
                 }
             });
 
-            // Tambahkan file baru
-            images.forEach(img => {
-                if (!img.isExisting && _files[img.id]) {
-                    formData.append('images[]', _files[img.id]);
-                }
+            // Tambahkan input file hidden untuk menampung file BLOB
+            if (dt.files.length > 0) {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.name = 'images[]';
+                fileInput.multiple = true;
+                fileInput.files = dt.files;
+                fileInput.className = 'hidden dynamic-input-remove';
+                form.appendChild(fileInput);
+            }
+
+            // Nonaktifkan file input default gambar pada form agar tidak terkirim dobel
+            form.querySelectorAll('input[type="file"]:not(.dynamic-input-remove)').forEach(input => {
+                input.disabled = true;
             });
 
-            // Kirim via fetch
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Menyimpan...';
 
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'text/html'
-                }
-            }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else if (response.ok) {
-                    window.location.reload();
-                } else {
-                    window.location.reload();
-                }
-            }).catch(() => {
-                window.location.reload(); // Mengabaikan pesan error jaringan dan merefresh halaman (karena konten seringkali sudah terkirim)
-            });
+            // Kirim secara normal ke backend (bukan via AJAX)
+            // Ini akan memicu redirect bawaan Laravel yang memuat ulang halaman dengan pesan Alert Flash
+            form.submit();
         }
     };
 }
