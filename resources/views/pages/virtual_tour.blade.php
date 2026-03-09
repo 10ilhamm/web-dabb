@@ -11,6 +11,17 @@
 
 @section('content')
 
+{{-- Breadcrumb --}}
+<div class="feature-breadcrumb">
+    <div class="container">
+        @if($feature->parent)
+            <a href="{{ url($feature->parent->path ?? '#') }}">{{ $feature->parent->name }}</a>
+            <span class="sep">/</span>
+        @endif
+        <span class="current">{{ $feature->name }}</span>
+    </div>
+</div>
+
 {{-- Hero --}}
 <div class="vt-hero">
     <div class="container">
@@ -23,6 +34,7 @@
         <p>Jelajahi pameran arsip 360° secara virtual</p>
     </div>
 </div>
+
 
 {{-- Room Grid --}}
 <section class="vt-rooms-section">

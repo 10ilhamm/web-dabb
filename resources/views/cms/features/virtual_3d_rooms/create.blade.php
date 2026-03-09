@@ -2,100 +2,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/cms/virtual_3d_rooms.css') }}">
-<style>
-/* 3D Preview styles */
-.room3d-preview-wrap {
-    perspective: 800px;
-    width: 100%;
-    height: 500px;
-    overflow: hidden;
-    background: #1e293b;
-    border-radius: 12px;
-    position: relative;
-}
-
-.room3d-scene {
-    width: 260px;
-    height: 200px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-style: preserve-3d;
-    transform: translate(-50%, -50%) rotateX(-10deg) rotateY(-25deg);
-    transition: transform 0.6s ease;
-}
-
-.room3d-face {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    border: 1px solid rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    backface-visibility: visible;
-}
-
-.room3d-face.front  { width: 260px; height: 200px; transform: translate(-50%, -50%) translateZ(-130px); }
-.room3d-face.back   { width: 260px; height: 200px; transform: translate(-50%, -50%) translateZ(130px) rotateY(180deg); }
-.room3d-face.left   { width: 260px; height: 200px; transform: translate(-50%, -50%) translateX(-130px) rotateY(90deg); }
-.room3d-face.right  { width: 260px; height: 200px; transform: translate(-50%, -50%) translateX(130px) rotateY(-90deg); }
-.room3d-face.floor  { width: 260px; height: 260px; transform: translate(-50%, -50%) translateY(100px) rotateX(90deg); }
-.room3d-face.ceiling{ width: 260px; height: 260px; transform: translate(-50%, -50%) translateY(-100px) rotateX(-90deg); }
-
-/* Door on back wall */
-.room3d-door {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 80px;
-    background: rgba(100, 116, 139, 0.5);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-bottom: none;
-    border-radius: 4px 4px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8px;
-    color: rgba(255,255,255,0.7);
-}
-
-.room3d-door-knob {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    position: absolute;
-    right: 6px;
-    top: 50%;
-}
-
-/* Preview rotate buttons */
-.preview-rot-btn {
-    padding: 4px 10px;
-    font-size: 11px;
-    background: rgba(255,255,255,0.1);
-    color: #e2e8f0;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-.preview-rot-btn:hover {
-    background: rgba(255,255,255,0.2);
-}
-.preview-rot-btn.active {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: white;
-}
-</style>
+<link rel="stylesheet" href="{{ asset('css/cms/virtual_3d_rooms_form.css') }}">
 @endpush
 
 @php
@@ -243,7 +150,7 @@
                     <div class="room3d-scene" id="preview3dScene">
                         <div class="room3d-face front" id="pv-wall-front">DEPAN</div>
                         <div class="room3d-face back" id="pv-wall-back">
-                            BELAKANG
+                            <span>BELAKANG</span>
                             <div class="room3d-door" id="pv-door">
                                 <span>PINTU</span>
                                 <div class="room3d-door-knob"></div>
@@ -252,7 +159,7 @@
                         <div class="room3d-face left" id="pv-wall-left">KIRI</div>
                         <div class="room3d-face right" id="pv-wall-right">KANAN</div>
                         <div class="room3d-face floor" id="pv-floor">LANTAI</div>
-                        <div class="room3d-face ceiling" id="pv-ceiling">ATAP</div>
+                        <div class="room3d-face ceiling" id="pv-ceiling"><span style="display:inline-block; transform:scaleY(-1);">ATAP</span></div>
                     </div>
 
                     <!-- Rotation controls overlay -->
@@ -284,75 +191,5 @@
 @endsection
 
 @push('scripts')
-<!-- Add html2canvas for automatic room thumbnail generation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-    const saveBtn = document.getElementById('saveRoomBtn');
-    if(saveBtn) {
-        saveBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const form = document.getElementById('virtual3d-room-form');
-            const previewContainer = document.getElementById('preview3dContainer');
-            
-            // Only generate if no file was selected manually
-            const fileInput = document.querySelector('input[name="thumbnail"]');
-            if (fileInput && fileInput.files.length === 0 && previewContainer) {
-                // Briefly reset perspective to default for a clear screenshot
-                // Since this is create page, we just take current state
-                html2canvas(previewContainer, {
-                    backgroundColor: '#1e293b',
-                    useCORS: true,
-                    logging: false
-                }).then(canvas => {
-                    document.getElementById('autoThumbnailInput').value = canvas.toDataURL('image/jpeg', 0.8);
-                    form.submit();
-                }).catch(err => {
-                    form.submit(); // fallback
-                });
-            } else {
-                form.submit();
-            }
-        });
-    }
-
-    // Update preview colors
-    function updatePreviewColors() {
-        const wc = document.getElementById('wallColorInput').value;
-        const fc = document.getElementById('floorColorInput').value;
-        const cc = document.getElementById('ceilingColorInput').value;
-
-        document.getElementById('wallColorText').value = wc;
-        document.getElementById('floorColorText').value = fc;
-        document.getElementById('ceilingColorText').value = cc;
-
-        document.getElementById('pv-wall-front').style.backgroundColor = wc;
-        document.getElementById('pv-wall-back').style.backgroundColor = wc;
-        document.getElementById('pv-wall-left').style.backgroundColor = wc;
-        document.getElementById('pv-wall-right').style.backgroundColor = wc;
-        document.getElementById('pv-floor').style.backgroundColor = fc;
-        document.getElementById('pv-ceiling').style.backgroundColor = cc;
-    }
-
-    // Rotate preview
-    function rotatePreview(view, btn) {
-        const scene = document.getElementById('preview3dScene');
-        const rotations = {
-            'default': 'translate(-50%, -50%) rotateX(-10deg) rotateY(-25deg)',
-            'front':   'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)',
-            'back':    'translate(-50%, -50%) rotateX(0deg) rotateY(180deg)',
-            'left':    'translate(-50%, -50%) rotateX(0deg) rotateY(90deg)',
-            'right':   'translate(-50%, -50%) rotateX(0deg) rotateY(-90deg)',
-            'top':     'translate(-50%, -50%) rotateX(90deg) rotateY(0deg)',
-        };
-        scene.style.transform = rotations[view] || rotations['default'];
-
-        document.querySelectorAll('.preview-rot-btn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-    }
-
-    // Initialize on load
-    document.addEventListener('DOMContentLoaded', () => {
-        updatePreviewColors();
-    });
-</script>
+<script src="{{ asset('js/cms/virtual_3d_rooms_create.js') }}"></script>
 @endpush

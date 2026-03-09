@@ -2,103 +2,24 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/cms/virtual_3d_rooms.css') }}">
-<style>
-/* 3D Preview styles */
-.room3d-preview-wrap {
-    perspective: 800px;
-    width: 100%;
-    height: 500px;
-    overflow: hidden;
-    background: #1e293b;
-    border-radius: 12px;
-    position: relative;
-}
-
-.room3d-scene {
-    width: 260px;
-    height: 200px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-style: preserve-3d;
-    transform: translate(-50%, -50%) rotateX(-10deg) rotateY(-25deg);
-    transition: transform 0.6s ease;
-}
-
-.room3d-face {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    border: 1px solid rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    backface-visibility: visible;
-}
-
-.room3d-face.front  { width: 260px; height: 200px; transform: translate(-50%, -50%) translateZ(-130px); }
-.room3d-face.back   { width: 260px; height: 200px; transform: translate(-50%, -50%) translateZ(130px) rotateY(180deg); }
-.room3d-face.left   { width: 260px; height: 200px; transform: translate(-50%, -50%) translateX(-130px) rotateY(90deg); }
-.room3d-face.right  { width: 260px; height: 200px; transform: translate(-50%, -50%) translateX(130px) rotateY(-90deg); }
-.room3d-face.floor  { width: 260px; height: 260px; transform: translate(-50%, -50%) translateY(100px) rotateX(90deg); }
-.room3d-face.ceiling{ width: 260px; height: 260px; transform: translate(-50%, -50%) translateY(-100px) rotateX(-90deg); }
-
-.room3d-door {
-    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 40px; height: 80px; background: rgba(100,116,139,0.5);
-    border: 1px solid rgba(255,255,255,0.3); border-bottom: none;
-    border-radius: 4px 4px 0 0; display: flex; align-items: center;
-    justify-content: center; font-size: 8px; color: rgba(255,255,255,0.7);
-}
-.room3d-door-knob {
-    width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.5);
-    position: absolute; right: 6px; top: 50%;
-}
-
-.preview-rot-btn {
-    padding: 4px 10px; font-size: 11px; background: rgba(255,255,255,0.1);
-    color: #e2e8f0; border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 4px; cursor: pointer; transition: background 0.15s;
-}
-.preview-rot-btn:hover { background: rgba(255,255,255,0.2); }
-.preview-rot-btn.active { background: #3b82f6; border-color: #3b82f6; color: white; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/cms/virtual_3d_rooms_form.css') }}">
 @endpush
 
 @section('breadcrumb_parent', 'CMS / Ruangan Virtual 3D')
 @section('breadcrumb_active', 'Edit: ' . $room->name)
 
 @section('content')
-<div class="mb-4">
-    <a href="{{ route('cms.features.virtual_3d_rooms.index', $feature) }}" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-white text-sm font-medium transition-colors shadow-sm" style="background-color: #818284;">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-        Kembali ke Daftar Ruangan
-    </a>
-</div>
 
 <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-800">Edit Ruangan: {{ $room->name }}</h1>
     <p class="text-sm text-gray-500 mt-1">Atur informasi ruangan, warna, media dinding, dan hotspot navigasi</p>
 </div>
 
-@if(session('success'))
-<div x-data="{ open: true }" x-show="open" class="mb-6 p-4 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-        <svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-        <span class="text-sm font-medium">{{ session('success') }}</span>
-    </div>
-    <button x-on:click="open = false" class="text-emerald-500 hover:text-emerald-700 opacity-70 text-lg">&times;</button>
-</div>
-@endif
-
 <form action="{{ route('cms.features.virtual_3d_rooms.update', [$feature, $room]) }}" method="POST" enctype="multipart/form-data" id="virtual3d-room-form">
     @csrf
     @method('PUT')
     <input type="hidden" name="auto_thumbnail" id="autoThumbnailInput">
+    <input type="hidden" name="remove_thumbnail" id="removeThumbnailInput" value="0">
 
     <div class="flex gap-6 items-start" style="flex-wrap: nowrap;">
 
@@ -120,9 +41,18 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail Ruangan</label>
                         @if($room->thumbnail_path)
-                            <img src="{{ asset('storage/' . $room->thumbnail_path) }}" class="mt-1 mb-2 w-full h-24 object-cover rounded-lg border border-gray-200">
+                            <div class="relative mt-1 mb-2" id="thumbnailPreviewWrap">
+                                <img src="{{ asset('storage/' . $room->thumbnail_path) }}" id="thumbnailPreviewImg" class="w-full h-24 object-cover rounded-lg border border-gray-200">
+                                <button type="button" id="removeThumbnailBtn"
+                                    onclick="removeThumbnail()"
+                                    title="Hapus thumbnail"
+                                    class="absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center rounded-full text-white text-xs font-bold shadow-md transition-transform hover:scale-110"
+                                    style="background-color:#ef4444;">
+                                    &times;
+                                </button>
+                            </div>
                         @endif
-                        <input type="file" name="thumbnail" accept="image/jpeg,image/png,image/webp" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                        <input type="file" name="thumbnail" id="thumbnailFileInput" accept="image/jpeg,image/png,image/webp" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                         <p class="text-xs text-gray-500 mt-1.5">Biarkan kosong jika tidak ingin mengubah</p>
                     </div>
                 </div>
@@ -275,7 +205,7 @@
                     <div class="room3d-scene" id="preview3dScene">
                         <div class="room3d-face front" id="pv-wall-front">DEPAN</div>
                         <div class="room3d-face back" id="pv-wall-back">
-                            BELAKANG
+                            <span>BELAKANG</span>
                             <div class="room3d-door" id="pv-door">
                                 <span>PINTU</span>
                                 <div class="room3d-door-knob"></div>
@@ -284,7 +214,7 @@
                         <div class="room3d-face left" id="pv-wall-left">KIRI</div>
                         <div class="room3d-face right" id="pv-wall-right">KANAN</div>
                         <div class="room3d-face floor" id="pv-floor">LANTAI</div>
-                        <div class="room3d-face ceiling" id="pv-ceiling">ATAP</div>
+                        <div class="room3d-face ceiling" id="pv-ceiling"><span style="display:inline-block; transform:scaleY(-1);">ATAP</span></div>
                     </div>
 
                     <div style="position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:10;">
@@ -368,149 +298,35 @@
 @endsection
 
 @push('scripts')
-<!-- Add html2canvas for automatic room thumbnail generation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{{-- Blade-specific data (routes & CSRF) injected inline, everything else is in external JS --}}
 <script>
-    const saveBtn = document.getElementById('saveRoomBtn');
-    if(saveBtn) {
-        saveBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const form = document.getElementById('virtual3d-room-form');
-            const previewContainer = document.getElementById('preview3dContainer');
-            
-            // Only generate if no file was selected manually
-            const fileInput = document.querySelector('input[name="thumbnail"]');
-            if (fileInput && fileInput.files.length === 0 && previewContainer) {
-                // Briefly reset perspective to default for a clear screenshot
-                const oldTransform = previewContainer.style.transform;
-                previewContainer.style.transform = 'none';
-                
-                html2canvas(previewContainer, {
-                    backgroundColor: '#000000',
-                    useCORS: true,
-                    logging: false
-                }).then(canvas => {
-                    previewContainer.style.transform = oldTransform;
-                    document.getElementById('autoThumbnailInput').value = canvas.toDataURL('image/jpeg', 0.8);
-                    form.submit();
-                }).catch(err => {
-                    form.submit(); // fallback
-                });
-            } else {
-                form.submit();
-            }
-        });
-    }
-
-    // Global routes used by virtual_3d_rooms.js functions
-    window.v3dCsrf = '{{ csrf_token() }}';
+    window.v3dCsrf   = '{{ csrf_token() }}';
     window.v3dRoutes = {
-        upload: "{{ route('cms.features.virtual_3d_rooms.media.store', [$feature, $room]) }}",
-        updateMedia: "{{ route('cms.features.virtual_3d_rooms.media.update', [$feature, $room, '__MEDIA_ID__']) }}",
+        upload:      "{{ route('cms.features.virtual_3d_rooms.media.store',   [$feature, $room]) }}",
+        updateMedia: "{{ route('cms.features.virtual_3d_rooms.media.update',  [$feature, $room, '__MEDIA_ID__']) }}",
         deleteMedia: "{{ route('cms.features.virtual_3d_rooms.media.destroy', [$feature, $room, '__MEDIA_ID__']) }}"
     };
 
-    // Update preview colors
-    function updatePreviewColors() {
-        const wc = document.getElementById('wallColorInput').value;
-        const fc = document.getElementById('floorColorInput').value;
-        const cc = document.getElementById('ceilingColorInput').value;
-        document.getElementById('wallColorText').value = wc;
-        document.getElementById('floorColorText').value = fc;
-        document.getElementById('ceilingColorText').value = cc;
-        document.getElementById('pv-wall-front').style.backgroundColor = wc;
-        document.getElementById('pv-wall-back').style.backgroundColor = wc;
-        document.getElementById('pv-wall-left').style.backgroundColor = wc;
-        document.getElementById('pv-wall-right').style.backgroundColor = wc;
-        document.getElementById('pv-floor').style.backgroundColor = fc;
-        document.getElementById('pv-ceiling').style.backgroundColor = cc;
-        const wallEditor = document.getElementById('wallEditor');
-        if (wallEditor) wallEditor.style.backgroundColor = wc;
-    }
-
-    function rotatePreview(view, btn) {
-        const scene = document.getElementById('preview3dScene');
-        const rotations = {
-            'default': 'translate(-50%, -50%) rotateX(-10deg) rotateY(-25deg)',
-            'front':   'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)',
-            'back':    'translate(-50%, -50%) rotateX(0deg) rotateY(180deg)',
-            'left':    'translate(-50%, -50%) rotateX(0deg) rotateY(90deg)',
-            'right':   'translate(-50%, -50%) rotateX(0deg) rotateY(-90deg)',
-            'top':     'translate(-50%, -50%) rotateX(90deg) rotateY(0deg)',
-        };
-        scene.style.transform = rotations[view] || rotations['default'];
-        document.querySelectorAll('.preview-rot-btn').forEach(b => b.classList.remove('active'));
-        if (btn) btn.classList.add('active');
-    }
-
-    async function deleteMediaItem(id, btnEl) {
-        if (!confirm('Yakin hapus media ini?')) return;
-        const url = window.v3dRoutes.deleteMedia.replace('__MEDIA_ID__', id);
-        try {
-            const response = await fetch(url, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': window.v3dCsrf, 'Accept': 'application/json' } });
-            const data = await response.json();
-            if (data.success) {
-                mediaItems = mediaItems.filter(m => m.id !== id);
-                if (activeMediaId === id) deselectItem();
-                renderWallItems();
-                const listItem = btnEl.closest('.media-list-item');
-                if (listItem) listItem.remove();
-                showToast('Media berhasil dihapus.');
-            }
-        } catch (error) { console.error(error); alert('Gagal menghapus.'); }
-    }
-
-    function addMediaToList(media) {
-        const noMsg = document.getElementById('noMediaMsg');
-        if (noMsg) noMsg.remove();
-        const list = document.getElementById('mediaList');
-        const html = `
-        <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg border border-gray-100 media-list-item" data-id="${media.id}">
-            <div class="w-12 h-10 flex-shrink-0 rounded overflow-hidden bg-gray-200">
-                ${media.type === 'image'
-                    ? '<img src="/storage/' + media.file_path + '" class="w-full h-full object-cover">'
-                    : '<div class="w-full h-full flex items-center justify-center text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>'}
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-xs font-medium text-gray-800 truncate">${media.type.charAt(0).toUpperCase() + media.type.slice(1)} #${media.id}</p>
-                <p class="text-xs text-gray-500">Dinding: ${media.wall.charAt(0).toUpperCase() + media.wall.slice(1)}</p>
-            </div>
-            <button type="button" onclick="deleteMediaItem(${media.id}, this)" class="p-1.5 text-red-500 hover:bg-red-50 rounded transition-colors" title="Hapus">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            </button>
-        </div>`;
-        list.insertAdjacentHTML('beforeend', html);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        updatePreviewColors();
-    });
-</script>
-<script src="{{ asset('js/cms/virtual_3d_rooms.js') }}"></script>
-<script>
-    // Integration logic for edit page
-    // Override uploadNewMedia to use custom upload fields from the left panel
-    window.uploadNewMedia = async function() {
+    // Upload media: uses Blade-generated routes so defined here
+    window.uploadNewMedia = async function () {
         const fileInput = document.getElementById('uploadFile');
         if (!fileInput || !fileInput.files.length) {
             alert('Pilih file untuk diunggah!');
             return;
         }
-
         const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
-        formData.append('wall', document.getElementById('uploadWall').value);
-        formData.append('type', document.getElementById('uploadType').value);
+        formData.append('file',       fileInput.files[0]);
+        formData.append('wall',       document.getElementById('uploadWall').value);
+        formData.append('type',       document.getElementById('uploadType').value);
         formData.append('position_x', 50);
         formData.append('position_y', 50);
-        formData.append('width', 30);
-        formData.append('height', 40);
-
+        formData.append('width',      30);
+        formData.append('height',     40);
         try {
             const response = await fetch(window.v3dRoutes.upload, {
-                method: 'POST',
+                method:  'POST',
                 headers: { 'X-CSRF-TOKEN': window.v3dCsrf },
-                body: formData
+                body:    formData
             });
             const data = await response.json();
             if (data.success) {
@@ -529,5 +345,6 @@
         }
     };
 </script>
+<script src="{{ asset('js/cms/virtual_3d_rooms.js') }}"></script>
+<script src="{{ asset('js/cms/virtual_3d_rooms_edit.js') }}"></script>
 @endpush
-

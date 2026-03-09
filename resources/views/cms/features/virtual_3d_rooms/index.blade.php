@@ -39,15 +39,7 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div x-data="{ open: true }" x-show="open" class="p-4 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-            <span class="text-sm font-medium">{{ session('success') }}</span>
-        </div>
-        <button x-on:click="open = false" class="text-emerald-500 hover:text-emerald-700 opacity-70 text-lg">&times;</button>
-    </div>
-    @endif
+
 
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

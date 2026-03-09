@@ -10,7 +10,27 @@
 
 @section('content')
 
-{{-- Hero --}}
+{{-- Breadcrumb --}}
+<div class="feature-breadcrumb">
+    <div class="container">
+        @if($feature->parent)
+            <a href="{{ url($feature->parent->path ?? '#') }}">
+                {{ app()->getLocale() === 'en' && $feature->parent->name_en ? $feature->parent->name_en : $feature->parent->name }}
+            </a>
+            <span class="sep">/</span>
+        @endif
+        <span class="current">{{ app()->getLocale() === 'en' && $feature->name_en ? $feature->name_en : $feature->name }}</span>
+    </div>
+</div>
+
+
+{{-- Hero: blue gradient only for virtual archive pages; photo-hero for all others --}}
+@php
+    $isVirtualArchive = str_starts_with(request()->path(), 'pameran/virtual');
+@endphp
+
+@if($isVirtualArchive)
+{{-- Blue gradient hero (Pameran Arsip Virtual) --}}
 <div class="vt-hero">
     <div class="container">
         @if($feature->parent)
@@ -22,6 +42,20 @@
         <p>{{ app()->getLocale() === 'en' ? 'Explore the archive exhibition rooms virtually' : 'Jelajahi ruangan pameran arsip secara virtual' }}</p>
     </div>
 </div>
+@else
+{{-- Photo hero (semua halaman lain) — sama seperti login --}}
+<div class="feature-hero">
+    <div class="container">
+        @if($feature->parent)
+            <p style="font-size:0.8rem;opacity:0.7;margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.08em;color:#fff;">
+                {{ app()->getLocale() === 'en' && $feature->parent->name_en ? $feature->parent->name_en : $feature->parent->name }}
+            </p>
+        @endif
+        <h1>{{ app()->getLocale() === 'en' && $feature->name_en ? $feature->name_en : $feature->name }}</h1>
+    </div>
+</div>
+@endif
+
 
 {{-- Virtual 3D Rooms Section (if virtual path) --}}
 @if(str_contains(request()->path(), 'virtual'))

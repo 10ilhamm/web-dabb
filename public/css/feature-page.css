@@ -1,14 +1,17 @@
 /* ===== Feature Page — Public View ===== */
 
 .feature-breadcrumb {
-    background: #f0f7ff;
-    padding: 10px 0;
-    font-size: 13px;
+    background: #fff;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #e8ecef;
 }
 .feature-breadcrumb .container {
     display: flex;
     align-items: center;
     gap: 6px;
+    padding: 0 5%;
 }
 .feature-breadcrumb a {
     color: #555;
@@ -18,18 +21,20 @@
     text-decoration: underline;
 }
 .feature-breadcrumb .current {
-    color: var(--blue, #08489E);
+    color: #3598db;
     font-weight: 600;
 }
-.feature-breadcrumb span {
-    color: #999;
+.feature-breadcrumb .sep {
+    color: #bbb;
+    font-weight: 400;
 }
+
 
 .feature-hero {
     position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.45)),
-                url('/image/background.png') center/cover no-repeat;
-    color: #ffff;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('/image/background.png') center 35%/cover no-repeat;
+    color: #fff;
     padding: 48px 0;
     min-height: 160px;
     display: flex;
@@ -38,10 +43,13 @@
 .feature-hero h1 {
     font-family: 'Poppins', 'Montserrat', sans-serif;
     font-size: 32px;
-    font-weight: 700;
+    font-weight: 800;
     margin: 0;
     letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
+
 
 .feature-content {
     padding: 36px 0 60px;
@@ -133,9 +141,8 @@
     gap: 36px;
 }
 
-.feature-section {
-    /* each section block */
-}
+
+
 
 .section-title-box {
     display: inline-block;

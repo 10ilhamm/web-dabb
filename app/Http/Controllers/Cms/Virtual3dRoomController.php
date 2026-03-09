@@ -83,56 +83,167 @@ class Virtual3dRoomController extends Controller
     public function update(Request $request, Feature $feature, Virtual3dRoom $room)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'thumbnail' => 'nullable|image|max:2048',
-            'wall_color' => 'nullable|string',
-            'floor_color' => 'nullable|string',
-            'ceiling_color' => 'nullable|string',
-            'door_link_type' => 'nullable|in:none,feature,room,url',
-            'door_target' => 'nullable|string',
-            'door_label' => 'nullable|string',
+            'name'             => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'thumbnail'        => 'nullable|image|max:2048',
+            'remove_thumbnail' => 'nullable|in:0,1',
+            'wall_color'       => 'nullable|string',
+            'floor_color'      => 'nullable|string',
+            'ceiling_color'    => 'nullable|string',
+            'door_link_type'   => 'nullable|in:none,feature,room,url',
+            'door_target'      => 'nullable|string',
+            'door_label'       => 'nullable|string',
         ]);
 
-        $room->name = $validated['name'];
-        $room->description = $validated['description'];
-        $room->wall_color = $validated['wall_color'] ?? '#e5e7eb';
-        $room->floor_color = $validated['floor_color'] ?? '#8B7355';
-        $room->ceiling_color = $validated['ceiling_color'] ?? '#f5f5f5';
+        $room->name         = $validated['name'];
+        $room->description  = $validated['description'];
+        $room->wall_color   = $validated['wall_color']   ?? '#e5e7eb';
+        $room->floor_color  = $validated['floor_color']  ?? '#8B7355';
+        $room->ceiling_color= $validated['ceiling_color']?? '#f5f5f5';
         $room->door_link_type = $validated['door_link_type'] ?? 'none';
-        $room->door_target = $validated['door_target'] ?? null;
-        $room->door_label = $validated['door_label'] ?? null;
+        $room->door_target  = $validated['door_target']  ?? null;
+        $room->door_label   = $validated['door_label']   ?? null;
 
         if ($request->hasFile('thumbnail')) {
+            // ① Manual upload — replace existing
             if ($room->thumbnail_path) {
                 Storage::disk('public')->delete($room->thumbnail_path);
             }
-            $room->thumbnail_path = $request->file('thumbnail')->store('virtual_3d_rooms/thumbnails', 'public');
-        } elseif ($request->filled('auto_thumbnail')) {
-            // Process base64 auto-thumbnail from html2canvas only if no manual file is uploaded
-            $imgData = $request->input('auto_thumbnail');
-            if (preg_match('/^data:image\/(\w+);base64,/', $imgData, $type)) {
-                $imgData = substr($imgData, strpos($imgData, ',') + 1);
-                $imgData = base64_decode($imgData);
-                
-                if ($room->thumbnail_path) {
-                    Storage::disk('public')->delete($room->thumbnail_path);
-                }
-                
-                $extension = strtolower($type[1]); // jpeg, png
-                $fileName = 'thumbnail_' . Str::random(10) . '_' . time() . '.' . $extension;
-                $path = 'virtual_3d_rooms/thumbnails/' . $fileName;
-                
-                Storage::disk('public')->put($path, $imgData);
-                $room->thumbnail_path = $path;
+            $room->thumbnail_path = $request->file('thumbnail')
+                ->store('virtual_3d_rooms/thumbnails', 'public');
+
+        } elseif ($request->input('remove_thumbnail') == '1') {
+            // ② User deleted thumbnail → remove file, then immediately auto-generate
+            if ($room->thumbnail_path) {
+                Storage::disk('public')->delete($room->thumbnail_path);
+                $room->thumbnail_path = null;
             }
+            // Auto-generate right away so it's never left empty
+            $room->load('media');
+            $room->thumbnail_path = $this->generateAutoThumbnail($room);
+
+        } elseif (!$room->thumbnail_path) {
+            // ③ No thumbnail at all → auto-generate
+            $room->load('media');
+            $room->thumbnail_path = $this->generateAutoThumbnail($room);
         }
+        // ④ Existing thumbnail + no changes → keep as-is (do nothing)
 
         $room->save();
 
         return redirect()->route('cms.features.virtual_3d_rooms.index', $feature)
             ->with('success', 'Ruangan Virtual 3D berhasil diperbarui.');
     }
+
+    /**
+     * Generate a thumbnail by compositing ALL front-wall media images
+     * onto the wall color background.
+     * Canvas: 1280×720 (16:9). Returns the storage-relative path or null on failure.
+     */
+    private function generateAutoThumbnail(Virtual3dRoom $room): ?string
+    {
+        if (!function_exists('imagecreatetruecolor')) {
+            return null; // GD not available
+        }
+
+        // Collect all front-wall images; fallback to any wall images
+        $mediaItems = $room->media
+            ->where('wall', 'front')
+            ->where('type', 'image')
+            ->values();
+
+        if ($mediaItems->isEmpty()) {
+            $mediaItems = $room->media
+                ->where('type', 'image')
+                ->values();
+        }
+
+        if ($mediaItems->isEmpty()) {
+            return null; // No image media at all
+        }
+
+        // ── Canvas ────────────────────────────────────────────────────
+        $canvasW = 1280;
+        $canvasH = 720;
+
+        $canvas = imagecreatetruecolor($canvasW, $canvasH);
+
+        // Fill wall color background
+        $hex = ltrim($room->wall_color ?? '#e5e7eb', '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+        $bg = imagecolorallocate(
+            $canvas,
+            hexdec(substr($hex, 0, 2)),
+            hexdec(substr($hex, 2, 2)),
+            hexdec(substr($hex, 4, 2))
+        );
+        imagefill($canvas, 0, 0, $bg);
+
+        // ── Composite every media item onto the canvas ─────────────────
+        foreach ($mediaItems as $media) {
+            if (!Storage::disk('public')->exists($media->file_path)) {
+                continue;
+            }
+
+            $srcPath = Storage::disk('public')->path($media->file_path);
+            $ext     = strtolower(pathinfo($srcPath, PATHINFO_EXTENSION));
+
+            $src = match($ext) {
+                'jpg', 'jpeg' => @imagecreatefromjpeg($srcPath),
+                'png'         => @imagecreatefrompng($srcPath),
+                'webp'        => @imagecreatefromwebp($srcPath),
+                default       => null,
+            };
+
+            if (!$src) {
+                continue;
+            }
+
+            $srcW = imagesx($src);
+            $srcH = imagesy($src);
+
+            // Slot: position_x/y are the CENTER of the slot (%), width/height are size (%)
+            $slotW = (int)($media->width      / 100 * $canvasW);
+            $slotH = (int)($media->height     / 100 * $canvasH);
+            $slotX = (int)($media->position_x / 100 * $canvasW) - intdiv($slotW, 2);
+            $slotY = (int)($media->position_y / 100 * $canvasH) - intdiv($slotH, 2);
+
+            // Maintain aspect ratio (objectFit: contain — same as guest viewer)
+            $scale = min(
+                $slotW / max($srcW, 1),
+                $slotH / max($srcH, 1)
+            );
+            $drawW = (int)($srcW * $scale);
+            $drawH = (int)($srcH * $scale);
+            $drawX = $slotX + intdiv($slotW - $drawW, 2);
+            $drawY = $slotY + intdiv($slotH - $drawH, 2);
+
+            imagecopyresampled(
+                $canvas, $src,
+                $drawX, $drawY,
+                0, 0,
+                $drawW, $drawH,
+                $srcW, $srcH
+            );
+            imagedestroy($src);
+        }
+
+        // ── Save ──────────────────────────────────────────────────────
+        Storage::disk('public')->makeDirectory('virtual_3d_rooms/thumbnails');
+        $fileName = 'thumbnail_' . Str::random(10) . '_' . time() . '.jpg';
+        $path     = 'virtual_3d_rooms/thumbnails/' . $fileName;
+        $fullPath = Storage::disk('public')->path($path);
+
+        imagejpeg($canvas, $fullPath, 90);
+        imagedestroy($canvas);
+
+        return $path;
+    }
+
+
+
 
     public function destroy(Feature $feature, Virtual3dRoom $room)
     {
