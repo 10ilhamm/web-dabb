@@ -54,4 +54,10 @@ return [
         'logout_other' => 'Log Out Other Browser Sessions',
         'logout_success' => 'All sessions on other devices have been removed.',
     ],
+    'disclaimer' => [
+        'title' => 'Disclaimer Settings',
+        'content_label' => 'Disclaimer Text Content',
+        'content_help' => 'You can change the text format (bold, italic, etc.) and separate paragraphs directly from the editor above.',
+        'save' => 'Save Changes',
+    ],
 ];

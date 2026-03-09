@@ -54,4 +54,10 @@ return [
         'logout_other' => 'Keluar dari Sesi Browser Lainnya',
         'logout_success' => 'Semua sesi di perangkat lain telah dihapus.',
     ],
+    'disclaimer' => [
+        'title' => 'Pengaturan Disclaimer',
+        'content_label' => 'Konten Teks Disclaimer',
+        'content_help' => 'Anda dapat mengubah format teks (tebal, miring, dsb.) dan memisahkan antar paragraf langsung dari editor di atas.',
+        'save' => 'Simpan Perubahan',
+    ],
 ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cms;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Setting;
+use App\Services\TranslationService;
 
 class SettingController extends Controller
 {
@@ -38,5 +39,69 @@ class SettingController extends Controller
         }
 
         return redirect()->back()->with('success', __('cms.common.saved_successfully') ?? 'Pengaturan berhasil disimpan.');
+    }
+    public function editDisclaimer()
+    {
+        $settings = Setting::all()->pluck('value', 'key')->toArray();
+        return view('cms.settings.disclaimer', compact('settings'));
+    }
+
+    public function updateDisclaimer(Request $request, TranslationService $translationService)
+    {
+        $data = $request->validate([
+            'disclaimer_content' => 'nullable|string',
+        ]);
+
+        foreach ($data as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            
+            // Translasi otomatis konten ke bahasa inggris jika diubah
+            if ($key === 'disclaimer_content') {
+                $htmlContent = $value;
+                $base64Images = [];
+                
+                if (!empty($htmlContent)) {
+                    // Gambar base64 ukurannya jutaan karakter (Mb), ini menyebabkan request Translasi API Google sangat lama.
+                    // Oleh karena itu, kita ubah sementara base64 panjangnya menjadi teks kecil "src=LOCAL_IMAGE_X".
+                    $htmlContent = preg_replace_callback('/src=["\']?data:image\/[^;]+;base64,[^"\']+["\']?/i', function($matches) use (&$base64Images) {
+                        $id = count($base64Images);
+                        $base64Images[$id] = $matches[0];
+                        return 'src="LOCAL_IMAGE_' . $id . '"';
+                    }, $htmlContent);
+                    
+                    $enValue = $translationService->translate($htmlContent);
+                    
+                    // Setelah terjemahan teks berhasil, kembalikan gambar aslinya ke konten.
+                    foreach ($base64Images as $id => $imgData) {
+                        $enValue = str_replace('src="LOCAL_IMAGE_' . $id . '"', $imgData, $enValue);
+                    }
+                } else {
+                    $enValue = '';
+                }
+                
+                Setting::updateOrCreate(['key' => 'disclaimer_content_en'], ['value' => $enValue]);
+            }
+        }
+
+        return redirect()->back()->with('success', __('cms.common.saved_successfully') ?? 'Konten Disclaimer berhasil disimpan.');
+    }
+
+    public function uploadRteMedia(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '_' . uniqid() . '.' . $extension;
+            
+            // Simpan gambar, video, pdf, atau dokumen lainnya ke folder public/storage/cms_media
+            $path = $file->storeAs('cms_media', $filename, 'public');
+            
+            // Kembalikan URL absolut menggunakan url() agar Editor bisa merendernya
+            $url = asset('storage/' . $path);
+            
+            return response()->json(['url' => $url]);
+        }
+        
+        return response()->json(['error' => 'No file uploaded.'], 400);
     }
 }

@@ -131,6 +131,10 @@
                             class="flex items-center px-3 py-2 text-[13px] rounded-md {{ request()->routeIs('cms.settings.footer.*') ? 'active-item' : 'text-white/70 hover:text-white font-medium' }}">
                             {{ __('dashboard.sidebar.cms_footer') }}
                         </a>
+                        <a href="{{ route('cms.settings.disclaimer.edit') }}"
+                            class="flex items-center px-3 py-2 text-[13px] rounded-md {{ request()->routeIs('cms.settings.disclaimer.*') ? 'active-item' : 'text-white/70 hover:text-white font-medium' }}">
+                            Disclaimer
+                        </a>
                     </div>
                 </div>
 

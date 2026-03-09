@@ -1,5 +1,5 @@
 <nav class="top-nav">
-    <div class="container" style="margin-right: 25%">
+    <div class="container">
         <div class="brand">
             <img src="{{ asset('image/logo_anri.png') }}" alt="ANRI">
             <div>

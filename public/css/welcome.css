@@ -40,11 +40,11 @@ section { padding: 48px 0; }
 .top-nav .container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     min-height: 120px;
-    gap: 24px;
+    gap: 20px;
 }
-.brand { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; margin-right: 80%; }
+.brand { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; }
 .brand img { width: 54px; }
 .brand strong {
     color: #fff;
@@ -59,7 +59,7 @@ section { padding: 48px 0; }
     flex: 1;
     min-width: 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     gap: 22px;
 }
@@ -188,7 +188,7 @@ section { padding: 48px 0; }
     display: block;
 }
 
-.auth-utils { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+.auth-utils { margin-left: auto; display: flex; align-items: center; gap: 14px; white-space: nowrap; }
 .auth-utils .login-link {
     color: #fff;
     text-decoration: none;

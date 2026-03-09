@@ -15,6 +15,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/lang/{locale}', [HomeController::class, 'switchLocale'])->name('locale.switch');
 Route::post('/api/chat', [ChatController::class, 'getBotResponse'])->name('api.chat');
 
+// Static pages
+Route::view('/disclaimer', 'pages.disclaimer')->name('disclaimer');
+
 // Public feature pages
 Route::get('/halaman/{feature}/{pageNum?}', [FeaturePageController::class, 'publicShow'])
     ->where('pageNum', '[0-9]+')
@@ -59,8 +62,12 @@ Route::middleware('auth')->group(function () {
 
     // CMS Settings
     Route::middleware('role:admin')->prefix('cms/settings')->name('cms.settings.')->group(function () {
+        Route::post('/rte-upload', [SettingController::class, 'uploadRteMedia'])->name('rte.upload');
+
         Route::get('/footer', [SettingController::class, 'editFooter'])->name('footer.edit');
         Route::put('/footer', [SettingController::class, 'updateFooter'])->name('footer.update');
+        Route::get('/disclaimer', [SettingController::class, 'editDisclaimer'])->name('disclaimer.edit');
+        Route::put('/disclaimer', [SettingController::class, 'updateDisclaimer'])->name('disclaimer.update');
     });
 
     // CMS Features

@@ -19,16 +19,24 @@
 
     $menuCol1Str = $getSetting('footer_menu_col1', "Beranda | " . (Route::has('home') ? route('home') : '/') . "\nLayanan Publik | #\nPublikasi | #\nKontak Kami | #");
     $menuCol2Str = $getSetting('footer_menu_col2', "Profil | #\nPameran Arsip | #\nPerpustakaan DABB | #\nDisclaimer | #");
-    
+
     $parseMenu = function($str) {
         $lines = explode("\n", trim($str));
         $menu = [];
         foreach($lines as $line) {
             if(!trim($line)) continue;
-            $parts = explode("|", $line);
+            $parts = array_map('trim', explode("|", $line));
+            $label = $parts[0];
+            $url = isset($parts[1]) ? $parts[1] : '#';
+            
+            // Auto-redirect Disclaimer menu to the proper route if set to #
+            if (strtolower($label) === 'disclaimer' && $url === '#') {
+                $url = '/disclaimer';
+            }
+            
             $menu[] = [
-                'label' => trim($parts[0]),
-                'url' => isset($parts[1]) ? trim($parts[1]) : '#'
+                'label' => $label,
+                'url' => $url
             ];
         }
         return $menu;
@@ -95,7 +103,7 @@
                     @if($managedBySub)<span>{!! nl2br(e($managedBySub)) !!}</span>@endif
                 </div>
             </div>
-            
+
             @if($fb || $tw || $ig || $yt)
             <div class="footer-social-list">
                 @if($fb)<a href="{{ $fb }}" class="footer-social-icon" title="Facebook" target="_blank">
