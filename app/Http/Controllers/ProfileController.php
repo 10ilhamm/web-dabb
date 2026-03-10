@@ -165,7 +165,14 @@ class ProfileController extends Controller
             $user->save();
 
             // Handle Profile Data
-            $profileFields = ['nip', 'nomor_whatsapp', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'jabatan', 'pangkat_golongan', 'alamat'];
+            if ($request->hasFile('kartu_identitas')) {
+                if ($user->profile && $user->profile->kartu_identitas) {
+                    Storage::disk('public')->delete($user->profile->kartu_identitas);
+                }
+                $data['kartu_identitas'] = $request->file('kartu_identitas')->store('kartu-identitas', 'public');
+            }
+
+            $profileFields = ['nip', 'nomor_whatsapp', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'jabatan', 'pangkat_golongan', 'alamat', 'nomor_kartu_identitas', 'jenis_keperluan', 'judul_keperluan', 'kartu_identitas'];
             $profileData = [];
 
             foreach ($profileFields as $field) {
@@ -174,12 +181,32 @@ class ProfileController extends Controller
                 }
             }
 
-            if (!empty($profileData) && $user->profile) {
-                // Ensure we don't try to save a field that doesn't exist on this particular profile
-                $validProfileData = array_intersect_key($profileData, array_flip(app()->make(get_class($user->profile))->getFillable() ?: $profileFields));
-                
-                // Fast workaround since some fillable might not be set in models, we can just do a direct update:
-                $user->profile->update($profileData);
+            if (!empty($profileData)) {
+                if ($user->profile) {
+                    // Ensure we don't try to save a field that doesn't exist on this particular profile
+                    $validProfileData = array_intersect_key($profileData, array_flip(app()->make(get_class($user->profile))->getFillable() ?: $profileFields));
+                    
+                    // Fast workaround since some fillable might not be set in models, we can just do a direct update:
+                    $user->profile->update($profileData);
+                } else {
+                    switch ($user->role) {
+                        case 'umum':
+                            $user->userUmum()->create($profileData);
+                            break;
+                        case 'pelajar_mahasiswa':
+                            $user->userPelajar()->create($profileData);
+                            break;
+                        case 'instansi_swasta':
+                            $user->userInstansi()->create($profileData);
+                            break;
+                        case 'admin':
+                            $user->userAdmin()->create($profileData);
+                            break;
+                        case 'pegawai':
+                            $user->userPegawai()->create($profileData);
+                            break;
+                    }
+                }
             }
 
             return Redirect::route('profile.show')->with('success', 'Profil berhasil diperbarui.');

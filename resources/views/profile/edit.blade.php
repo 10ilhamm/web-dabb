@@ -57,7 +57,7 @@
                             <div>
                                 <label
                                     class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.nip') }}</label>
-                                <input type="text" name="nip" value="{{ old('nip', $user->profile->nip ?? '') }}"
+                                <input type="text" name="nip" value="{{ old('nip', $user->profile?->nip ?? '') }}"
                                     maxlength="18"
                                     class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
                             </div>
@@ -83,7 +83,7 @@
                                     <option value="">Pilih Jenis Kelamin</option>
                                     @foreach($jkList as $jk)
                                     <option value="{{ $jk }}"
-                                        {{ old('jenis_kelamin', $user->profile->jenis_kelamin ?? '') == $jk ? 'selected' : '' }}>
+                                        {{ old('jenis_kelamin', $user->profile?->jenis_kelamin ?? '') == $jk ? 'selected' : '' }}>
                                         {{ $jk }}</option>
                                     @endforeach
                                 </select>
@@ -104,7 +104,7 @@
                                     <option value="">Pilih Agama</option>
                                     @foreach ($agamaList as $agama)
                                         <option value="{{ $agama }}"
-                                            {{ old('agama', $user->profile->agama ?? '') == $agama ? 'selected' : '' }}>
+                                            {{ old('agama', $user->profile?->agama ?? '') == $agama ? 'selected' : '' }}>
                                             {{ $agama }}</option>
                                     @endforeach
                                 </select>
@@ -127,7 +127,7 @@
                             <label
                                 class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.phone_number') }}</label>
                             <input type="text" name="nomor_whatsapp"
-                                value="{{ old('nomor_whatsapp', $user->profile->nomor_whatsapp ?? '') }}" maxlength="20"
+                                value="{{ old('nomor_whatsapp', $user->profile?->nomor_whatsapp ?? '') }}" maxlength="20"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
                         </div>
 
@@ -145,7 +145,7 @@
                                     <option value="">Pilih Jabatan</option>
                                     @foreach ($jabatanList as $jabatan)
                                         <option value="{{ $jabatan }}"
-                                            {{ old('jabatan', $user->profile->jabatan ?? '') == $jabatan ? 'selected' : '' }}>
+                                            {{ old('jabatan', $user->profile?->jabatan ?? '') == $jabatan ? 'selected' : '' }}>
                                             {{ $jabatan }}</option>
                                     @endforeach
                                 </select>
@@ -164,7 +164,7 @@
                                     <option value="">Pilih Pangkat/Golongan</option>
                                     @foreach ($pangkatList as $pangkat)
                                         <option value="{{ $pangkat }}"
-                                            {{ old('pangkat_golongan', $user->profile->pangkat_golongan ?? '') == $pangkat ? 'selected' : '' }}>
+                                            {{ old('pangkat_golongan', $user->profile?->pangkat_golongan ?? '') == $pangkat ? 'selected' : '' }}>
                                             {{ $pangkat }}</option>
                                     @endforeach
                                 </select>
@@ -175,7 +175,7 @@
                         <div>
                             <label class="block text-[12px] font-medium text-gray-400 mb-1.5">Tempat Lahir</label>
                             <input type="text" name="tempat_lahir"
-                                value="{{ old('tempat_lahir', $user->profile->tempat_lahir ?? '') }}" maxlength="100"
+                                value="{{ old('tempat_lahir', $user->profile?->tempat_lahir ?? '') }}" maxlength="100"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
                         </div>
 
@@ -183,16 +183,36 @@
                         <div>
                             <label class="block text-[12px] font-medium text-gray-400 mb-1.5">Tanggal Lahir</label>
                             <input type="date" name="tanggal_lahir"
-                                value="{{ old('tanggal_lahir', $user->profile->tanggal_lahir ?? '') }}"
+                                value="{{ old('tanggal_lahir', $user->profile?->tanggal_lahir ?? '') }}"
                                 class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
                         </div>
+
+                        <!-- Nomor Kartu Identitas -->
+                        <div>
+                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">Nomor Kartu Identitas</label>
+                            <input type="text" name="nomor_kartu_identitas"
+                                value="{{ old('nomor_kartu_identitas', $user->profile?->nomor_kartu_identitas ?? '') }}"
+                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors">
+                        </div>
+
+                        <!-- Kartu Identitas -->
+                        <div>
+                            <label class="block text-[12px] font-medium text-gray-400 mb-1.5">Upload Kartu Identitas (Opsional Perbarui)</label>
+                            <input type="file" name="kartu_identitas" accept=".jpg,.jpeg,.png,.pdf"
+                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors cursor-pointer">
+                            @if($user->profile?->kartu_identitas)
+                                <a href="{{ Storage::url($user->profile->kartu_identitas) }}" target="_blank" class="text-xs text-blue-500 mt-1 block">Lihat KTP/Identitas Saat Ini</a>
+                            @endif
+                        </div>
+
+
 
                         <!-- Alamat -->
                         <div class="md:col-span-2">
                             <label
                                 class="block text-[12px] font-medium text-gray-400 mb-1.5">{{ __('dashboard.profile.address') }}</label>
                             <textarea name="alamat" rows="3"
-                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors resize-none">{{ old('alamat', $user->profile->alamat ?? '') }}</textarea>
+                                class="w-full bg-gray-50 border border-gray-200 text-gray-800 text-[13px] rounded-lg p-2.5 outline-none focus:border-blue-500 focus:bg-white transition-colors resize-none">{{ old('alamat', $user->profile?->alamat ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>

@@ -9,9 +9,13 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
+    Route::get('auth/google/login', [GoogleController::class, 'redirectToGoogleLogin'])->name('auth.google.login');
+    Route::get('auth/google/register', [GoogleController::class, 'redirectToGoogleRegister'])->name('auth.google.register');
+    Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
@@ -53,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::post('password/set', [PasswordController::class, 'set'])->name('password.set');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

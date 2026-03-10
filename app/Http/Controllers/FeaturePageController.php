@@ -258,14 +258,17 @@ class FeaturePageController extends Controller
         $loginModalRoomName = null;
         if ($requiresLoginModal) {
             // Try direct virtual rooms on this feature
-            $firstRoom = $feature->virtualRooms()->first();
-            // If none, check first sub-feature's virtual rooms
+            $firstRoom = $feature->virtual3dRooms()->first() ?? $feature->virtualRooms()->first();
+
+            // If none, check sub-features' virtual rooms
             if (!$firstRoom && method_exists($feature, 'subfeatures')) {
-                $sub = $feature->subfeatures()->first();
-                $firstRoom = $sub ? $sub->virtualRooms()->first() : null;
+                foreach ($feature->subfeatures as $sub) {
+                    $firstRoom = $sub->virtual3dRooms()->first() ?? $sub->virtualRooms()->first();
+                    if ($firstRoom) break;
+                }
             }
             if ($firstRoom) {
-                $imgPath = $firstRoom->thumbnail_path ?? $firstRoom->image_360_path;
+                $imgPath = $firstRoom->thumbnail_path ?? $firstRoom->image_360_path ?? null;
                 $loginModalPreview = $imgPath ? asset('storage/'.$imgPath) : null;
                 $loginModalRoomName = $firstRoom->name;
             }
@@ -274,7 +277,7 @@ class FeaturePageController extends Controller
         // Virtual 3D Rooms feature — show interactive 4-walls 3D room
         if (method_exists($feature, 'virtual3dRooms')) {
             $virtual3dRooms = $feature->virtual3dRooms()->with('media')->get();
-            
+
             // Check subfeatures if the parent feature has no virtual 3d rooms
             if ($virtual3dRooms->isEmpty() && method_exists($feature, 'subfeatures')) {
                 foreach ($feature->subfeatures as $sub) {
@@ -283,15 +286,15 @@ class FeaturePageController extends Controller
                     }
                 }
             }
-            
+
             if ($virtual3dRooms->isNotEmpty()) {
                 // Add first room thumbnail for modal if needed
-                if ($requiresLoginModal && !$loginModalPreview) {
+                if ($requiresLoginModal) {
                     $first3dRoom = $virtual3dRooms->first();
                     $loginModalPreview = $first3dRoom->thumbnail_path ? asset('storage/'.$first3dRoom->thumbnail_path) : null;
                     $loginModalRoomName = $first3dRoom->name;
                 }
-                
+
                 return view('pages.virtual_3d_tour', compact(
                     'feature', 'virtual3dRooms', 'requiresLoginModal',
                     'loginModalPreview', 'loginModalRoomName'
@@ -303,6 +306,13 @@ class FeaturePageController extends Controller
         if (method_exists($feature, 'virtualRooms')) {
             $virtualRooms = $feature->virtualRooms()->withCount('hotspots')->with('hotspots')->get();
             if ($virtualRooms->isNotEmpty()) {
+                if ($requiresLoginModal) {
+                    $firstRoom = $virtualRooms->first();
+                    $imgPath = $firstRoom->thumbnail_path ?? $firstRoom->image_360_path ?? null;
+                    $loginModalPreview = $imgPath ? asset('storage/'.$imgPath) : null;
+                    $loginModalRoomName = $firstRoom->name;
+                }
+
                 return view('pages.virtual_tour', compact(
                     'feature', 'virtualRooms', 'requiresLoginModal',
                     'loginModalPreview', 'loginModalRoomName'

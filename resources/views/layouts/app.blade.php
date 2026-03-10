@@ -246,7 +246,7 @@
                                 <span
                                     class="text-[13px] font-semibold text-gray-800">{{ auth()->user()->name ?? __('dashboard.profile.default_name') }}</span>
                                 <span
-                                    class="text-[11px] text-gray-500">{{ App\Models\User::roleLabels()[auth()->user()->role ?? 'umum'] ?? __('dashboard.profile.default_role') }}</span>
+                                    class="text-[11px] text-gray-500">{{ is_null(auth()->user()->password) ? 'Belum Diatur' : (App\Models\User::roleLabels()[auth()->user()->role ?? 'umum'] ?? __('dashboard.profile.default_role')) }}</span>
                             </div>
                             <div
                                 class="ml-4 p-1 rounded-full border border-gray-200 text-gray-400 hover:text-gray-600 focus:outline-none">
@@ -393,6 +393,118 @@
             </div>
         </div>
     </div>
+    <!-- Set Password Modal for Google Login Users -->
+    @if(auth()->check() && is_null(auth()->user()->password))
+        <div x-data="{ showSetPassword: true }"
+            x-show="showSetPassword"
+            class="fixed inset-0 z-[100] flex items-center justify-center">
+
+            <!-- Backdrop -->
+            <div x-show="showSetPassword" class="absolute inset-0 bg-black/60 transition-opacity"></div>
+
+            <!-- Modal Content -->
+            <div x-show="showSetPassword"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8">
+
+                <!-- Icon -->
+                <div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-5">
+                    <svg class="w-8 h-8 text-[#174E93]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+
+                <div class="text-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('Lengkapi Akun Anda') }}</h3>
+                    <p class="text-[13px] text-gray-500">{{ __('Silahkan pilih jenis akun Anda dan atur kata sandi untuk keamanan serta kemudahan login di masa mendatang.') }}</p>
+                </div>
+
+                <form method="POST" action="{{ route('password.set') }}">
+                    @csrf
+                    
+                    <div class="space-y-4">
+                        <!-- Role Selector -->
+                        <div>
+                            <label for="role" class="block text-[13px] font-medium text-gray-700 mb-1">{{ __('Pilih Jenis Akun') }} <span class="text-red-500">*</span></label>
+                            <select id="role" name="role" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#174E93] focus:border-[#174E93] text-[14px]">
+                                <option value="" disabled selected>{{ __('Pilih...') }}</option>
+                                <option value="umum">{{ __('Umum') }}</option>
+                                <option value="pelajar_mahasiswa">{{ __('Pelajar / Mahasiswa') }}</option>
+                                <option value="instansi_swasta">{{ __('Instansi / Swasta') }}</option>
+                            </select>
+                            @error('role', 'setPassword')
+                                <p class="text-red-500 text-[12px] mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Jenis Keperluan -->
+                        <div>
+                            <label for="jenis_keperluan" class="block text-[13px] font-medium text-gray-700 mb-1">Jenis Keperluan <span class="text-red-500">*</span></label>
+                            <select id="jenis_keperluan" name="jenis_keperluan" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#174E93] focus:border-[#174E93] text-[14px]">
+                                <option value="" disabled selected>Pilih...</option>
+                                <option value="Hanya Daftar Akun">Hanya Daftar Akun</option>
+                                <option value="Penelitian">Penelitian / Riset</option>
+                                <option value="Kunjungan">Kunjungan / Konsultasi</option>
+                            </select>
+                            @error('jenis_keperluan', 'setPassword')
+                                <p class="text-red-500 text-[12px] mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Judul Keperluan -->
+                        <div>
+                            <label for="judul_keperluan" class="block text-[13px] font-medium text-gray-700 mb-1">Judul Keperluan (Keterangan) <span class="text-red-500">*</span></label>
+                            <input id="judul_keperluan" type="text" name="judul_keperluan" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#174E93] focus:border-[#174E93] text-[14px]">
+                            @error('judul_keperluan', 'setPassword')
+                                <p class="text-red-500 text-[12px] mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password Input -->
+                        <div>
+                            <label for="password" class="block text-[13px] font-medium text-gray-700 mb-1">{{ __('New Password') }} <span class="text-red-500">*</span></label>
+                            <input id="password" type="password" name="password" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#174E93] focus:border-[#174E93] text-[14px]"
+                                placeholder="Min. 10 characters">
+                            @error('password', 'setPassword')
+                                <p class="text-red-500 text-[12px] mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Confirm Password Input -->
+                        <div>
+                            <label for="password_confirmation" class="block text-[13px] font-medium text-gray-700 mb-1">{{ __('Confirm Password') }} <span class="text-red-500">*</span></label>
+                            <input id="password_confirmation" type="password" name="password_confirmation" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#174E93] focus:border-[#174E93] text-[14px]"
+                                placeholder="Min. 10 characters">
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex items-center justify-end gap-3">
+                        <button type="submit" class="w-full px-5 py-2.5 text-sm font-semibold text-white bg-[#174E93] hover:bg-blue-800 rounded-lg transition-colors">
+                            {{ __('Simpan & Lanjutkan') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        @if($errors->setPassword->any())
+            <!-- If there are validation errors, ensure modal stays open -->
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    // It will remain open because x-data="{ showSetPassword: true }"
+                });
+            </script>
+        @endif
+    @endif
+
     <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
         <symbol id="check-circle-fill" viewBox="0 0 16 16">
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>

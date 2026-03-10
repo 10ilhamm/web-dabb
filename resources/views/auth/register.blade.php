@@ -51,6 +51,17 @@
                         <option value="pelajar">{{ __('auth.role_pelajar') }}</option>
                         <option value="instansi">{{ __('auth.role_instansi') }}</option>
                     </select>
+
+                    <div class="login-divider" style="margin: 30px 0 20px 0; display: flex; align-items: center; text-align: center; color: #a0aec0;">
+                        <span style="flex: 1; border-bottom: 1px solid #e2e8f0;"></span>
+                        <span style="padding: 0 10px; font-size: 14px;">{{ __('auth.or') }}</span>
+                        <span style="flex: 1; border-bottom: 1px solid #e2e8f0;"></span>
+                    </div>
+
+                    <a href="{{ route('auth.google.register') }}" class="btn-google" style="display: flex; justify-content: center; align-items: center; width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; color: #4a5568; font-weight: 600; text-decoration: none; transition: all 0.2s ease;">
+                        <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google" style="margin-right: 10px; width: 24px;">
+                        Daftar dengan Google
+                    </a>
                 </div>
 
                 <!-- Registration Form -->

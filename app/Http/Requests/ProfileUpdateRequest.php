@@ -35,6 +35,10 @@ class ProfileUpdateRequest extends FormRequest
             'jabatan' => ['nullable', 'string', 'max:80'],
             'pangkat_golongan' => ['nullable', 'string', 'max:80'],
             'alamat' => ['nullable', 'string'],
+            'kartu_identitas' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'nomor_kartu_identitas' => ['nullable', 'string', 'max:50'],
+            'jenis_keperluan' => ['nullable', 'string', 'max:255'],
+            'judul_keperluan' => ['nullable', 'string', 'max:255'],
         ];
 
         $tableName = match($this->user()->role) {
