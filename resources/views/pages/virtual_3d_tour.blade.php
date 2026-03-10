@@ -26,7 +26,9 @@
 
 {{-- Hero: blue gradient only for virtual archive pages; photo-hero for all others --}}
 @php
-    $isVirtualArchive = str_starts_with(request()->path(), 'pameran/virtual');
+    $isVirtualArchive = str_contains(request()->path(), 'pameran/virtual') || 
+                        str_contains(request()->path(), 'pameran-arsip-virtual') ||
+                        str_contains(request()->path(), 'pameran-virtual');
 @endphp
 
 @if($isVirtualArchive)

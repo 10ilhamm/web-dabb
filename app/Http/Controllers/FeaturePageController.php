@@ -250,8 +250,12 @@ class FeaturePageController extends Controller
         $feature = Feature::where('path', $path)->firstOrFail();
         $feature->loadCount('pages');
 
-        // Pages under /pameran/virtual require authentication — show login modal if guest
-        $requiresLoginModal = !Auth::check() && str_starts_with($path, '/pameran/virtual');
+        // Pages under /pameran/virtual or /pameran-arsip-virtual require authentication — show login modal if guest
+        $requiresLoginModal = !Auth::check() && (
+            str_contains($path, '/pameran/virtual') || 
+            str_contains($path, '/pameran-virtual') ||
+            str_contains($path, '/pameran-arsip-virtual')
+        );
 
         // Resolve preview image for the login modal right panel
         $loginModalPreview = null;
