@@ -37,7 +37,7 @@ class HomeContentController extends Controller
         $this->saveLangFile('en', $translatedData, replace: true);
 
         return redirect()->route('cms.home.edit')
-            ->with('success', 'Konten Beranda berhasil disimpan & diterjemahkan ke Bahasa Inggris.');
+            ->with('success', 'Konten Beranda berhasil disimpan');
     }
 
     /**

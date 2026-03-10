@@ -26,12 +26,24 @@ class FeatureController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:link,dropdown',
-            'path' => 'nullable|string|max:255',
             'order' => 'required|integer|min:0',
             'parent_id' => 'nullable|exists:features,id',
         ]);
 
         $validated['name_en'] = $translationService->translate($validated['name']);
+
+        if ($validated['type'] === 'link') {
+            $slug = \Illuminate\Support\Str::slug($validated['name']);
+            if (empty($validated['parent_id'])) {
+                $validated['path'] = '/' . $slug;
+            } else {
+                $parent = Feature::find($validated['parent_id']);
+                $parentPath = $parent->path ?: ('/' . \Illuminate\Support\Str::slug($parent->name));
+                $validated['path'] = rtrim($parentPath, '/') . '/' . $slug;
+            }
+        } else {
+            $validated['path'] = null;
+        }
 
         Feature::create($validated);
 
@@ -85,11 +97,23 @@ class FeatureController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:link,dropdown',
-            'path' => 'nullable|string|max:255',
             'order' => 'required|integer|min:0',
         ]);
 
         $validated['name_en'] = $translationService->translate($validated['name']);
+
+        if ($validated['type'] === 'link') {
+            $slug = \Illuminate\Support\Str::slug($validated['name']);
+            if (empty($feature->parent_id)) {
+                $validated['path'] = '/' . $slug;
+            } else {
+                $parent = Feature::find($feature->parent_id);
+                $parentPath = $parent->path ?: ('/' . \Illuminate\Support\Str::slug($parent->name));
+                $validated['path'] = rtrim($parentPath, '/') . '/' . $slug;
+            }
+        } else {
+            $validated['path'] = null;
+        }
 
         $feature->update($validated);
 
@@ -139,11 +163,23 @@ class FeatureController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:link,dropdown',
-            'path' => 'nullable|string|max:255',
             'order' => 'required|integer|min:0',
         ]);
 
         $validated['name_en'] = $translationService->translate($validated['name']);
+
+        if ($validated['type'] === 'link') {
+            $slug = \Illuminate\Support\Str::slug($validated['name']);
+            if (empty($feature->parent_id)) {
+                $validated['path'] = '/' . $slug;
+            } else {
+                $parent = Feature::find($feature->parent_id);
+                $parentPath = $parent->path ?: ('/' . \Illuminate\Support\Str::slug($parent->name));
+                $validated['path'] = rtrim($parentPath, '/') . '/' . $slug;
+            }
+        } else {
+            $validated['path'] = null;
+        }
 
         $feature->update($validated);
 

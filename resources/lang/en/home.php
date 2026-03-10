@@ -14,7 +14,7 @@ return [
         'service' => 'Public Service',
         'contact' => 'Contact Us',
         'login' => 'Login',
-        'dashboard' => 'Dashboard',
+        'dashboard' => 'Dashboards',
     ],
     'feature_strip' => [
         'left' => 'Visit the virtual archive exhibition and also the onsite contemporary exhibition available at the Bandung Sustainable Archives Depot.',
@@ -78,9 +78,9 @@ return [
     ],
     'dashboard' => [
         'title' => 'User Profile',
-        'profile' => 'Profile',
+        'profile' => 'Personal data',
         'edit' => 'Change',
         'view_site' => 'View Website',
-        'logout' => 'Log Out',
+        'logout' => 'Go out',
     ],
 ];

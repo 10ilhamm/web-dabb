@@ -521,42 +521,42 @@
         @php
             $tType = 'info';
             $tMsg = session('info');
-            $tIcon = '#info-fill';
-            $tClass = 'text-blue-800 bg-blue-100 border-blue-200';
             
             if (session('success')) {
                 $tType = 'success'; 
                 $tMsg = session('success');
-                $tIcon = '#check-circle-fill';
-                $tClass = 'text-green-800 bg-green-100 border-green-200';
             } elseif (session('error') || $errors->any()) {
-                $tType = 'danger'; 
+                $tType = 'error'; 
                 $tMsg = session('error') ?? $errors->first();
-                $tIcon = '#exclamation-triangle-fill';
-                $tClass = 'text-red-800 bg-red-100 border-red-200';
             } elseif (session('warning')) {
                 $tType = 'warning'; 
                 $tMsg = session('warning');
-                $tIcon = '#exclamation-triangle-fill';
-                $tClass = 'text-yellow-800 bg-yellow-100 border-yellow-200';
             }
         @endphp
 
-        <!-- Custom Vanilla JS Toast -->
-        <div class="toast-container">
-            <div class="toast-message {{ $tClass }}" role="alert">
-                <svg class="toast-icon" role="img" aria-label="{{ ucfirst($tType) }}:"><use xlink:href="{{ $tIcon }}"/></svg>
-                <div class="toast-content">
-                    {!! $tMsg !!}
-                </div>
-                <button type="button" class="toast-close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-    @endif
+        <!-- SweetAlert2 Toast -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
 
-    <script src="{{ asset('js/alert.js') }}"></script>
+                Toast.fire({
+                    icon: '{{ $tType }}',
+                    title: `{!! addslashes($tMsg) !!}`
+                });
+            });
+        </script>
+    @endif
 
     <!-- DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

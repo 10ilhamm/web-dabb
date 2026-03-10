@@ -79,11 +79,197 @@
         <div class="container">
             <h2 class="section-title">{{ __('home.sections.gallery') }}</h2>
             <div class="separator"></div>
-            <div class="items">
-                <img src="{{ asset('image/pameran1.png') }}" alt="Pameran 1">
-                <img src="{{ asset('image/desain_dokumentasi.png') }}" alt="Pameran 2">
-                <img src="{{ asset('image/pameran1.png') }}" alt="Pameran 3">
+            @php
+                $previews = collect();
+                // 1. Ambil list pameran arsip 3d virtual
+                $virtual3dRooms = \App\Models\Virtual3dRoom::with('feature')->orderBy('id', 'desc')->limit(5)->get();
+                foreach($virtual3dRooms as $room) {
+                    $imgPath = $room->thumbnail_path ? asset('storage/' . $room->thumbnail_path) : asset('image/pameran1.png');
+                    $link = $room->feature && $room->feature->path ? url($room->feature->path) : url('/pameran/virtual');
+                    $previews->push([
+                        'name' => $room->name,
+                        'image' => $imgPath,
+                        'link' => $link,
+                        'type' => '3D Virtual'
+                    ]);
+                }
+                
+                // 2. Ambil list pameran arsip 360 lama, maksimal 5
+                $virtualRooms = \App\Models\VirtualRoom::with('feature')->orderBy('id', 'desc')->limit(5)->get();
+                foreach($virtualRooms as $room) {
+                    $imgPath = $room->thumbnail_path ?? $room->image_360_path;
+                    $imgPath = $imgPath ? asset('storage/' . $imgPath) : asset('image/pameran1.png');
+                    $link = $room->feature && $room->feature->path ? url($room->feature->path) : url('/pameran/virtual');
+                    $previews->push([
+                        'name' => $room->name,
+                        'image' => $imgPath,
+                        'link' => $link,
+                        'type' => '360° Virtual'
+                    ]);
+                }
+                
+                // Fallback kosong jika blm ada data
+                if ($previews->isEmpty()) {
+                    $previews->push(['name' => 'Pameran 1', 'image' => asset('image/pameran1.png'), 'link' => '#', 'type' => 'Pameran']);
+                    $previews->push(['name' => 'Pameran 2', 'image' => asset('image/desain_dokumentasi.png'), 'link' => '#', 'type' => 'Pameran']);
+                    $previews->push(['name' => 'Pameran 3', 'image' => asset('image/pameran1.png'), 'link' => '#', 'type' => 'Pameran']);
+                }
+            @endphp
+
+            <div class="gallery-wrapper">
+                <button type="button" class="gallery-nav prev" id="btn-gallery-prev" aria-label="Previous">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="gallery-slider" id="gallery-carousel">
+                    @foreach($previews as $preview)
+                    <div class="gallery-item-card">
+                        <a href="{{ $preview['link'] }}">
+                            <img src="{{ $preview['image'] }}" alt="{{ $preview['name'] }}" loading="lazy">
+                            <div class="gallery-item-overlay">
+                                <div><span class="badge">{{ $preview['type'] }}</span></div>
+                                <h3>{{ $preview['name'] }}</h3>
+                            </div>
+                        </a>
+                    </div>
+                    @endforeach
+                </div>
+                <button type="button" class="gallery-nav next" id="btn-gallery-next" aria-label="Next">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
             </div>
+
+            <style>
+                .gallery-wrapper {
+                    position: relative;
+                    padding: 0 50px;
+                    max-width: 1100px;
+                    margin: 0 auto;
+                }
+                .gallery-slider {
+                    display: flex;
+                    overflow-x: auto;
+                    scroll-behavior: smooth;
+                    scroll-snap-type: x mandatory;
+                    gap: 20px;
+                    padding: 10px 0 20px 0;
+                    scrollbar-width: none;
+                }
+                .gallery-slider::-webkit-scrollbar {
+                    display: none;
+                }
+                .gallery-item-card {
+                    flex: 0 0 calc(33.333% - 14px);
+                    scroll-snap-align: start;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    position: relative;
+                    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+                    background: #fff;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+                .gallery-item-card:hover {
+                    transform: translateY(-6px);
+                    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+                }
+                .gallery-item-card a {
+                    display: block;
+                    height: 100%;
+                    text-decoration: none;
+                }
+                .gallery-item-card img {
+                    width: 100%;
+                    height: 240px;
+                    object-fit: cover;
+                    display: block;
+                    transition: transform 0.5s ease;
+                }
+                .gallery-item-card:hover img {
+                    transform: scale(1.05);
+                }
+                .gallery-item-overlay {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background: linear-gradient(to top, rgba(0,25,70,0.9) 0%, rgba(0,25,70,0) 100%);
+                    padding: 40px 16px 16px;
+                    color: #fff;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                }
+                .gallery-item-overlay .badge {
+                    background: var(--blue-light);
+                    color: #000;
+                    font-size: 11px;
+                    font-weight: 700;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    display: inline-block;
+                    margin-bottom: 8px;
+                }
+                .gallery-item-overlay h3 {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 700;
+                    line-height: 1.3;
+                    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+                    color: #fff;
+                }
+                .gallery-nav {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 50%;
+                    background: #fff;
+                    border: 1px solid #e5e7eb;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    z-index: 10;
+                    color: var(--blue);
+                    transition: all 0.2s ease;
+                }
+                .gallery-nav:hover {
+                    background: var(--blue);
+                    color: #fff;
+                    border-color: var(--blue);
+                }
+                .gallery-nav.prev {
+                    left: -2px;
+                }
+                .gallery-nav.next {
+                    right: -2px;
+                }
+                @media (max-width: 768px) {
+                    .gallery-wrapper { padding: 0; }
+                    .gallery-nav { display: none; }
+                    .gallery-item-card { flex: 0 0 calc(85% - 10px); }
+                }
+            </style>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const slider = document.getElementById('gallery-carousel');
+                    const btnPrev = document.getElementById('btn-gallery-prev');
+                    const btnNext = document.getElementById('btn-gallery-next');
+                    
+                    if (slider && btnPrev && btnNext) {
+                        btnPrev.addEventListener('click', () => {
+                            const itemWidth = slider.querySelector('.gallery-item-card').offsetWidth + 20;
+                            slider.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+                        });
+                        btnNext.addEventListener('click', () => {
+                            const itemWidth = slider.querySelector('.gallery-item-card').offsetWidth + 20;
+                            slider.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                        });
+                    }
+                });
+            </script>
         </div>
     </section>
 

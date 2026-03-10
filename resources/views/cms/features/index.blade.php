@@ -149,11 +149,7 @@
                         <option value="dropdown">{{ __('cms.features.type_dropdown') }}</option>
                     </select>
                 </div>
-                <div x-show="editModal.type === 'link'">
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.path') }}</label>
-                    <input type="text" name="path" x-model="editModal.path" placeholder="{{ __('cms.features.form.path_placeholder') }}"
-                        class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
-                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.order') }} <span class="text-red-500">*</span></label>
                     <input type="number" name="order" x-model="editModal.order" min="0" required
@@ -216,11 +212,7 @@
                         <option value="dropdown">{{ __('cms.features.type_dropdown') }}</option>
                     </select>
                 </div>
-                <div x-show="addModal.type === 'link'">
-                    <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.path') }}</label>
-                    <input type="text" name="path" placeholder="{{ __('cms.features.form.path_placeholder') }}"
-                        class="w-full px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
-                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ __('cms.features.form.order') }} <span class="text-red-500">*</span></label>
                     <input type="number" name="order" min="0" value="{{ $features->count() + 1 }}" required
