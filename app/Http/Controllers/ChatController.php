@@ -17,7 +17,8 @@ class ChatController extends Controller
         }
 
         try {
-            $apiKey = 'AIzaSyA7yRbz7JwIcNn9f0qxDSsnjcJGe2-ztI0'; // Provided by User
+            // Api key dari ai studio Google Gemini (Disimpan di .env)
+            $apiKey = env('GEMINI_API_KEY');
             $endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={$apiKey}";
 
             $systemInstruction = "Anda adalah Customer Support AI ramah berbahasa Indonesia dari DABB (Depot Arsip Berkelanjutan Bandung), instansi di bawah Arsip Nasional Republik Indonesia (ANRI). Tugas Anda menjawab pertanyaan pengunjung website. \nInformasi penting DABB:\n- Jam Operasional: Senin - Jumat, 08:00 - 15:00 WIB (Sabtu, Minggu, dan Hari Libur Nasional tutup).\n- Layanan: Layanan Baca Arsip, Konsultasi Kearsipan, Perawatan Arsip Keluarga (LARASKA), dan Pameran Arsip (onsite/virtual).\n- Biaya: Seluruh layanan GRATIS.\n- Cara Akses: Datang langsung ke Ruang Baca DABB atau daftar online.\nJawablah dengan ringkas, akurat, dan langsung ke intinya (jangan selalu mengulang salam pembuka jika tidak perlu).";
