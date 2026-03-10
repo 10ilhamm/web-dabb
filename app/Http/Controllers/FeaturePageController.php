@@ -7,6 +7,7 @@ use App\Models\FeaturePage;
 use App\Models\FeaturePageSection;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class FeaturePageController extends Controller
@@ -199,7 +200,7 @@ class FeaturePageController extends Controller
     /**
      * Public: show feature page with sections (paginated).
      */
-    public function publicShow(Feature $feature, ?int $pageNum = null)
+    public function publicShow(Feature $feature, ?int $pageNum = null, bool $requiresLoginModal = false, ?string $loginModalPreview = null, ?string $loginModalRoomName = null)
     {
         $feature->load('parent');
         $pages = $feature->pages()->withCount('sections')->orderBy('order')->get();
@@ -217,13 +218,27 @@ class FeaturePageController extends Controller
 
         $currentPage->load('sections');
 
-        return view('pages.feature', [
-            'feature' => $feature,
-            'pages' => $pages,
-            'currentPage' => $currentPage,
-            'currentPageNum' => $pageNum,
-            'totalPages' => $pages->count(),
+        $virtual3dRooms = $feature->virtual3dRooms()->with('media')->get();
+
+        return view('pages.virtual_3d_tour', [
+            'feature'             => $feature,
+            'pages'               => $pages,
+            'currentPage'         => $currentPage,
+            'currentPageNum'      => $pageNum,
+            'totalPages'          => $pages->count(),
+            'requiresLoginModal'  => $requiresLoginModal,
+            'loginModalPreview'   => $loginModalPreview,
+            'loginModalRoomName'  => $loginModalRoomName,
+            'virtual3dRooms'      => $virtual3dRooms,
         ]);
+    }
+
+    /**
+     * @internal wrapped call from publicShowByPath
+     */
+    private function publicShowWithModal(Feature $feature, int $pageNum, bool $requiresLoginModal)
+    {
+        return $this->publicShow($feature, $pageNum, $requiresLoginModal);
     }
 
     /**
@@ -235,11 +250,82 @@ class FeaturePageController extends Controller
         $feature = Feature::where('path', $path)->firstOrFail();
         $feature->loadCount('pages');
 
-        if ($feature->pages_count > 0) {
-            return $this->publicShow($feature, 1);
+        // Pages under /pameran/virtual require authentication — show login modal if guest
+        $requiresLoginModal = !Auth::check() && str_starts_with($path, '/pameran/virtual');
+
+        // Resolve preview image for the login modal right panel
+        $loginModalPreview = null;
+        $loginModalRoomName = null;
+        if ($requiresLoginModal) {
+            // Try direct virtual rooms on this feature
+            $firstRoom = $feature->virtualRooms()->first();
+            // If none, check first sub-feature's virtual rooms
+            if (!$firstRoom && method_exists($feature, 'subfeatures')) {
+                $sub = $feature->subfeatures()->first();
+                $firstRoom = $sub ? $sub->virtualRooms()->first() : null;
+            }
+            if ($firstRoom) {
+                $imgPath = $firstRoom->thumbnail_path ?? $firstRoom->image_360_path;
+                $loginModalPreview = $imgPath ? asset('storage/'.$imgPath) : null;
+                $loginModalRoomName = $firstRoom->name;
+            }
         }
 
-        return view('pages.feature', compact('feature'));
+        // Virtual 3D Rooms feature — show interactive 4-walls 3D room
+        if (method_exists($feature, 'virtual3dRooms')) {
+            $virtual3dRooms = $feature->virtual3dRooms()->with('media')->get();
+            
+            // Check subfeatures if the parent feature has no virtual 3d rooms
+            if ($virtual3dRooms->isEmpty() && method_exists($feature, 'subfeatures')) {
+                foreach ($feature->subfeatures as $sub) {
+                    if (method_exists($sub, 'virtual3dRooms')) {
+                        $virtual3dRooms = $virtual3dRooms->merge($sub->virtual3dRooms()->with('media')->get());
+                    }
+                }
+            }
+            
+            if ($virtual3dRooms->isNotEmpty()) {
+                // Add first room thumbnail for modal if needed
+                if ($requiresLoginModal && !$loginModalPreview) {
+                    $first3dRoom = $virtual3dRooms->first();
+                    $loginModalPreview = $first3dRoom->thumbnail_path ? asset('storage/'.$first3dRoom->thumbnail_path) : null;
+                    $loginModalRoomName = $first3dRoom->name;
+                }
+                
+                return view('pages.virtual_3d_tour', compact(
+                    'feature', 'virtual3dRooms', 'requiresLoginModal',
+                    'loginModalPreview', 'loginModalRoomName'
+                ));
+            }
+        }
+
+        // Virtual rooms feature (360) — show dedicated 360° tour page
+        if (method_exists($feature, 'virtualRooms')) {
+            $virtualRooms = $feature->virtualRooms()->withCount('hotspots')->with('hotspots')->get();
+            if ($virtualRooms->isNotEmpty()) {
+                return view('pages.virtual_tour', compact(
+                    'feature', 'virtualRooms', 'requiresLoginModal',
+                    'loginModalPreview', 'loginModalRoomName'
+                ));
+            }
+        }
+
+        if ($feature->pages_count > 0) {
+            return $this->publicShow($feature, 1, $requiresLoginModal, $loginModalPreview, $loginModalRoomName);
+        }
+
+        $virtual3dRooms = $feature->virtual3dRooms()->with('media')->get();
+        if ($virtual3dRooms->isEmpty() && method_exists($feature, 'subfeatures')) {
+            foreach ($feature->subfeatures as $sub) {
+                if (method_exists($sub, 'virtual3dRooms')) {
+                    $virtual3dRooms = $virtual3dRooms->merge($sub->virtual3dRooms()->with('media')->get());
+                }
+            }
+        }
+
+        return view('pages.virtual_3d_tour', compact(
+            'feature', 'requiresLoginModal', 'loginModalPreview', 'loginModalRoomName', 'virtual3dRooms'
+        ));
     }
 
     private function deleteSectionImages(FeaturePageSection $section): void
