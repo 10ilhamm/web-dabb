@@ -8,7 +8,7 @@
             <!-- Clear Chat Button -->
             <button id="ai-clear-btn"
                 class="hidden absolute top-4 left-4 text-gray-400 hover:text-red-500 transition-colors"
-                title="Hapus Obrolan">
+                title="{{ __('home.chat.clear') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -17,7 +17,7 @@
             </button>
             <!-- Close Button -->
             <button id="ai-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors"
-                title="Tutup">
+                title="{{ __('home.chat.close') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -33,8 +33,8 @@
                     <path d="M12 22C14.2091 22 16 20.2091 16 18H8C8 20.2091 9.79086 22 12 22Z" fill="currentColor" />
                 </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">Halo 👋</h3>
-            <p class="text-gray-500 text-[15px] mt-1">Ada yang bisa saya bantu?</p>
+            <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">{{ __('home.chat.greeting') }} 👋</h3>
+            <p class="text-gray-500 text-[15px] mt-1">{{ __('home.chat.subtitle') }}</p>
         </div>
 
         <!-- Chat Content Area -->
@@ -45,43 +45,40 @@
                 <div class="border-b border-gray-100">
                     <button
                         class="faq-btn w-full text-left py-3.5 flex items-center group transition-colors hover:text-[#2563EB]"
-                        data-question="Bagaimana cara mengakses arsip publik?">
+                        data-question="{{ __('home.chat.faq_1') }}">
                         <svg class="w-4 h-4 mr-3 text-gray-800 group-hover:text-[#2563EB]" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                         </svg>
                         <span
-                            class="text-[14px] font-medium group-hover:text-[#2563EB] transition-colors pointer-events-none">Bagaimana
-                            cara mengakses arsip publik?</span>
+                            class="text-[14px] font-medium group-hover:text-[#2563EB] transition-colors pointer-events-none">{{ __('home.chat.faq_1') }}</span>
                     </button>
                 </div>
                 <div class="border-b border-gray-100">
                     <button
                         class="faq-btn w-full text-left py-3.5 flex items-center group transition-colors hover:text-[#2563EB]"
-                        data-question="Apa layanan yang ada di DABB?">
+                        data-question="{{ __('home.chat.faq_2') }}">
                         <svg class="w-4 h-4 mr-3 text-gray-800 group-hover:text-[#2563EB]" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                         </svg>
                         <span
-                            class="text-[14px] font-medium group-hover:text-[#2563EB] transition-colors pointer-events-none">Apa
-                            layanan yang ada di DABB?</span>
+                            class="text-[14px] font-medium group-hover:text-[#2563EB] transition-colors pointer-events-none">{{ __('home.chat.faq_2') }}</span>
                     </button>
                 </div>
                 <div>
                     <button
                         class="faq-btn w-full text-left py-3.5 flex items-center group transition-colors hover:text-[#2563EB]"
-                        data-question="Apakah kunjungan dipungut biaya?">
+                        data-question="{{ __('home.chat.faq_3') }}">
                         <svg class="w-4 h-4 mr-3 text-gray-800 group-hover:text-[#2563EB]" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                         </svg>
                         <span
-                            class="text-[14px] font-medium group-hover:text-[#2563EB] transition-colors pointer-events-none">Apakah
-                            kunjungan dipungut biaya?</span>
+                            class="text-[14px] font-medium group-hover:text-[#2563EB] transition-colors pointer-events-none">{{ __('home.chat.faq_3') }}</span>
                     </button>
                 </div>
             </div>
@@ -107,7 +104,7 @@
                 class="relative border hover:border-gray-400 border-gray-800 rounded-2xl bg-white overflow-hidden transition-all group focus-within:border-[#2563EB] focus-within:ring-1 focus-within:ring-[#2563EB]">
                 <textarea id="ai-chat-input" rows="1"
                     class="w-full bg-transparent border-0 focus:ring-0 resize-none px-4 py-3 pb-10 text-[14px] text-gray-800 placeholder-gray-500 max-h-[100px]"
-                    placeholder="Tulis pertanyaan Anda..." style="box-shadow: none; outline: none;"></textarea>
+                    placeholder="{{ __('home.chat.placeholder') }}" style="box-shadow: none; outline: none;"></textarea>
                 <div class="absolute bottom-2 right-2">
                     <button id="ai-send-btn"
                         class="bg-[#f3f4f6] hover:bg-[#2563EB] group-focus-within:bg-[#2563EB] group-focus-within:text-white hover:text-white text-gray-400 p-1.5 rounded-lg transition-colors">
@@ -122,7 +119,7 @@
 
         <!-- Footer terms -->
         <div class="px-5 pb-4 pt-1 text-center bg-white">
-            <p class="text-[12px] text-gray-400">Pesan yang dihasilkan AI mungkin saja keliru</p>
+            <p class="text-[12px] text-gray-400">{{ __('home.chat.disclaimer') }}</p>
         </div>
     </div>
 
@@ -138,13 +135,21 @@
                     fill="currentColor" />
                 <path d="M12 22C14.2091 22 16 20.2091 16 18H8C8 20.2091 9.79086 22 12 22Z" fill="currentColor" />
             </svg>
-            <span class="font-bold text-[16px] tracking-wide">Tanya DABB</span>
+            <span class="font-bold text-[16px] tracking-wide">{{ __('home.chat.button') }}</span>
         </button>
     </div>
 </div>
 
+<script type="application/json" id="ai-chat-translations">
+    {!! json_encode([
+        'error_no_reply' => __('home.chat.error_no_reply'),
+        'error_busy' => __('home.chat.error_busy'),
+        'error_network' => __('home.chat.error_network')
+    ]) !!}
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const __chatLang = JSON.parse(document.getElementById('ai-chat-translations').textContent);
         const toggleBtn = document.getElementById('ai-toggle-btn');
         const popup = document.getElementById('ai-chat-popup');
         const closeBtn = document.getElementById('ai-close-btn');
@@ -224,11 +229,11 @@
                     let cleanReply = data.reply.replace(/\*\*/g, '');
                     return cleanReply;
                 } else {
-                    return 'Maaf, saya tidak dapat memproses jawaban saat ini.';
+                    return __chatLang.error_no_reply;
                 }
             } catch (error) {
                 console.error('API Proxy Error:', error);
-                return 'Maaf, saat ini sistem AI sedang sibuk atau tidak terhubung (Bypass SSL diaktifkan). Silakan coba lagi nanti.';
+                return __chatLang.error_busy;
             }
         }
 
@@ -282,7 +287,7 @@
                 appendMessage(reply, false);
             }).catch(err => {
                 typingIndicator.classList.add('hidden');
-                appendMessage('Maaf, ada gangguan jaringan.', false);
+                appendMessage(__chatLang.error_network, false);
             });
         }
 

@@ -68,6 +68,39 @@ return [
         'email' => 'Email : info@anri.go.id',
         'hours' => 'Jam Kerja : Senin-Kamis : 7:30 - 16:00, Jumat : 7:30 - 16:30',
         'copyright' => 'Copyright © 2026 Arsip Nasional Republik Indonesia',
+        'phone_label' => 'Telp',
+        'email_label' => 'Email',
+        'hours_label' => 'Jam Kerja',
+        'copyright_text' => 'Arsip Nasional Republik Indonesia',
+        'hours_default' => 'Senin-Kamis : 7:30 - 16:00
+Jumat : 7:30 - 16:30',
+        'managed_by_default' => 'Depot Arsip
+Berkelanjutan Bandung',
+        'managed_by_sub_default' => 'Depot Arsip
+Berkelanjutan',
+        'menu_col1_default' => 'Beranda | /
+Layanan Publik | #
+Publikasi | #
+Kontak Kami | #',
+        'menu_col2_default' => 'Profil | #
+Pameran Arsip | #
+Perpustakaan DABB | #
+Disclaimer | #',
+    ],
+    'chat' => [
+        'greeting' => 'Halo',
+        'subtitle' => 'Ada yang bisa saya bantu?',
+        'button' => 'Tanya DABB',
+        'placeholder' => 'Tulis pertanyaan Anda...',
+        'disclaimer' => 'Pesan yang dihasilkan AI mungkin saja keliru',
+        'clear' => 'Hapus Obrolan',
+        'close' => 'Tutup',
+        'faq_1' => 'Bagaimana cara mengakses arsip publik?',
+        'faq_2' => 'Apa layanan yang ada di DABB?',
+        'faq_3' => 'Apakah kunjungan dipungut biaya?',
+        'error_no_reply' => 'Maaf, saya tidak dapat memproses jawaban saat ini.',
+        'error_busy' => 'Maaf, saat ini sistem AI sedang sibuk atau tidak terhubung. Silakan coba lagi nanti.',
+        'error_network' => 'Maaf, ada gangguan jaringan.',
     ],
     'roles' => [
         'admin' => 'Admin',
@@ -82,5 +115,33 @@ return [
         'edit' => 'Ubah',
         'view_site' => 'Lihat Website',
         'logout' => 'Keluar',
+    ],
+
+    'virtual_3d_tour' => [
+        'hero_desc' => 'Jelajahi ruangan pameran arsip secara virtual',
+        'select_room' => 'Pilih Ruangan',
+        'select_room_desc' => 'Klik salah satu ruangan di bawah untuk memulai tur virtual 3D',
+        'no_rooms' => 'Belum ada ruangan yang tersedia.',
+        'enter_room' => 'MASUK RUANGAN',
+        'media_on_wall' => ':count media di dinding',
+        'door_label' => 'Pintu: :label',
+        'door_active' => 'Aktif',
+        'viewer_title' => 'Ruangan Virtual',
+        'view_front' => 'Depan',
+        'view_left' => 'Kiri',
+        'view_right' => 'Kanan',
+        'view_back' => 'Belakang',
+        'close' => 'Keluar',
+        'hint' => 'Gunakan tombol View untuk membalik sudut pandang, atau seret/drag untuk menggeser.',
+    ],
+
+    'virtual_tour' => [
+        'hero_desc' => 'Jelajahi pameran arsip 360° secara virtual',
+        'select_room' => 'Pilih Ruangan',
+        'select_room_desc' => 'Klik salah satu ruangan di bawah untuk memulai tur virtual 360°',
+        'no_rooms' => 'Belum ada ruangan yang tersedia.',
+        'enter_room' => 'MASUK RUANGAN',
+        'hotspot_count' => ':count hotspot',
+        'room_title' => 'Ruangan',
     ],
 ];

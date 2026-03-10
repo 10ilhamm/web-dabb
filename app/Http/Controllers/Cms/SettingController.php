@@ -15,7 +15,7 @@ class SettingController extends Controller
         return view('cms.settings.footer', compact('settings'));
     }
 
-    public function updateFooter(Request $request)
+    public function updateFooter(Request $request, TranslationService $translationService)
     {
         $data = $request->validate([
             'footer_title' => 'nullable|string',
@@ -34,8 +34,25 @@ class SettingController extends Controller
             'footer_menu_col2' => 'nullable|string',
         ]);
 
+        // Kunci yang perlu diterjemahkan otomatis ke bahasa Inggris
+        $translatableKeys = [
+            'footer_title',
+            'footer_address',
+            'footer_hours',
+            'footer_managed_by',
+            'footer_managed_by_sub',
+            'footer_menu_col1',
+            'footer_menu_col2',
+        ];
+
         foreach ($data as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+
+            // Translasi otomatis ke bahasa Inggris untuk field yang bisa diterjemahkan
+            if (in_array($key, $translatableKeys)) {
+                $enValue = !empty($value) ? $translationService->translate($value) : '';
+                Setting::updateOrCreate(['key' => $key . '_en'], ['value' => $enValue]);
+            }
         }
 
         return redirect()->back()->with('success', __('cms.common.saved_successfully') ?? 'Pengaturan berhasil disimpan.');
@@ -54,12 +71,12 @@ class SettingController extends Controller
 
         foreach ($data as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
-            
+
             // Translasi otomatis konten ke bahasa inggris jika diubah
             if ($key === 'disclaimer_content') {
                 $htmlContent = $value;
                 $base64Images = [];
-                
+
                 if (!empty($htmlContent)) {
                     // Gambar base64 ukurannya jutaan karakter (Mb), ini menyebabkan request Translasi API Google sangat lama.
                     // Oleh karena itu, kita ubah sementara base64 panjangnya menjadi teks kecil "src=LOCAL_IMAGE_X".
@@ -68,9 +85,9 @@ class SettingController extends Controller
                         $base64Images[$id] = $matches[0];
                         return 'src="LOCAL_IMAGE_' . $id . '"';
                     }, $htmlContent);
-                    
+
                     $enValue = $translationService->translate($htmlContent);
-                    
+
                     // Setelah terjemahan teks berhasil, kembalikan gambar aslinya ke konten.
                     foreach ($base64Images as $id => $imgData) {
                         $enValue = str_replace('src="LOCAL_IMAGE_' . $id . '"', $imgData, $enValue);
@@ -78,7 +95,7 @@ class SettingController extends Controller
                 } else {
                     $enValue = '';
                 }
-                
+
                 Setting::updateOrCreate(['key' => 'disclaimer_content_en'], ['value' => $enValue]);
             }
         }
@@ -92,16 +109,16 @@ class SettingController extends Controller
             $file = $request->file('file');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '_' . uniqid() . '.' . $extension;
-            
+
             // Simpan gambar, video, pdf, atau dokumen lainnya ke folder public/storage/cms_media
             $path = $file->storeAs('cms_media', $filename, 'public');
-            
+
             // Kembalikan URL absolut menggunakan url() agar Editor bisa merendernya
             $url = asset('storage/' . $path);
-            
+
             return response()->json(['url' => $url]);
         }
-        
+
         return response()->json(['error' => 'No file uploaded.'], 400);
     }
 }

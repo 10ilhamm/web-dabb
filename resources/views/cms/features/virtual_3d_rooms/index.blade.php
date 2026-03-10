@@ -5,7 +5,7 @@
 @endpush
 
 @section('breadcrumb_parent', 'CMS / ' . $feature->name)
-@section('breadcrumb_active', 'Ruangan Virtual 3D')
+@section('breadcrumb_active', __('cms.virtual_3d_rooms.breadcrumb_parent'))
 
 @section('content')
 <div class="space-y-6">
@@ -20,21 +20,21 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Ruangan Virtual 3D &mdash; {{ $feature->name }}</h1>
-                <p class="text-sm text-gray-500 mt-0.5">Kelola ruangan virtual dengan 4 dinding dan pintu interaktif</p>
+                <h1 class="text-2xl font-bold text-gray-800">{!! __('cms.virtual_3d_rooms.page_title', ['name' => $feature->name]) !!}</h1>
+                <p class="text-sm text-gray-500 mt-0.5">{{ __('cms.virtual_3d_rooms.page_desc') }}</p>
             </div>
         </div>
-        
+
         <div class="flex items-center gap-3">
             @if($feature->path)
             <a href="{{ url($feature->path) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-800 border border-transparent text-white text-sm font-medium rounded-lg hover:bg-blue-900 transition-colors shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                Lihat Pameran Virtual
+                {{ __('cms.virtual_3d_rooms.view_exhibition') }}
             </a>
             @endif
             <a href="{{ route('cms.features.virtual_3d_rooms.create', $feature) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-800 border border-transparent text-white text-sm font-semibold rounded-lg hover:bg-gray-900 transition-colors shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                Tambah Ruangan 3D
+                {{ __('cms.virtual_3d_rooms.add_room') }}
             </a>
         </div>
     </div>
@@ -44,24 +44,24 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <p class="text-sm font-medium text-gray-600">Total Ruangan</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('cms.virtual_3d_rooms.stat_total_rooms') }}</p>
             <div class="mt-4">
                 <h3 class="text-3xl font-bold text-gray-800">{{ $virtual3dRooms->count() }}</h3>
-                <p class="text-xs text-gray-500 mt-1">Ruangan virtual 3D aktif</p>
+                <p class="text-xs text-gray-500 mt-1">{{ __('cms.virtual_3d_rooms.stat_total_rooms_sub') }}</p>
             </div>
         </div>
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <p class="text-sm font-medium text-gray-600">Total Media</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('cms.virtual_3d_rooms.stat_total_media') }}</p>
             <div class="mt-4">
                 <h3 class="text-3xl font-bold text-gray-800">{{ $virtual3dRooms->sum(fn($r) => $r->media()->count()) }}</h3>
-                <p class="text-xs text-gray-500 mt-1">Gambar &amp; video di dinding</p>
+                <p class="text-xs text-gray-500 mt-1">{!! __('cms.virtual_3d_rooms.stat_total_media_sub') !!}</p>
             </div>
         </div>
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <p class="text-sm font-medium text-gray-600">Rata-rata Media</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('cms.virtual_3d_rooms.stat_avg_media') }}</p>
             <div class="mt-4">
                 <h3 class="text-3xl font-bold text-gray-800">{{ $virtual3dRooms->count() ? number_format($virtual3dRooms->sum(fn($r) => $r->media()->count()) / $virtual3dRooms->count(), 1) : '0' }}</h3>
-                <p class="text-xs text-gray-500 mt-1">Per ruangan</p>
+                <p class="text-xs text-gray-500 mt-1">{{ __('cms.virtual_3d_rooms.stat_avg_media_sub') }}</p>
             </div>
         </div>
     </div>
@@ -69,18 +69,18 @@
     <!-- Table -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100">
         <div class="px-6 py-5 border-b border-gray-100">
-            <h2 class="text-base font-semibold text-gray-800">Daftar Ruangan Virtual 3D</h2>
+            <h2 class="text-base font-semibold text-gray-800">{{ __('cms.virtual_3d_rooms.table_title') }}</h2>
         </div>
         <div>
             <table id="tableVirtual3dRooms" class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 text-sm font-medium border-b border-gray-100">
-                        <th class="px-6 py-4 w-12">No</th>
-                        <th class="px-6 py-4 w-28">Thumbnail</th>
-                        <th class="px-6 py-4">Nama Ruangan</th>
-                        <th class="px-6 py-4">Deskripsi</th>
-                        <th class="px-6 py-4 w-32">Media</th>
-                        <th class="px-6 py-4 w-32 text-right">Aksi</th>
+                        <th class="px-6 py-4 w-12">{{ __('cms.virtual_3d_rooms.col_no') }}</th>
+                        <th class="px-6 py-4 w-28">{{ __('cms.virtual_3d_rooms.col_thumbnail') }}</th>
+                        <th class="px-6 py-4">{{ __('cms.virtual_3d_rooms.col_name') }}</th>
+                        <th class="px-6 py-4">{{ __('cms.virtual_3d_rooms.col_desc') }}</th>
+                        <th class="px-6 py-4 w-32">{{ __('cms.virtual_3d_rooms.col_media') }}</th>
+                        <th class="px-6 py-4 w-32 text-right">{{ __('cms.virtual_3d_rooms.col_action') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -112,7 +112,7 @@
                                     class="inline-flex items-center justify-center w-8 h-8 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </a>
-                                <form action="{{ route('cms.features.virtual_3d_rooms.destroy', [$feature, $room]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus ruangan ini? Semua media di dinding akan ikut terhapus.');">
+                                <form action="{{ route('cms.features.virtual_3d_rooms.destroy', [$feature, $room]) }}" method="POST" data-confirm="{{ __('cms.virtual_3d_rooms.delete_confirm') }}" onsubmit="return confirm(this.dataset.confirm);">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors">
@@ -125,7 +125,7 @@
                     @empty
                     <tr>
                         <td colspan="6" class="px-6 py-8 text-center text-sm text-gray-500">
-                            Belum ada ruangan virtual 3D yang ditambahkan.
+                            {{ __('cms.virtual_3d_rooms.empty') }}
                         </td>
                     </tr>
                     @endforelse

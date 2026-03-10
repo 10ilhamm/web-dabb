@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="{{ asset('css/cms/virtual_rooms.css') }}">
 @endpush
 
-@section('breadcrumb_parent', 'CMS / Pameran Virtual Real')
-@section('breadcrumb_active', 'Dashboard')
+@section('breadcrumb_parent', __('cms.virtual_rooms.breadcrumb_parent'))
+@section('breadcrumb_active', __('cms.virtual_rooms.breadcrumb_active'))
 
 @section('content')
 <div class="space-y-6">
@@ -20,19 +20,19 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Manajemen Halaman &mdash; {{ $feature->name }}</h1>
-                <p class="text-sm text-gray-500 mt-0.5">Kelola ruangan virtual dan hotspot navigasi untuk {{ strtolower($feature->name) }} 360 derajat</p>
+                <h1 class="text-2xl font-bold text-gray-800">{!! __('cms.virtual_rooms.page_title', ['name' => $feature->name]) !!}</h1>
+                <p class="text-sm text-gray-500 mt-0.5">{{ __('cms.virtual_rooms.page_desc', ['name' => strtolower($feature->name)]) }}</p>
             </div>
         </div>
-        
+
         <div class="flex items-center gap-3">
             <a href="{{ url($feature->path) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-800 border border-transparent text-white text-sm font-medium rounded-lg hover:bg-blue-900 transition-colors shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                Lihat Pameran Virtual
+                {{ __('cms.virtual_rooms.view_exhibition') }}
             </a>
             <a href="{{ route('cms.features.virtual_rooms.create', $feature) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-800 border border-transparent text-white text-sm font-semibold rounded-lg hover:bg-gray-900 transition-colors shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                Tambah Ruangan Virtual
+                {{ __('cms.virtual_rooms.add_room') }}
             </a>
         </div>
     </div>
@@ -41,28 +41,28 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Card 1 -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
-            <p class="text-sm font-medium text-gray-600">Total Ruangan</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('cms.virtual_rooms.stat_total_rooms') }}</p>
             <div class="mt-4">
                 <h3 class="text-3xl font-bold text-gray-800">{{ $totalRooms }}</h3>
-                <p class="text-xs text-gray-500 mt-1">Ruangan virtual aktif</p>
+                <p class="text-xs text-gray-500 mt-1">{{ __('cms.virtual_rooms.stat_total_rooms_sub') }}</p>
             </div>
         </div>
-        
+
         <!-- Card 2 -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
-            <p class="text-sm font-medium text-gray-600">Total Hotspot</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('cms.virtual_rooms.stat_total_hotspots') }}</p>
             <div class="mt-4">
                 <h3 class="text-3xl font-bold text-gray-800">{{ $totalHotspots }}</h3>
-                <p class="text-xs text-gray-500 mt-1">Titik navigasi aktif</p>
+                <p class="text-xs text-gray-500 mt-1">{{ __('cms.virtual_rooms.stat_total_hotspots_sub') }}</p>
             </div>
         </div>
-        
+
         <!-- Card 3 -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
-            <p class="text-sm font-medium text-gray-600">Rata-rata Hotspot</p>
+            <p class="text-sm font-medium text-gray-600">{{ __('cms.virtual_rooms.stat_avg_hotspots') }}</p>
             <div class="mt-4">
                 <h3 class="text-3xl font-bold text-gray-800">{{ number_format($avgHotspots, 1) }}</h3>
-                <p class="text-xs text-gray-500 mt-1">Per ruangan</p>
+                <p class="text-xs text-gray-500 mt-1">{{ __('cms.virtual_rooms.stat_avg_hotspots_sub') }}</p>
             </div>
         </div>
     </div>
@@ -70,18 +70,18 @@
     <!-- Details Table -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 mt-8">
         <div class="px-6 py-5 border-b border-gray-100">
-            <h2 class="text-base font-semibold text-gray-800">Daftar Ruangan Virtual</h2>
+            <h2 class="text-base font-semibold text-gray-800">{{ __('cms.virtual_rooms.table_title') }}</h2>
         </div>
         <div>
             <table id="tableVirtualRooms" class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 text-sm font-medium border-b border-gray-100">
-                        <th class="px-6 py-4 w-12">No</th>
-                        <th class="px-6 py-4 w-28">Thumbnail</th>
-                        <th class="px-6 py-4">Nama Ruangan</th>
-                        <th class="px-6 py-4">Deskripsi</th>
-                        <th class="px-6 py-4 w-32">Hotspot</th>
-                        <th class="px-6 py-4 w-32 text-right">Aksi</th>
+                        <th class="px-6 py-4 w-12">{{ __('cms.virtual_rooms.col_no') }}</th>
+                        <th class="px-6 py-4 w-28">{{ __('cms.virtual_rooms.col_thumbnail') }}</th>
+                        <th class="px-6 py-4">{{ __('cms.virtual_rooms.col_name') }}</th>
+                        <th class="px-6 py-4">{{ __('cms.virtual_rooms.col_desc') }}</th>
+                        <th class="px-6 py-4 w-32">{{ __('cms.virtual_rooms.col_hotspot') }}</th>
+                        <th class="px-6 py-4 w-32 text-right">{{ __('cms.virtual_rooms.col_action') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -113,7 +113,7 @@
                                     class="inline-flex items-center justify-center w-8 h-8 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md transition-colors">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </a>
-                                <form action="{{ route('cms.features.virtual_rooms.destroy', [$feature, $room]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus ruangan ini?');">
+                                <form action="{{ route('cms.features.virtual_rooms.destroy', [$feature, $room]) }}" method="POST" data-confirm="{{ __('cms.virtual_rooms.delete_confirm') }}" onsubmit="return confirm(this.dataset.confirm);">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors">
@@ -126,7 +126,7 @@
                     @empty
                     <tr>
                         <td colspan="5" class="px-6 py-8 text-center text-sm text-gray-500">
-                            Belum ada ruangan virtual yang ditambahkan.
+                            {{ __('cms.virtual_rooms.empty') }}
                         </td>
                     </tr>
                     @endforelse

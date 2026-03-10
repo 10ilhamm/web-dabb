@@ -1,24 +1,31 @@
 @php
     $footerSettings = \App\Models\Setting::all()->pluck('value', 'key');
-    $getSetting = function($key, $default) use ($footerSettings) {
+    $locale = app()->getLocale();
+    $enSuffix = ($locale === 'en') ? '_en' : '';
+
+    $getSetting = function($key, $default) use ($footerSettings, $enSuffix) {
+        $enKey = $key . '_en';
+        if ($enSuffix && $footerSettings->has($enKey) && !empty($footerSettings->get($enKey))) {
+            return $footerSettings->get($enKey);
+        }
         return $footerSettings->has($key) ? $footerSettings->get($key) : $default;
     };
 
-    $title = $getSetting('footer_title', __('home.footer.title') ?? 'DEPOT ARSIP BERKELANJUTAN BANDUNG');
-    $mapEmbed = $getSetting('footer_map_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.1647370889287!2d107.6724258!3d-6.963769!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68c3b997b00f17%3A0xa05bd0bfa977d91c!2sArsip%20Nasional%20RI%2C%20Depo%20Arsip%20Berkelanjutan%2C%20Bandung!5e0!3m2!1sid!2sid!4v1704369600000');
-    $address = $getSetting('footer_address', __('home.footer.address') ?? 'Jl. Raya Derwati, Mekarjaya, Kec. Rancasari, Kota Bandung, Jawa Barat 40292');
-    $phone = $getSetting('footer_phone', '(+62) 21 7805851');
-    $email = $getSetting('footer_email', 'info@anri.go.id');
-    $hours = $getSetting('footer_hours', "Senin-Kamis : 7:30 - 16:00\nJumat : 7:30 - 16:30");
-    $managedBy = $getSetting('footer_managed_by', "Depot Arsip\nBerkelanjutan Bandung");
-    $managedBySub = $getSetting('footer_managed_by_sub', "Depot Arsip\nBerkelanjutan");
-    $fb = $getSetting('footer_facebook', '#');
-    $tw = $getSetting('footer_twitter', '#');
-    $ig = $getSetting('footer_instagram', '#');
-    $yt = $getSetting('footer_youtube', '#');
+    $title = $getSetting('footer_title', __('home.footer.title'));
+    $mapEmbed = $footerSettings->get('footer_map_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.1647370889287!2d107.6724258!3d-6.963769!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68c3b997b00f17%3A0xa05bd0bfa977d91c!2sArsip%20Nasional%20RI%2C%20Depo%20Arsip%20Berkelanjutan%2C%20Bandung!5e0!3m2!1sid!2sid!4v1704369600000');
+    $address = $getSetting('footer_address', __('home.footer.address'));
+    $phone = $footerSettings->get('footer_phone', '(+62) 21 7805851');
+    $email = $footerSettings->get('footer_email', 'info@anri.go.id');
+    $hours = $getSetting('footer_hours', __('home.footer.hours_default'));
+    $managedBy = $getSetting('footer_managed_by', __('home.footer.managed_by_default'));
+    $managedBySub = $getSetting('footer_managed_by_sub', __('home.footer.managed_by_sub_default'));
+    $fb = $footerSettings->get('footer_facebook', '#');
+    $tw = $footerSettings->get('footer_twitter', '#');
+    $ig = $footerSettings->get('footer_instagram', '#');
+    $yt = $footerSettings->get('footer_youtube', '#');
 
-    $menuCol1Str = $getSetting('footer_menu_col1', "Beranda | " . (Route::has('home') ? route('home') : '/') . "\nLayanan Publik | #\nPublikasi | #\nKontak Kami | #");
-    $menuCol2Str = $getSetting('footer_menu_col2', "Profil | #\nPameran Arsip | #\nPerpustakaan DABB | #\nDisclaimer | #");
+    $menuCol1Str = $getSetting('footer_menu_col1', __('home.footer.menu_col1_default'));
+    $menuCol2Str = $getSetting('footer_menu_col2', __('home.footer.menu_col2_default'));
 
     $parseMenu = function($str) {
         $lines = explode("\n", trim($str));
@@ -28,12 +35,12 @@
             $parts = array_map('trim', explode("|", $line));
             $label = $parts[0];
             $url = isset($parts[1]) ? $parts[1] : '#';
-            
+
             // Auto-redirect Disclaimer menu to the proper route if set to #
             if (strtolower($label) === 'disclaimer' && $url === '#') {
                 $url = '/disclaimer';
             }
-            
+
             $menu[] = [
                 'label' => $label,
                 'url' => $url
@@ -62,14 +69,14 @@
 
         <!-- Kolom 2: Informasi -->
         <div>
-            <div class="footer-block-title">{{ __('home.footer.info') ?? 'INFORMASI' }}</div>
+            <div class="footer-block-title">{{ __('home.footer.info') }}</div>
             <div class="footer-info-text">
                 @if($address)<p>{{ $address }}</p>@endif
-                @if($phone)<p><span class="footer-highlight">Telp :</span> {{ $phone }}</p>@endif
-                @if($email)<p><span class="footer-highlight">Email :</span> {{ $email }}</p>@endif
+                @if($phone)<p><span class="footer-highlight">{{ __('home.footer.phone_label') }} :</span> {{ $phone }}</p>@endif
+                @if($email)<p><span class="footer-highlight">{{ __('home.footer.email_label') }} :</span> {{ $email }}</p>@endif
                 @if($hours)
                 <p>
-                    <span class="footer-highlight">Jam Kerja :</span><br>
+                    <span class="footer-highlight">{{ __('home.footer.hours_label') }} :</span><br>
                     {!! nl2br(e($hours)) !!}
                 </p>
                 @endif
@@ -78,7 +85,7 @@
 
         <!-- Kolom 3: Menu -->
         <div>
-            <div class="footer-block-title">{{ __('home.footer.menu') ?? 'MENU' }}</div>
+            <div class="footer-block-title">{{ __('home.footer.menu') }}</div>
             <div class="footer-menu-grid">
                 <div>
                     @foreach($menuCol1 as $item)
@@ -95,7 +102,7 @@
 
         <!-- Kolom 4: Dikelola Oleh -->
         <div class="footer-managed">
-            <div class="footer-block-title">{{ __('home.footer.managed') ?? 'DIKELOLA OLEH' }}</div>
+            <div class="footer-block-title">{{ __('home.footer.managed') }}</div>
             <div class="footer-brand-wrap">
                 <img src="{{ asset('image/logo_anri.png') }}" alt="ANRI" class="footer-logo">
                 <div class="footer-brand-text">
@@ -124,6 +131,6 @@
         </div>
     </div>
     <div class="footer-bottom">
-        Copyright &copy; {{ date('Y') }} <strong>Arsip Nasional Republik Indonesia</strong>
+        Copyright &copy; {{ date('Y') }} <strong>{{ __('home.footer.copyright_text') }}</strong>
     </div>
 </footer>

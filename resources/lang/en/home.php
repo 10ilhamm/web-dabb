@@ -68,6 +68,39 @@ return [
         'email' => 'Email : info@anri.go.id',
         'hours' => 'Working Hours : Monday-Thursday : 7:30 - 16:00, Friday : 7:30 - 16:30',
         'copyright' => 'Copyright © 2026 Arsip Nasional Republik Indonesia',
+        'phone_label' => 'Tel',
+        'email_label' => 'E-mail',
+        'hours_label' => 'Working hours',
+        'copyright_text' => 'National Archives of the Republic of Indonesia',
+        'hours_default' => 'Monday-Thursday : 7:30 - 16:00
+Friday : 7:30 - 16:30',
+        'managed_by_default' => 'Archives Depot
+Sustainable Bandung',
+        'managed_by_sub_default' => 'Archives Depot
+Sustainable',
+        'menu_col1_default' => 'Home | /
+Public Services | #
+Publications | #
+Contact Us | #',
+        'menu_col2_default' => 'Profile | #
+Archive Exhibition | #
+DABB Library | #
+Disclaimer | #',
+    ],
+    'chat' => [
+        'greeting' => 'Hello',
+        'subtitle' => 'Can I help you?',
+        'button' => 'DABB asked',
+        'placeholder' => 'Write your question...',
+        'disclaimer' => 'AI-generated messages may be wrong',
+        'clear' => 'Delete Chat',
+        'close' => 'Closed',
+        'faq_1' => 'How do I access public archives?',
+        'faq_2' => 'What services are available at DABB?',
+        'faq_3' => 'Is there a fee for the visit?',
+        'error_no_reply' => 'Sorry, I can\'t process the answer at this time.',
+        'error_busy' => 'Sorry, the AI ​​system is currently busy or not connected. Please try again later.',
+        'error_network' => 'Sorry, there was a network problem.',
     ],
     'roles' => [
         'admin' => 'Admin',
@@ -82,5 +115,33 @@ return [
         'edit' => 'Change',
         'view_site' => 'View Website',
         'logout' => 'Go out',
+    ],
+
+    'virtual_3d_tour' => [
+        'hero_desc' => 'Explore the archive exhibition rooms virtually',
+        'select_room' => 'Select a Room',
+        'select_room_desc' => 'Click one of the rooms below to start the virtual 3D tour',
+        'no_rooms' => 'No rooms available yet.',
+        'enter_room' => 'ENTER ROOM',
+        'media_on_wall' => ':count media on walls',
+        'door_label' => 'Door: :label',
+        'door_active' => 'Active',
+        'viewer_title' => 'Virtual Room',
+        'view_front' => 'Front',
+        'view_left' => 'Left',
+        'view_right' => 'Right',
+        'view_back' => 'Back',
+        'close' => 'Exit',
+        'hint' => 'Use the View buttons to change perspective, or drag to pan around.',
+    ],
+
+    'virtual_tour' => [
+        'hero_desc' => 'Explore the 360° archive exhibition virtually',
+        'select_room' => 'Select a Room',
+        'select_room_desc' => 'Click one of the rooms below to start the virtual 360° tour',
+        'no_rooms' => 'No rooms available yet.',
+        'enter_room' => 'ENTER ROOM',
+        'hotspot_count' => ':count hotspot',
+        'room_title' => 'Room',
     ],
 ];

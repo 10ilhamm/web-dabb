@@ -5,14 +5,14 @@
 <link rel="stylesheet" href="{{ asset('css/cms/virtual_3d_rooms_form.css') }}">
 @endpush
 
-@section('breadcrumb_parent', 'CMS / Ruangan Virtual 3D')
-@section('breadcrumb_active', 'Edit: ' . $room->name)
+@section('breadcrumb_parent', __('cms.virtual_3d_rooms.breadcrumb_parent'))
+@section('breadcrumb_active', __('cms.virtual_3d_rooms.breadcrumb_edit', ['name' => $room->name]))
 
 @section('content')
 
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Edit Ruangan: {{ $room->name }}</h1>
-    <p class="text-sm text-gray-500 mt-1">Atur informasi ruangan, warna, media dinding, dan hotspot navigasi</p>
+    <h1 class="text-2xl font-bold text-gray-800">{{ __('cms.virtual_3d_rooms.form_title_edit', ['name' => $room->name]) }}</h1>
+    <p class="text-sm text-gray-500 mt-1">{{ __('cms.virtual_3d_rooms.form_desc_edit') }}</p>
 </div>
 
 <form action="{{ route('cms.features.virtual_3d_rooms.update', [$feature, $room]) }}" method="POST" enctype="multipart/form-data" id="virtual3d-room-form">
@@ -28,24 +28,24 @@
 
             <!-- Basic Information -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-                <h3 class="text-sm font-semibold text-gray-800 mb-4">Informasi Ruangan</h3>
+                <h3 class="text-sm font-semibold text-gray-800 mb-4">{{ __('cms.virtual_3d_rooms.info_title') }}</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Ruangan <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_name') }} <span class="text-red-500">*</span></label>
                         <input type="text" name="name" value="{{ old('name', $room->name) }}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_desc') }}</label>
                         <textarea name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('description', $room->description) }}</textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Thumbnail Ruangan</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_thumbnail') }}</label>
                         @if($room->thumbnail_path)
                             <div class="relative mt-1 mb-2" id="thumbnailPreviewWrap">
                                 <img src="{{ asset('storage/' . $room->thumbnail_path) }}" id="thumbnailPreviewImg" class="w-full h-24 object-cover rounded-lg border border-gray-200">
                                 <button type="button" id="removeThumbnailBtn"
                                     onclick="removeThumbnail()"
-                                    title="Hapus thumbnail"
+                                    title="{{ __('cms.virtual_3d_rooms.media_delete') }}"
                                     class="absolute top-1.5 right-1.5 w-6 h-6 flex items-center justify-center rounded-full text-white text-xs font-bold shadow-md transition-transform hover:scale-110"
                                     style="background-color:#ef4444;">
                                     &times;
@@ -53,31 +53,31 @@
                             </div>
                         @endif
                         <input type="file" name="thumbnail" id="thumbnailFileInput" accept="image/jpeg,image/png,image/webp" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-                        <p class="text-xs text-gray-500 mt-1.5">Biarkan kosong jika tidak ingin mengubah</p>
+                        <p class="text-xs text-gray-500 mt-1.5">{{ __('cms.virtual_3d_rooms.thumbnail_keep') }}</p>
                     </div>
                 </div>
             </div>
 
             <!-- Room Colors -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-                <h3 class="text-sm font-semibold text-gray-800 mb-4">Warna Ruangan</h3>
+                <h3 class="text-sm font-semibold text-gray-800 mb-4">{{ __('cms.virtual_3d_rooms.colors_title') }}</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Warna Dinding</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_wall_color') }}</label>
                         <div class="flex items-center gap-3">
                             <input type="color" name="wall_color" id="wallColorInput" value="{{ old('wall_color', $room->wall_color) }}" class="w-10 h-10 p-1 border border-gray-300 rounded-lg cursor-pointer" onchange="updatePreviewColors()">
                             <input type="text" id="wallColorText" value="{{ old('wall_color', $room->wall_color) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Warna Lantai</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_floor_color') }}</label>
                         <div class="flex items-center gap-3">
                             <input type="color" name="floor_color" id="floorColorInput" value="{{ old('floor_color', $room->floor_color) }}" class="w-10 h-10 p-1 border border-gray-300 rounded-lg cursor-pointer" onchange="updatePreviewColors()">
                             <input type="text" id="floorColorText" value="{{ old('floor_color', $room->floor_color) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Warna Atap</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_ceiling_color') }}</label>
                         <div class="flex items-center gap-3">
                             <input type="color" name="ceiling_color" id="ceilingColorInput" value="{{ old('ceiling_color', $room->ceiling_color) }}" class="w-10 h-10 p-1 border border-gray-300 rounded-lg cursor-pointer" onchange="updatePreviewColors()">
                             <input type="text" id="ceilingColorText" value="{{ old('ceiling_color', $room->ceiling_color) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" readonly>
@@ -88,22 +88,22 @@
 
             <!-- Door / Hotspot -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5" x-data="{ doorType: '{{ old('door_link_type', $room->door_link_type) }}' }">
-                <h3 class="text-sm font-semibold text-gray-800 mb-2">Pengaturan Pintu / Hotspot</h3>
-                <p class="text-xs text-gray-500 mb-4">Pintu di dinding belakang untuk navigasi ke halaman/ruangan lain</p>
+                <h3 class="text-sm font-semibold text-gray-800 mb-2">{{ __('cms.virtual_3d_rooms.door_title') }}</h3>
+                <p class="text-xs text-gray-500 mb-4">{{ __('cms.virtual_3d_rooms.door_desc_edit') }}</p>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipe Tautan Pintu</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_door_type') }}</label>
                         <select name="door_link_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" x-model="doorType">
-                            <option value="none">Tidak Aktif (Hanya Visual)</option>
-                            <option value="room">Arahkan ke Ruangan Lain</option>
-                            <option value="url">Tautan Bebas (URL)</option>
+                            <option value="none">{{ __('cms.virtual_3d_rooms.door_type_none') }}</option>
+                            <option value="room">{{ __('cms.virtual_3d_rooms.door_type_room') }}</option>
+                            <option value="url">{{ __('cms.virtual_3d_rooms.door_type_url') }}</option>
                         </select>
                     </div>
 
                     <div x-show="doorType === 'room'">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Target Ruangan</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_target_room') }}</label>
                         <select x-bind:name="doorType === 'room' ? 'door_target' : ''" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                            <option value="">— Pilih Ruangan —</option>
+                            <option value="">{{ __('cms.virtual_3d_rooms.target_room_placeholder') }}</option>
                             @foreach($allRooms as $r)
                             <option value="{{ $r->id }}" {{ $room->door_target == $r->id ? 'selected' : '' }}>{{ $r->name }}</option>
                             @endforeach
@@ -111,13 +111,13 @@
                     </div>
 
                     <div x-show="doorType === 'url'">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Target URL</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_target_url') }}</label>
                         <input type="text" x-bind:name="doorType === 'url' ? 'door_target' : ''" value="{{ old('door_target', $room->door_target) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="https://...">
                     </div>
 
                     <div x-show="doorType !== 'none'">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Label Pintu (Opsional)</label>
-                        <input type="text" name="door_label" value="{{ old('door_label', $room->door_label) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Contoh: KELUAR">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('cms.virtual_3d_rooms.label_door_label') }}</label>
+                        <input type="text" name="door_label" value="{{ old('door_label', $room->door_label) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="{{ __('cms.virtual_3d_rooms.door_label_placeholder') }}">
                     </div>
                 </div>
             </div>
@@ -125,8 +125,8 @@
             <!-- Media Dinding -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-semibold text-gray-800">Media Dinding (Foto / Video)</h3>
-                    <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">{{ $room->media()->count() }} item</span>
+                    <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.virtual_3d_rooms.media_title') }}</h3>
+                    <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">{{ __('cms.virtual_3d_rooms.media_items', ['count' => $room->media()->count()]) }}</span>
                 </div>
 
                 <div id="uploadMediaSection">
@@ -134,31 +134,31 @@
                         {{-- Wall indicator synced from wall editor tabs --}}
                         <input type="hidden" id="uploadWall" value="front">
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">Dinding Terpilih</label>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">{{ __('cms.virtual_3d_rooms.media_selected_wall') }}</label>
                             <div id="uploadWallBadge" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold text-white" style="background-color: #1e40af;">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                                <span id="uploadWallLabel">Dinding Depan</span>
+                                <span id="uploadWallLabel">{{ __('cms.virtual_3d_rooms.media_wall_front') }}</span>
                             </div>
-                            <p class="text-xs text-gray-400 mt-1">Pilih dinding di panel <strong>Editor Posisi Media</strong> di sebelah kanan</p>
+                            <p class="text-xs text-gray-400 mt-1">{!! __('cms.virtual_3d_rooms.media_wall_hint') !!}</p>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">Tipe Media</label>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">{{ __('cms.virtual_3d_rooms.media_type_label') }}</label>
                             <select id="uploadType" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                <option value="image">Gambar (JPG/PNG)</option>
-                                <option value="video">Video (MP4)</option>
+                                <option value="image">{{ __('cms.virtual_3d_rooms.media_type_image') }}</option>
+                                <option value="video">{{ __('cms.virtual_3d_rooms.media_type_video') }}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">File Upload</label>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">{{ __('cms.virtual_3d_rooms.media_file_label') }}</label>
                             <input id="uploadFile" type="file" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" accept="image/*,video/mp4,video/webm">
                         </div>
                     </div>
 
                     <button type="button" onclick="uploadNewMedia()" class="w-full text-sm font-semibold text-white px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors" style="background-color: #1e3a5f;" onmouseover="this.style.backgroundColor='#162d4a'" onmouseout="this.style.backgroundColor='#1e3a5f'">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                        Unggah &amp; Tambah ke Dinding
+                        {!! __('cms.virtual_3d_rooms.media_upload_btn') !!}
                     </button>
                 </div>
 
@@ -177,15 +177,15 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-medium text-gray-800 truncate">{{ ucfirst($media->type) }} #{{ $media->id }}</p>
-                            <p class="text-xs text-gray-500">Dinding: {{ ucfirst($media->wall) }}</p>
+                            <p class="text-xs text-gray-500">{{ __('cms.virtual_3d_rooms.media_wall_label', ['wall' => ucfirst($media->wall)]) }}</p>
                         </div>
-                        <button type="button" onclick="deleteMediaItem({{ $media->id }}, this)" class="p-1.5 text-red-500 hover:bg-red-50 rounded transition-colors" title="Hapus">
+                        <button type="button" data-media-id="{{ $media->id }}" onclick="deleteMediaItem(+this.dataset.mediaId, this)" class="p-1.5 text-red-500 hover:bg-red-50 rounded transition-colors" title="{{ __('cms.virtual_3d_rooms.media_delete') }}">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                     </div>
                     @empty
                     <div id="noMediaMsg" class="text-center py-4 text-sm text-gray-400 border-2 border-dashed border-gray-100 rounded-lg">
-                        Belum ada media. Unggah file di atas.
+                        {{ __('cms.virtual_3d_rooms.media_empty') }}
                     </div>
                     @endforelse
                 </div>
@@ -198,32 +198,32 @@
 
             <!-- 3D Preview -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-                <h3 class="text-sm font-semibold text-gray-800 mb-1">Preview Ruangan 3D</h3>
-                <p class="text-xs text-gray-500 mb-4">Preview langsung ruangan sesuai pengaturan warna Anda</p>
+                <h3 class="text-sm font-semibold text-gray-800 mb-1">{{ __('cms.virtual_3d_rooms.preview_title') }}</h3>
+                <p class="text-xs text-gray-500 mb-4">{{ __('cms.virtual_3d_rooms.preview_desc_edit') }}</p>
 
                 <div class="room3d-preview-wrap" id="preview3dContainer">
                     <div class="room3d-scene" id="preview3dScene">
-                        <div class="room3d-face front" id="pv-wall-front">DEPAN</div>
+                        <div class="room3d-face front" id="pv-wall-front">{{ __('cms.virtual_3d_rooms.preview_front') }}</div>
                         <div class="room3d-face back" id="pv-wall-back">
-                            <span>BELAKANG</span>
+                            <span>{{ __('cms.virtual_3d_rooms.preview_back') }}</span>
                             <div class="room3d-door" id="pv-door">
-                                <span>PINTU</span>
+                                <span>{{ __('cms.virtual_3d_rooms.preview_door') }}</span>
                                 <div class="room3d-door-knob"></div>
                             </div>
                         </div>
-                        <div class="room3d-face left" id="pv-wall-left">KIRI</div>
-                        <div class="room3d-face right" id="pv-wall-right">KANAN</div>
-                        <div class="room3d-face floor" id="pv-floor">LANTAI</div>
-                        <div class="room3d-face ceiling" id="pv-ceiling"><span style="display:inline-block; transform:scaleY(-1);">ATAP</span></div>
+                        <div class="room3d-face left" id="pv-wall-left">{{ __('cms.virtual_3d_rooms.preview_left') }}</div>
+                        <div class="room3d-face right" id="pv-wall-right">{{ __('cms.virtual_3d_rooms.preview_right') }}</div>
+                        <div class="room3d-face floor" id="pv-floor">{{ __('cms.virtual_3d_rooms.preview_floor') }}</div>
+                        <div class="room3d-face ceiling" id="pv-ceiling"><span style="display:inline-block; transform:scaleY(-1);">{{ __('cms.virtual_3d_rooms.preview_ceiling') }}</span></div>
                     </div>
 
                     <div style="position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:10;">
-                        <button type="button" class="preview-rot-btn active" onclick="rotatePreview('default', this)">Default</button>
-                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('front', this)">Depan</button>
-                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('left', this)">Kiri</button>
-                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('right', this)">Kanan</button>
-                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('back', this)">Belakang</button>
-                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('top', this)">Atas</button>
+                        <button type="button" class="preview-rot-btn active" onclick="rotatePreview('default', this)">{{ __('cms.virtual_3d_rooms.preview_btn_default') }}</button>
+                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('front', this)">{{ __('cms.virtual_3d_rooms.preview_btn_front') }}</button>
+                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('left', this)">{{ __('cms.virtual_3d_rooms.preview_btn_left') }}</button>
+                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('right', this)">{{ __('cms.virtual_3d_rooms.preview_btn_right') }}</button>
+                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('back', this)">{{ __('cms.virtual_3d_rooms.preview_btn_back') }}</button>
+                        <button type="button" class="preview-rot-btn" onclick="rotatePreview('top', this)">{{ __('cms.virtual_3d_rooms.preview_btn_top') }}</button>
                     </div>
                 </div>
             </div>
@@ -232,29 +232,29 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
                 <div class="flex items-center justify-between mb-2">
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-800">Editor Posisi Media di Dinding</h3>
-                        <p class="text-xs text-gray-500 mt-0.5">Geser media untuk mengatur posisi di dinding. Klik media untuk menampilkan properti.</p>
+                        <h3 class="text-sm font-semibold text-gray-800">{{ __('cms.virtual_3d_rooms.editor_title') }}</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ __('cms.virtual_3d_rooms.editor_desc') }}</p>
                     </div>
                 </div>
                 <div class="mb-4 flex flex-wrap gap-2">
-                    <button type="button" onclick="switchWallView('front')" data-wall="front" class="wall-tab-btn active">Dinding Depan</button>
-                    <button type="button" onclick="switchWallView('left')" data-wall="left" class="wall-tab-btn">Dinding Kiri</button>
-                    <button type="button" onclick="switchWallView('right')" data-wall="right" class="wall-tab-btn">Dinding Kanan</button>
-                    <button type="button" onclick="switchWallView('back')" data-wall="back" class="wall-tab-btn">Dinding Belakang</button>
+                    <button type="button" onclick="switchWallView('front')" data-wall="front" class="wall-tab-btn active">{{ __('cms.virtual_3d_rooms.editor_wall_front') }}</button>
+                    <button type="button" onclick="switchWallView('left')" data-wall="left" class="wall-tab-btn">{{ __('cms.virtual_3d_rooms.editor_wall_left') }}</button>
+                    <button type="button" onclick="switchWallView('right')" data-wall="right" class="wall-tab-btn">{{ __('cms.virtual_3d_rooms.editor_wall_right') }}</button>
+                    <button type="button" onclick="switchWallView('back')" data-wall="back" class="wall-tab-btn">{{ __('cms.virtual_3d_rooms.editor_wall_back') }}</button>
                 </div>
 
-                <div id="wallEditor" class="wall-panel" style="background-color: {{ $room->wall_color }}">
-                    <div class="wall-panel-title" id="wallTitleLabel">DINDING DEPAN</div>
+                <div id="wallEditor" class="wall-panel" data-wall-color="{{ $room->wall_color }}">
+                    <div class="wall-panel-title" id="wallTitleLabel">{{ __('cms.virtual_3d_rooms.editor_wall_title_front') }}</div>
                     <div id="doorRender" class="door-rendered" style="display: none;" data-active="{{ $room->door_link_type !== 'none' ? '1' : '0' }}">
-                        <div class="text-center">PINTU<br><span class="text-xs opacity-70">{{ $room->door_label ?: 'KELUAR' }}</span></div>
+                        <div class="text-center">{{ __('cms.virtual_3d_rooms.preview_door') }}<br><span class="text-xs opacity-70">{{ $room->door_label ?: __('cms.virtual_3d_rooms.door_label_placeholder') }}</span></div>
                     </div>
                 </div>
 
                 <!-- Properties Panel -->
                 <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" id="propertiesPanel" style="display: none;">
                     <div class="flex justify-between items-center mb-3">
-                        <p class="text-xs font-semibold text-gray-700">Properti Media yang Dipilih</p>
-                        <button type="button" onclick="deleteActiveMedia()" class="text-xs text-red-600 font-semibold hover:text-red-700">Hapus</button>
+                        <p class="text-xs font-semibold text-gray-700">{{ __('cms.virtual_3d_rooms.editor_props_title') }}</p>
+                        <button type="button" onclick="deleteActiveMedia()" class="text-xs text-red-600 font-semibold hover:text-red-700">{{ __('cms.virtual_3d_rooms.editor_props_delete') }}</button>
                     </div>
                     <div class="grid grid-cols-4 gap-3">
                         <div>
@@ -274,7 +274,7 @@
                             <input type="number" id="propH" step="any" class="w-full px-2 py-1.5 border border-gray-300 rounded text-xs" onchange="updatePropertiesFromInput()">
                         </div>
                     </div>
-                    <button type="button" onclick="saveActiveMedia()" class="mt-3 w-full text-sm font-semibold text-white px-3 py-2 rounded-lg transition-colors" style="background-color:#1d4ed8;">Simpan Posisi</button>
+                    <button type="button" onclick="saveActiveMedia()" class="mt-3 w-full text-sm font-semibold text-white px-3 py-2 rounded-lg transition-colors" style="background-color:#1d4ed8;">{{ __('cms.virtual_3d_rooms.editor_props_save') }}</button>
                 </div>
             </div>
         </div>
@@ -284,11 +284,11 @@
     <!-- Sticky Footer Actions -->
     <div class="mt-8 flex justify-end gap-3 pb-8">
         <a href="{{ route('cms.features.virtual_3d_rooms.index', $feature) }}" class="px-5 py-2.5 bg-gray-100 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 active:bg-gray-300 transition-colors shadow-sm">
-            Batal
+            {{ __('cms.virtual_3d_rooms.btn_cancel') }}
         </a>
         <button type="submit" id="saveRoomBtn" class="px-5 py-2.5 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center gap-2" style="background-color:#1d4ed8;" onmouseover="this.style.backgroundColor='#1e40af'" onmouseout="this.style.backgroundColor='#1d4ed8'">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
-            Simpan Perubahan
+            {{ __('cms.virtual_3d_rooms.btn_save_edit') }}
         </button>
     </div>
 </form>
@@ -298,52 +298,54 @@
 @endsection
 
 @push('scripts')
-{{-- Blade-specific data (routes & CSRF) injected inline, everything else is in external JS --}}
+{{-- Blade data passed as JSON (not linted as JS by IDE) --}}
+<script type="application/json" id="v3dConfig">{"csrf":"{{ csrf_token() }}","routes":{"upload":"{{ route('cms.features.virtual_3d_rooms.media.store', [$feature, $room]) }}","updateMedia":"{{ route('cms.features.virtual_3d_rooms.media.update', [$feature, $room, '__MEDIA_ID__']) }}","deleteMedia":"{{ route('cms.features.virtual_3d_rooms.media.destroy', [$feature, $room, '__MEDIA_ID__']) }}"},"translations":{"uploadChoose":"{{ __('cms.virtual_3d_rooms.media_upload_choose') }}","uploadSuccess":"{{ __('cms.virtual_3d_rooms.media_upload_success') }}"},"wallColor":"{{ $room->wall_color }}"}</script>
 <script>
-    window.v3dCsrf   = '{{ csrf_token() }}';
-    window.v3dRoutes = {
-        upload:      "{{ route('cms.features.virtual_3d_rooms.media.store',   [$feature, $room]) }}",
-        updateMedia: "{{ route('cms.features.virtual_3d_rooms.media.update',  [$feature, $room, '__MEDIA_ID__']) }}",
-        deleteMedia: "{{ route('cms.features.virtual_3d_rooms.media.destroy', [$feature, $room, '__MEDIA_ID__']) }}"
-    };
+    (function() {
+        var cfg = JSON.parse(document.getElementById('v3dConfig').textContent);
+        window.v3dCsrf   = cfg.csrf;
+        window.v3dRoutes = cfg.routes;
 
-    // Upload media: uses Blade-generated routes so defined here
-    window.uploadNewMedia = async function () {
-        const fileInput = document.getElementById('uploadFile');
-        if (!fileInput || !fileInput.files.length) {
-            alert('Pilih file untuk diunggah!');
-            return;
-        }
-        const formData = new FormData();
-        formData.append('file',       fileInput.files[0]);
-        formData.append('wall',       document.getElementById('uploadWall').value);
-        formData.append('type',       document.getElementById('uploadType').value);
-        formData.append('position_x', 50);
-        formData.append('position_y', 50);
-        formData.append('width',      30);
-        formData.append('height',     40);
-        try {
-            const response = await fetch(window.v3dRoutes.upload, {
-                method:  'POST',
-                headers: { 'X-CSRF-TOKEN': window.v3dCsrf },
-                body:    formData
-            });
-            const data = await response.json();
-            if (data.success) {
-                mediaItems.push(data.media);
-                renderWallItems();
-                selectItem(data.media.id);
-                fileInput.value = '';
-                addMediaToList(data.media);
-                showToast('Media berhasil diunggah!');
-            } else {
-                alert('Upload gagal: ' + (data.message || 'Error'));
+        var wallEl = document.getElementById('wallEditor');
+        if (wallEl) wallEl.style.backgroundColor = cfg.wallColor;
+
+        window.uploadNewMedia = async function () {
+            const fileInput = document.getElementById('uploadFile');
+            if (!fileInput || !fileInput.files.length) {
+                alert(cfg.translations.uploadChoose);
+                return;
             }
-        } catch (error) {
-            console.error(error);
-            alert('Error uploading media.');
-        }
-    };
+            const formData = new FormData();
+            formData.append('file',       fileInput.files[0]);
+            formData.append('wall',       document.getElementById('uploadWall').value);
+            formData.append('type',       document.getElementById('uploadType').value);
+            formData.append('position_x', 50);
+            formData.append('position_y', 50);
+            formData.append('width',      30);
+            formData.append('height',     40);
+            try {
+                const response = await fetch(window.v3dRoutes.upload, {
+                    method:  'POST',
+                    headers: { 'X-CSRF-TOKEN': window.v3dCsrf },
+                    body:    formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    mediaItems.push(data.media);
+                    renderWallItems();
+                    selectItem(data.media.id);
+                    fileInput.value = '';
+                    addMediaToList(data.media);
+                    showToast(cfg.translations.uploadSuccess);
+                } else {
+                    alert('Upload failed: ' + (data.message || 'Error'));
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error uploading media.');
+            }
+        };
+    })();
 </script>
 <script src="{{ asset('js/cms/virtual_3d_rooms.js') }}"></script>
 <script src="{{ asset('js/cms/virtual_3d_rooms_edit.js') }}"></script>

@@ -257,6 +257,188 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | CMS — Virtual Rooms 360° (virtual_rooms)
+    |--------------------------------------------------------------------------
+    */
+
+    'virtual_rooms' => [
+        'breadcrumb_parent' => 'CMS / Virtual Exhibition Real',
+        'breadcrumb_active' => 'Dashboard',
+        'breadcrumb_form_parent' => 'CMS / Virtual Exhibition Real / Room List',
+        'breadcrumb_edit' => 'Edit Room',
+        'breadcrumb_create' => 'Add Room',
+
+        'page_title' => 'Page Management &mdash; :name',
+        'page_desc' => 'Manage virtual rooms and navigation hotspots for :name 360 degrees',
+        'view_exhibition' => 'View Virtual Exhibition',
+        'add_room' => 'Add Virtual Room',
+
+        'stat_total_rooms' => 'Total Rooms',
+        'stat_total_rooms_sub' => 'Active virtual rooms',
+        'stat_total_hotspots' => 'Total Hotspots',
+        'stat_total_hotspots_sub' => 'Active navigation points',
+        'stat_avg_hotspots' => 'Average Hotspots',
+        'stat_avg_hotspots_sub' => 'Per room',
+
+        'table_title' => 'Virtual Room List',
+        'col_no' => 'No',
+        'col_thumbnail' => 'Thumbnail',
+        'col_name' => 'Room Name',
+        'col_desc' => 'Description',
+        'col_hotspot' => 'Hotspot',
+        'col_action' => 'Action',
+        'empty' => 'No virtual rooms have been added yet.',
+        'delete_confirm' => 'Are you sure you want to delete this room?',
+
+        // Form (create/edit)
+        'form_title_create' => 'Add Virtual Room',
+        'form_title_edit' => 'Edit Virtual Room',
+        'form_desc' => 'Update room information and configure navigation hotspots',
+        'back_to_list' => 'Back to Room List',
+        'info_title' => 'Room Information',
+        'label_name' => 'Room Name',
+        'label_desc' => 'Description',
+        'label_thumbnail' => 'Room Thumbnail',
+        'thumbnail_help' => 'Preview image for room list (JPG, PNG, WEBP)',
+        'label_image_360' => '360° Image',
+        'image_360_help' => 'Equirectangular 360 degree image (JPG, PNG)',
+
+        'hotspot_title' => 'Navigation Hotspots',
+        'hotspot_add' => 'Add',
+        'hotspot_rooms_available' => 'Available rooms: :count',
+        'hotspot_empty' => "Empty. Click 'Add'",
+
+        'preview_title' => '360° Panorama Preview',
+        'preview_desc' => 'Click a target point on the panorama to get Yaw/Pitch, or drag to look around',
+        'preview_placeholder' => 'Preview not available',
+        'preview_placeholder_sub' => 'Select a 360° image first',
+
+        'btn_cancel' => 'Cancel',
+        'btn_save' => 'Save Changes',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | CMS — Virtual 3D Rooms (virtual_3d_rooms)
+    |--------------------------------------------------------------------------
+    */
+
+    'virtual_3d_rooms' => [
+        'breadcrumb_parent' => 'CMS / Virtual 3D Rooms',
+        'breadcrumb_edit' => 'Edit: :name',
+        'breadcrumb_create' => 'Add Room',
+
+        'page_title' => 'Virtual 3D Rooms &mdash; :name',
+        'page_desc' => 'Manage virtual rooms with 4 walls and interactive doors',
+        'view_exhibition' => 'View Virtual Exhibition',
+        'add_room' => 'Add 3D Room',
+
+        'stat_total_rooms' => 'Total Rooms',
+        'stat_total_rooms_sub' => 'Active virtual 3D rooms',
+        'stat_total_media' => 'Total Media',
+        'stat_total_media_sub' => 'Images &amp; videos on walls',
+        'stat_avg_media' => 'Average Media',
+        'stat_avg_media_sub' => 'Per room',
+
+        'table_title' => 'Virtual 3D Room List',
+        'col_no' => 'No',
+        'col_thumbnail' => 'Thumbnail',
+        'col_name' => 'Room Name',
+        'col_desc' => 'Description',
+        'col_media' => 'Media',
+        'col_action' => 'Action',
+        'empty' => 'No virtual 3D rooms have been added yet.',
+        'delete_confirm' => 'Are you sure you want to delete this room? All wall media will also be deleted.',
+
+        // Create form
+        'form_title_create' => 'Add Virtual 3D Room',
+        'form_desc_create' => 'Set up room information, wall/floor/ceiling colors, and navigation hotspots',
+        'back_to_list' => 'Back to Room List',
+
+        // Edit form
+        'form_title_edit' => 'Edit Room: :name',
+        'form_desc_edit' => 'Set up room information, colors, wall media, and navigation hotspots',
+
+        // Shared form
+        'info_title' => 'Room Information',
+        'label_name' => 'Room Name',
+        'label_desc' => 'Description',
+        'label_thumbnail' => 'Room Thumbnail',
+        'thumbnail_help' => 'Preview image for room list (JPG, PNG, WEBP)',
+        'thumbnail_keep' => 'Leave empty if you don\'t want to change it',
+
+        'colors_title' => 'Room Colors',
+        'label_wall_color' => 'Wall Color',
+        'label_floor_color' => 'Floor Color',
+        'label_ceiling_color' => 'Ceiling Color',
+
+        'door_title' => 'Door / Hotspot Settings',
+        'door_desc' => 'The door is on the back wall of the 3D room and can direct visitors to another page or room.',
+        'door_desc_edit' => 'Back wall door for navigation to other pages/rooms',
+        'label_door_type' => 'Door Link Type',
+        'door_type_none' => 'Inactive (Visual Only)',
+        'door_type_room' => 'Navigate to Another Room',
+        'door_type_url' => 'Free Link (URL)',
+        'label_target_room' => 'Target Room',
+        'target_room_placeholder' => '— Select Room —',
+        'rooms_available' => 'Available rooms: :count',
+        'label_target_url' => 'Target URL',
+        'label_door_label' => 'Door Label (Optional)',
+        'door_label_placeholder' => 'Example: EXIT',
+
+        'media_title' => 'Wall Media (Photo / Video)',
+        'media_save_first' => 'Save the room first',
+        'media_save_first_sub' => 'After saving, you will be redirected to the edit page to add photos/videos to the room walls.',
+        'media_items' => ':count items',
+        'media_selected_wall' => 'Selected Wall',
+        'media_wall_front' => 'Front Wall',
+        'media_wall_hint' => 'Select a wall in the <strong>Media Position Editor</strong> panel on the right',
+        'media_type_label' => 'Media Type',
+        'media_type_image' => 'Image (JPG/PNG)',
+        'media_type_video' => 'Video (MP4)',
+        'media_file_label' => 'File Upload',
+        'media_upload_btn' => 'Upload &amp; Add to Wall',
+        'media_wall_label' => 'Wall: :wall',
+        'media_delete' => 'Delete',
+        'media_empty' => 'No media yet. Upload a file above.',
+        'media_upload_success' => 'Media uploaded successfully!',
+        'media_upload_choose' => 'Select a file to upload!',
+
+        'preview_title' => '3D Room Preview',
+        'preview_desc' => 'Live 3D room preview based on your color settings',
+        'preview_desc_edit' => 'Live room preview based on your color settings',
+        'preview_front' => 'FRONT',
+        'preview_back' => 'BACK',
+        'preview_left' => 'LEFT',
+        'preview_right' => 'RIGHT',
+        'preview_floor' => 'FLOOR',
+        'preview_ceiling' => 'CEILING',
+        'preview_door' => 'DOOR',
+        'preview_btn_default' => 'Default',
+        'preview_btn_front' => 'Front',
+        'preview_btn_left' => 'Left',
+        'preview_btn_right' => 'Right',
+        'preview_btn_back' => 'Back',
+        'preview_btn_top' => 'Top',
+
+        'editor_title' => 'Wall Media Position Editor',
+        'editor_desc' => 'Drag media to adjust position on the wall. Click media to show properties.',
+        'editor_wall_front' => 'Front Wall',
+        'editor_wall_left' => 'Left Wall',
+        'editor_wall_right' => 'Right Wall',
+        'editor_wall_back' => 'Back Wall',
+        'editor_wall_title_front' => 'FRONT WALL',
+        'editor_props_title' => 'Selected Media Properties',
+        'editor_props_delete' => 'Delete',
+        'editor_props_save' => 'Save Position',
+
+        'btn_cancel' => 'Cancel',
+        'btn_save_create' => 'Save Room',
+        'btn_save_edit' => 'Save Changes',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Common (shared across CMS pages)
     |--------------------------------------------------------------------------
     */

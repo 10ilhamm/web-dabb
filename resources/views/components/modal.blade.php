@@ -46,8 +46,9 @@ $maxWidth = [
     x-on:keydown.tab.prevent="$event.shiftKey || nextFocusable().focus()"
     x-on:keydown.shift.tab.prevent="prevFocusable().focus()"
     x-show="show"
+    x-cloak
     class="fixed inset-0"
-    style="z-index: 9999; display: {{ $show ? 'block' : 'none' }};"
+    style="z-index: 9999;"
 >
     <div
         x-show="show"
